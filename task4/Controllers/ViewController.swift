@@ -30,6 +30,7 @@ final class ViewController: UIViewController {
   }
 
   // MARK: - Variables
+  private let locationManager = CLLocationManager()
   private var atms = [ATM]()
   private var isMapDisplayType = true {
     didSet {
@@ -75,6 +76,8 @@ final class ViewController: UIViewController {
   private lazy var mapView: MKMapView = {
     let map = MKMapView(frame: .zero)
     map.isHidden = !isMapDisplayType
+    map.showsUserLocation = true
+    map.setRegion(map.belarusRegion, animated: true)
 
     return map
   }()
@@ -113,11 +116,24 @@ final class ViewController: UIViewController {
     navigationItem.rightBarButtonItem = UIBarButtonItem(customView: refreshButton)
     atmCollectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "cell") //create custom cell
 
+    attemptLocationAccess()
+
     setupViews()
   }
 
+  private func attemptLocationAccess() {
+    locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
+    locationManager.delegate = self
+
+    switch locationManager.authorizationStatus {
+    case .notDetermined: locationManager.requestWhenInUseAuthorization()
+    case .denied: break //add go options
+    default: locationManager.requestLocation()
+    }
+  }
+
   @objc private func fetchRequest() {
-    print("fetch request") //delete
+    //add check Internet connection
     NetworkService.getData { [weak self] data in
       do {
         let atmResponse = try ATMResponse(data: data)
@@ -135,7 +151,6 @@ final class ViewController: UIViewController {
 
   @objc private func switchDisplayType() {
     isMapDisplayType = !isMapDisplayType
-    print("switch displayType") //delete
   }
 
   private func setupViews() {
@@ -183,5 +198,16 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
 
     return cell
   }
+}
 
+extension ViewController: CLLocationManagerDelegate {
+  internal func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+    if let location = manager.location {
+      mapView.centerToLocation(location)
+    }
+  }
+
+  internal func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+    print(error.localizedDescription)
+  }
 }

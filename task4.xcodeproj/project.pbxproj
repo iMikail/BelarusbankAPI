@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		590AA9085723C22FCD5289AA /* Pods_task4.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F7F589BE12D7362054E92066 /* Pods_task4.framework */; };
+		A8726071295DE65F00666DB9 /* MKMapView+Ex.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8726070295DE65F00666DB9 /* MKMapView+Ex.swift */; };
 		A8E5F921295C3C2700B18A0B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8E5F920295C3C2700B18A0B /* AppDelegate.swift */; };
 		A8E5F923295C3C2700B18A0B /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8E5F922295C3C2700B18A0B /* SceneDelegate.swift */; };
 		A8E5F925295C3C2700B18A0B /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8E5F924295C3C2700B18A0B /* ViewController.swift */; };
@@ -20,6 +21,7 @@
 
 /* Begin PBXFileReference section */
 		86C81AE4C38043A42C4AB06B /* Pods-task4.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-task4.debug.xcconfig"; path = "Target Support Files/Pods-task4/Pods-task4.debug.xcconfig"; sourceTree = "<group>"; };
+		A8726070295DE65F00666DB9 /* MKMapView+Ex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MKMapView+Ex.swift"; sourceTree = "<group>"; };
 		A8E5F91D295C3C2700B18A0B /* task4.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = task4.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A8E5F920295C3C2700B18A0B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A8E5F922295C3C2700B18A0B /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -54,6 +56,14 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		A8726072295DE6EA00666DB9 /* Exstensions */ = {
+			isa = PBXGroup;
+			children = (
+				A8726070295DE65F00666DB9 /* MKMapView+Ex.swift */,
+			);
+			path = Exstensions;
+			sourceTree = "<group>";
+		};
 		A8E5F914295C3C2700B18A0B = {
 			isa = PBXGroup;
 			children = (
@@ -79,6 +89,7 @@
 				A8E816E5295C50830014A7FD /* Controllers */,
 				A8F2185B295CB64200447A18 /* NetworkService */,
 				A8E816E4295C505E0014A7FD /* Supporting files */,
+				A8726072295DE6EA00666DB9 /* Exstensions */,
 			);
 			path = task4;
 			sourceTree = "<group>";
@@ -268,6 +279,7 @@
 				A8E5F925295C3C2700B18A0B /* ViewController.swift in Sources */,
 				A8E5F921295C3C2700B18A0B /* AppDelegate.swift in Sources */,
 				A8E5F923295C3C2700B18A0B /* SceneDelegate.swift in Sources */,
+				A8726071295DE65F00666DB9 /* MKMapView+Ex.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
