@@ -30,11 +30,14 @@ final class ViewController: UIViewController {
   }
 
   // MARK: - Variables
-  private var points = [1, 2, 3]
+  private var atms = [ATM]()
   private var isMapDisplayType = true {
     didSet {
       mapView.isHidden = !isMapDisplayType
       atmCollectionView.isHidden = isMapDisplayType
+      if !isMapDisplayType {
+        atmCollectionView.reloadData()
+      }
     }
   }
 
@@ -115,6 +118,15 @@ final class ViewController: UIViewController {
 
   @objc private func fetchRequest() {
     print("fetch request") //delete
+    NetworkService.getData { [weak self] data in
+      do {
+        let atmResponse = try ATMResponse(data: data)
+        self?.atms = atmResponse.data.atm
+        print("atms loaded, \(self?.atms.count)") //delete
+      } catch {
+        print(error)
+      }
+    }
   }
 
   @objc private func buildingRoute() {
@@ -161,7 +173,7 @@ final class ViewController: UIViewController {
 
 extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
   internal func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-    return points.count
+    return atms.count
   }
 
   internal func collectionView(_ collectionView: UICollectionView,
