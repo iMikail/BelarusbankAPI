@@ -31,7 +31,11 @@ final class ViewController: UIViewController {
 
   // MARK: - Variables
   private let locationManager = CLLocationManager()
-  private var atms = [ATM]()
+  private var atms = [ATM]() {
+    didSet {
+      atms.forEach { showATMInMap($0) }
+    }
+  }
   private var isMapDisplayType = true {
     didSet {
       mapView.isHidden = !isMapDisplayType
@@ -55,6 +59,7 @@ final class ViewController: UIViewController {
 
     return button
   }()
+
   private lazy var segmentedControl: UISegmentedControl = {
     let items = DisplayType.allCases
     let segmentedControl = UISegmentedControl(items: items.map { $0.title })
@@ -73,14 +78,17 @@ final class ViewController: UIViewController {
 
     return segmentedControl
   }()
+
   private lazy var mapView: MKMapView = {
     let map = MKMapView(frame: .zero)
+    map.delegate = self
     map.isHidden = !isMapDisplayType
     map.showsUserLocation = true
     map.setRegion(map.belarusRegion, animated: true)
 
     return map
   }()
+
   private lazy var atmCollectionView: UICollectionView = {
     let layout = UICollectionViewFlowLayout()
     layout.itemSize = CGSize(width: 60, height: 60)
@@ -93,6 +101,7 @@ final class ViewController: UIViewController {
     collectionView.backgroundColor = .gray //delete
     return collectionView
   }()
+
   private lazy var routeButton: UIButton = {
     let button = UIButton()
     var configuration = UIButton.Configuration.filled()
@@ -119,6 +128,7 @@ final class ViewController: UIViewController {
     attemptLocationAccess()
 
     setupViews()
+    setupConstraints()
   }
 
   private func attemptLocationAccess() {
@@ -145,7 +155,21 @@ final class ViewController: UIViewController {
     }
   }
 
+  private func showATMInMap(_ atm: ATM) {
+    let annotation = ATMAnnotation(fromATM: atm)
+    mapView.addAnnotation(annotation)
+  }
+
   @objc private func buildingRoute() {
+    atms.forEach { atm in
+
+      atm.services.forEach {
+        if $0.serviceType == "Прием наличных" {
+          print(atm.atmID)
+        }
+      }
+
+    }
     print("build route") //delete
   }
 
@@ -158,7 +182,9 @@ final class ViewController: UIViewController {
     view.addSubview(mapView)
     view.addSubview(atmCollectionView)
     view.addSubview(routeButton)
+  }
 
+  private func setupConstraints() {
     segmentedControl.snp.makeConstraints { make in
       make.width.equalTo(150.0)
       make.height.equalTo(30.0)
@@ -210,4 +236,7 @@ extension ViewController: CLLocationManagerDelegate {
   internal func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
     print(error.localizedDescription)
   }
+}
+
+extension ViewController: MKMapViewDelegate {
 }
