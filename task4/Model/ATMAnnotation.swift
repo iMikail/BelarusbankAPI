@@ -8,6 +8,8 @@
 import MapKit
 
 final class ATMAnnotation: NSObject, MKAnnotation {
+    var title: String?
+    let id: String
     let installPlace: String
     let currency: String
     let workTime: String
@@ -16,6 +18,8 @@ final class ATMAnnotation: NSObject, MKAnnotation {
     let coordinate: CLLocationCoordinate2D
 
     init(fromATM atm: ATM) {
+        title = "Банкомат"
+        id = atm.id
         installPlace = atm.installPlace
         currency = atm.currency
         workTime = atm.workTime //full?

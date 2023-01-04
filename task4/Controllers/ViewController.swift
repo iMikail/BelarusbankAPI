@@ -33,7 +33,7 @@ final class ViewController: UIViewController {
     private let locationManager = CLLocationManager()
     private var atms = ATMResponse() {
         didSet {
-            atms.forEach { setupATMOnMap($0) }
+            setupATMsOnMap()
         }
     }
     private var isMapDisplayType = true {
@@ -82,6 +82,7 @@ final class ViewController: UIViewController {
     private lazy var mapView: MKMapView = {
         let map = MKMapView(frame: .zero)
         map.delegate = self
+        map.register(ATMAnnotationView.self, forAnnotationViewWithReuseIdentifier: ATMAnnotationView.identifier)
         map.isHidden = !isMapDisplayType
         map.showsUserLocation = true
         map.setRegion(map.belarusRegion, animated: true)
@@ -126,6 +127,7 @@ final class ViewController: UIViewController {
         atmCollectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "cell") //create custom cell
 
         attemptLocationAccess()
+        fetchRequest()
 
         setupViews()
         setupConstraints()
@@ -155,9 +157,16 @@ final class ViewController: UIViewController {
         }
     }
 
-    private func setupATMOnMap(_ atm: ATM) {
-        let annotation = ATMAnnotation(fromATM: atm)
-        mapView.addAnnotation(annotation)
+    private func setupATMsOnMap() {
+        let oldAnnotations = mapView.annotations
+        var newAnnotations = [ATMAnnotation]()
+        atms.forEach { atm in
+            let annotation = ATMAnnotation(fromATM: atm)
+            newAnnotations.append(annotation)
+        }
+
+        mapView.removeAnnotations(oldAnnotations)
+        mapView.addAnnotations(newAnnotations)
     }
 
     @objc private func buildingRoute() {
@@ -234,4 +243,20 @@ extension ViewController: CLLocationManagerDelegate {
 }
 
 extension ViewController: MKMapViewDelegate {
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        guard let annotation = annotation as? ATMAnnotation else { return nil }
+
+        var view: ATMAnnotationView
+        if let dequeuedView = mapView.dequeueReusableAnnotationView(
+            withIdentifier: ATMAnnotationView.identifier) as? ATMAnnotationView {
+            dequeuedView.annotation = annotation
+            view = dequeuedView
+        } else {
+            view = ATMAnnotationView(annotation: annotation, reuseIdentifier: ATMAnnotationView.identifier)
+        }
+        view.atmAnnotation = annotation
+
+        return view
+    }
+
 }
