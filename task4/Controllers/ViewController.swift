@@ -51,6 +51,7 @@ final class ViewController: UIViewController {
         let button = UIButton()
         var configuration = UIButton.Configuration.plain()
         configuration.title = "Обновить"
+        configuration.attributedTitle?.font = UIFont.systemFont(ofSize: 15.0)
         configuration.image = UIImage(systemName: "arrow.triangle.2.circlepath") //add animation
         configuration.imagePadding = 5.0
 
@@ -121,7 +122,7 @@ final class ViewController: UIViewController {
     // MARK: - Functions
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Банкоматы Беларусбанка"
+        title = "Банкоматы"
         view.backgroundColor = .systemBackground
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: refreshButton)
         atmCollectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "cell") //create custom cell
@@ -254,7 +255,18 @@ extension ViewController: MKMapViewDelegate {
         } else {
             view = ATMAnnotationView(annotation: annotation, reuseIdentifier: ATMAnnotationView.identifier)
         }
+
         view.atmAnnotation = annotation
+        view.idHandler = { [weak self] id in
+            guard let self = self  else { return }
+
+            let detailVC = DetailViewController()
+            detailVC.atm = self.atms.first(where: { atm in
+                atm.id == id
+            })
+
+            self.navigationController?.pushViewController(detailVC, animated: true)
+        }
 
         return view
     }

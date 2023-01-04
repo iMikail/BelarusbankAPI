@@ -16,6 +16,8 @@ final class ATMAnnotationView: MKMarkerAnnotationView {
         }
     }
 
+    internal var idHandler: (_ id: String) -> Void = { _ in }
+
     private lazy var detailLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 4
@@ -27,6 +29,14 @@ final class ATMAnnotationView: MKMarkerAnnotationView {
     private lazy var detailButton: UIButton = {
         let button = UIButton(configuration: .plain())
         button.setTitle("Подробнее", for: .normal)
+        let action = UIAction { [weak self] _ in
+            guard let self = self else { return }
+
+            if let atmAnnotation = self.atmAnnotation {
+                self.idHandler(atmAnnotation.id)
+            }
+        }
+        button.addAction(action, for: .touchUpInside)
 
         return button
     }()
@@ -42,14 +52,14 @@ final class ATMAnnotationView: MKMarkerAnnotationView {
         return stackView
     }()
 
-    private lazy var closeButton: UIButton = {
-        let action = UIAction { [weak self] _ in
-            self?.setSelected(false, animated: true)
-        }
-        let button = UIButton(type: .close, primaryAction: action)
-
-        return button
-    }()
+//    private lazy var closeButton: UIButton = {
+//        let action = UIAction { [weak self] _ in
+//            self?.setSelected(false, animated: true)
+//        }
+//        let button = UIButton(type: .close, primaryAction: action)
+//
+//        return button
+//    }()
 
     override init(annotation: MKAnnotation?, reuseIdentifier: String?) {
         super.init(annotation: annotation, reuseIdentifier: reuseIdentifier)

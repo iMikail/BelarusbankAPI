@@ -51,6 +51,32 @@ struct ATM: Codable {
     init(data: Data) throws {
         self = try JSONDecoder().decode(ATM.self, from: data)
     }
+
+    internal func arrayDescriptions() -> [String] {
+        var descriptions = [String]()
+
+        descriptions.append("id банкомата: \(id)")
+        descriptions.append("Область: \(area)")
+        descriptions.append("Тип населённого пункта: \(cityType)")
+        descriptions.append("Название населённого пункта: \(city)")
+        descriptions.append("Тип улицы: \(addressType)")
+        descriptions.append("Название улицы: \(address)")
+        descriptions.append("Дом: \(house)")
+        descriptions.append("Место установки: \(installPlace)")
+        descriptions.append("Режим работы банкомата: \(workTime)")
+        descriptions.append("Координата широты: \(latitude)")
+        descriptions.append("Координата долготы: \(longitude)")
+        descriptions.append("Пояснение места установки: \(installPlaceFull)")
+        let weekTime = workTimeFull.components(separatedBy: ",").joined(separator: "\n")
+        descriptions.append("Режим работы банкомата:\n\(weekTime)")
+        descriptions.append("Тип банкомата: \(atmType)")
+        descriptions.append("Исправность банкомата: \(atmError)")
+        descriptions.append("Выдаваемая валюта: \(currency)")
+        descriptions.append("Наличие купюроприемника: \(cashIn)")
+        descriptions.append("Возможность печати чека: \(atmPrinter)")
+
+        return descriptions
+    }
 }
 
 extension Array where Element == ATMResponse.Element {
