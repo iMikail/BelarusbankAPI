@@ -31,9 +31,9 @@ final class ViewController: UIViewController {
 
     // MARK: - Variables
     private let locationManager = CLLocationManager()
-    private var atms = [ATM]() {
+    private var atms = ATMResponse() {
         didSet {
-            atms.forEach { showATMInMap($0) }
+            atms.forEach { setupATMOnMap($0) }
         }
     }
     private var isMapDisplayType = true {
@@ -146,8 +146,8 @@ final class ViewController: UIViewController {
         //add check Internet connection
         NetworkService.getData { [weak self] data in
             do {
-                let atmResponse = try ATMResponse(data: data)
-                self?.atms = atmResponse.data.atm
+                let atms = try ATMResponse(data: data)
+                self?.atms = atms
                 print("atms loaded, \(self?.atms.count)") //delete
             } catch {
                 print(error)
@@ -155,21 +155,12 @@ final class ViewController: UIViewController {
         }
     }
 
-    private func showATMInMap(_ atm: ATM) {
+    private func setupATMOnMap(_ atm: ATM) {
         let annotation = ATMAnnotation(fromATM: atm)
         mapView.addAnnotation(annotation)
     }
 
     @objc private func buildingRoute() {
-        atms.forEach { atm in
-
-            atm.services.forEach {
-                if $0.serviceType == "Прием наличных" {
-                    print(atm.atmID)
-                }
-            }
-
-        }
         print("build route") //delete
     }
 
@@ -212,7 +203,8 @@ final class ViewController: UIViewController {
     }
 }
 
-extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+// MARK: - Extensions
+extension ViewController: UICollectionViewDataSource {
     internal func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return atms.count
     }
@@ -224,6 +216,9 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
 
         return cell
     }
+}
+
+extension ViewController: UICollectionViewDelegate {
 }
 
 extension ViewController: CLLocationManagerDelegate {

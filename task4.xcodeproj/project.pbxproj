@@ -10,6 +10,7 @@
 		590AA9085723C22FCD5289AA /* Pods_task4.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F7F589BE12D7362054E92066 /* Pods_task4.framework */; };
 		A8726071295DE65F00666DB9 /* MKMapView+Ex.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8726070295DE65F00666DB9 /* MKMapView+Ex.swift */; };
 		A8726074295DFF8A00666DB9 /* ATMAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8726073295DFF8A00666DB9 /* ATMAnnotation.swift */; };
+		A8C2AEBC296567E000E375E5 /* ATM.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8C2AEBB296567E000E375E5 /* ATM.swift */; };
 		A8E5F921295C3C2700B18A0B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8E5F920295C3C2700B18A0B /* AppDelegate.swift */; };
 		A8E5F923295C3C2700B18A0B /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8E5F922295C3C2700B18A0B /* SceneDelegate.swift */; };
 		A8E5F925295C3C2700B18A0B /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8E5F924295C3C2700B18A0B /* ViewController.swift */; };
@@ -17,13 +18,13 @@
 		A8E5F92D295C3C2900B18A0B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A8E5F92B295C3C2900B18A0B /* LaunchScreen.storyboard */; };
 		A8E816E7295C90DB0014A7FD /* ColorSets.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8E816E6295C90DB0014A7FD /* ColorSets.swift */; };
 		A8F2185A295CB63C00447A18 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8F21859295CB63C00447A18 /* NetworkService.swift */; };
-		A8F2185D295CB73300447A18 /* ATMResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8F2185C295CB73300447A18 /* ATMResponse.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		86C81AE4C38043A42C4AB06B /* Pods-task4.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-task4.debug.xcconfig"; path = "Target Support Files/Pods-task4/Pods-task4.debug.xcconfig"; sourceTree = "<group>"; };
 		A8726070295DE65F00666DB9 /* MKMapView+Ex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MKMapView+Ex.swift"; sourceTree = "<group>"; };
 		A8726073295DFF8A00666DB9 /* ATMAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ATMAnnotation.swift; sourceTree = "<group>"; };
+		A8C2AEBB296567E000E375E5 /* ATM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ATM.swift; sourceTree = "<group>"; };
 		A8E5F91D295C3C2700B18A0B /* task4.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = task4.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A8E5F920295C3C2700B18A0B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A8E5F922295C3C2700B18A0B /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -33,7 +34,6 @@
 		A8E5F92E295C3C2900B18A0B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = "task4/Supporting files/Info.plist"; sourceTree = SOURCE_ROOT; };
 		A8E816E6295C90DB0014A7FD /* ColorSets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorSets.swift; sourceTree = "<group>"; };
 		A8F21859295CB63C00447A18 /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
-		A8F2185C295CB73300447A18 /* ATMResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ATMResponse.swift; sourceTree = "<group>"; };
 		E79DBE25C6842647A6282583 /* Pods-task4.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-task4.release.xcconfig"; path = "Target Support Files/Pods-task4/Pods-task4.release.xcconfig"; sourceTree = "<group>"; };
 		F7F589BE12D7362054E92066 /* Pods_task4.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_task4.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -128,7 +128,7 @@
 		A8F2185E295CB73A00447A18 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				A8F2185C295CB73300447A18 /* ATMResponse.swift */,
+				A8C2AEBB296567E000E375E5 /* ATM.swift */,
 				A8726073295DFF8A00666DB9 /* ATMAnnotation.swift */,
 			);
 			path = Model;
@@ -276,7 +276,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A8F2185D295CB73300447A18 /* ATMResponse.swift in Sources */,
+				A8C2AEBC296567E000E375E5 /* ATM.swift in Sources */,
 				A8F2185A295CB63C00447A18 /* NetworkService.swift in Sources */,
 				A8E816E7295C90DB0014A7FD /* ColorSets.swift in Sources */,
 				A8726074295DFF8A00666DB9 /* ATMAnnotation.swift in Sources */,

@@ -11,7 +11,7 @@ final class NetworkService {
 
     private init() {}
 
-    private static let link = "https://belarusbank.by/open-banking/v1.0/atms"
+    private static let link = "https://belarusbank.by/api/atm"
 
     internal static func getData(completion: @escaping (Data) -> Void) {
         guard let url = URL(string: link)
