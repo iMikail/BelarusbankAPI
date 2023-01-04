@@ -6,5 +6,5 @@
 //
 
 enum ColorSets: String {
-  case blackWhite
+    case blackWhite
 }
