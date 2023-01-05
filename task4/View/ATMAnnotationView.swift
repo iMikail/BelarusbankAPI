@@ -20,7 +20,7 @@ final class ATMAnnotationView: MKMarkerAnnotationView {
 
     private lazy var detailLabel: UILabel = {
         let label = UILabel()
-        label.numberOfLines = 4
+        label.numberOfLines = 0
         label.font = UIFont.systemFont(ofSize: 13.0)
 
         return label

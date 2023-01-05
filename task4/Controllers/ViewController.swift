@@ -104,21 +104,6 @@ final class ViewController: UIViewController {
         return collectionView
     }()
 
-    private lazy var routeButton: UIButton = {
-        let button = UIButton()
-        var configuration = UIButton.Configuration.filled()
-        configuration.title = "Построить маршрут"
-        configuration.image = UIImage(systemName: "point.filled.topleft.down.curvedto.point.bottomright.up")
-        configuration.imagePadding = 5.0
-        configuration.imagePlacement = .bottom
-        configuration.titleAlignment = .center
-
-        button.configuration = configuration
-        button.addTarget(self, action: #selector(buildingRoute), for: .touchUpInside)
-
-        return button
-    }()
-
     // MARK: - Functions
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -170,10 +155,6 @@ final class ViewController: UIViewController {
         mapView.addAnnotations(newAnnotations)
     }
 
-    @objc private func buildingRoute() {
-        print("build route") //delete
-    }
-
     @objc private func switchDisplayType() {
         isMapDisplayType = !isMapDisplayType
     }
@@ -182,7 +163,6 @@ final class ViewController: UIViewController {
         view.addSubview(segmentedControl)
         view.addSubview(mapView)
         view.addSubview(atmCollectionView)
-        view.addSubview(routeButton)
     }
 
     private func setupConstraints() {
@@ -193,22 +173,14 @@ final class ViewController: UIViewController {
             make.centerX.equalToSuperview()
         }
 
-        let spacing: CGFloat = 10.0
+        let spacing: CGFloat = 5.0
         mapView.snp.makeConstraints { make in
-            make.leading.trailing.equalTo(view.safeAreaLayoutGuide)
+            make.leading.trailing.bottom.equalTo(view.safeAreaLayoutGuide)
             make.top.equalTo(segmentedControl.snp.bottom).offset(spacing)
-            make.bottom.equalTo(routeButton.snp.top).offset(-spacing)
         }
 
         atmCollectionView.snp.makeConstraints { make in
             make.edges.equalTo(mapView)
-        }
-
-        routeButton.snp.makeConstraints { make in
-            make.width.equalTo(200.0)
-            make.height.equalTo(65.0)
-            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
-            make.centerX.equalToSuperview()
         }
     }
 }
@@ -261,9 +233,8 @@ extension ViewController: MKMapViewDelegate {
             guard let self = self  else { return }
 
             let detailVC = DetailViewController()
-            detailVC.atm = self.atms.first(where: { atm in
-                atm.id == id
-            })
+            detailVC.atm = self.atms.first(where: { $0.id == id })
+            detailVC.userCoordinate = self.locationManager.location?.coordinate
 
             self.navigationController?.pushViewController(detailVC, animated: true)
         }

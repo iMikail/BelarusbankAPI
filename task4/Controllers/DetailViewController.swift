@@ -6,10 +6,12 @@
 //
 
 import UIKit
+import MapKit
 
 final class DetailViewController: UIViewController {
 
     private let reuseIdentifier = "reuseIdentifier"
+    internal var userCoordinate: CLLocationCoordinate2D?
     internal var atm: ATM? {
         didSet {
             if let atm = atm {
@@ -17,7 +19,6 @@ final class DetailViewController: UIViewController {
             }
         }
     }
-
     private var descriptions = [String]()
 
     private lazy var tableView: UITableView = {
@@ -46,13 +47,26 @@ final class DetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
-
         setupSubviews()
         setupConstraints()
     }
 
     @objc private func buildingRoute() {
-        print("build route") //delete
+        guard
+            let userCoordinate = userCoordinate,
+            let atm = atm,
+            let latitude = Double(atm.latitude),
+            let longitude = Double(atm.longitude) else { return }
+
+        let userMapItem = MKMapItem(placemark: MKPlacemark(coordinate: userCoordinate))
+        userMapItem.name = "Моё местоположение"
+
+        let atmCoordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+        let atmMapItem = MKMapItem(placemark: MKPlacemark(coordinate: atmCoordinate))
+        atmMapItem.name = "АТМ"
+
+        MKMapItem.openMaps(with: [userMapItem, atmMapItem],
+                           launchOptions: [MKLaunchOptionsDirectionsModeKey: MKLaunchOptionsDirectionsModeWalking])
     }
 
     private func setupSubviews() {
