@@ -13,6 +13,8 @@
 		A8C2AEBC296567E000E375E5 /* ATM.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8C2AEBB296567E000E375E5 /* ATM.swift */; };
 		A8C2AEBE29659F5B00E375E5 /* ATMAnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8C2AEBD29659F5B00E375E5 /* ATMAnnotationView.swift */; };
 		A8C2AEC12965D05700E375E5 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8C2AEC02965D05700E375E5 /* DetailViewController.swift */; };
+		A8C2AEC329671A3F00E375E5 /* SectionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8C2AEC229671A3F00E375E5 /* SectionHeaderView.swift */; };
+		A8C2AEC529671DFF00E375E5 /* ATMViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8C2AEC429671DFF00E375E5 /* ATMViewCell.swift */; };
 		A8E5F921295C3C2700B18A0B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8E5F920295C3C2700B18A0B /* AppDelegate.swift */; };
 		A8E5F923295C3C2700B18A0B /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8E5F922295C3C2700B18A0B /* SceneDelegate.swift */; };
 		A8E5F925295C3C2700B18A0B /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8E5F924295C3C2700B18A0B /* ViewController.swift */; };
@@ -29,6 +31,8 @@
 		A8C2AEBB296567E000E375E5 /* ATM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ATM.swift; sourceTree = "<group>"; };
 		A8C2AEBD29659F5B00E375E5 /* ATMAnnotationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ATMAnnotationView.swift; sourceTree = "<group>"; };
 		A8C2AEC02965D05700E375E5 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
+		A8C2AEC229671A3F00E375E5 /* SectionHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionHeaderView.swift; sourceTree = "<group>"; };
+		A8C2AEC429671DFF00E375E5 /* ATMViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ATMViewCell.swift; sourceTree = "<group>"; };
 		A8E5F91D295C3C2700B18A0B /* task4.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = task4.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A8E5F920295C3C2700B18A0B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A8E5F922295C3C2700B18A0B /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -74,8 +78,18 @@
 			isa = PBXGroup;
 			children = (
 				A8C2AEBD29659F5B00E375E5 /* ATMAnnotationView.swift */,
+				A8C2AEC629671F9D00E375E5 /* CollectionView */,
 			);
 			path = View;
+			sourceTree = "<group>";
+		};
+		A8C2AEC629671F9D00E375E5 /* CollectionView */ = {
+			isa = PBXGroup;
+			children = (
+				A8C2AEC229671A3F00E375E5 /* SectionHeaderView.swift */,
+				A8C2AEC429671DFF00E375E5 /* ATMViewCell.swift */,
+			);
+			path = CollectionView;
 			sourceTree = "<group>";
 		};
 		A8E5F914295C3C2700B18A0B = {
@@ -290,6 +304,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A8C2AEC329671A3F00E375E5 /* SectionHeaderView.swift in Sources */,
+				A8C2AEC529671DFF00E375E5 /* ATMViewCell.swift in Sources */,
 				A8C2AEBE29659F5B00E375E5 /* ATMAnnotationView.swift in Sources */,
 				A8C2AEBC296567E000E375E5 /* ATM.swift in Sources */,
 				A8F2185A295CB63C00447A18 /* NetworkService.swift in Sources */,

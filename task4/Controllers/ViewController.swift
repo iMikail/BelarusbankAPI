@@ -11,7 +11,7 @@ import MapKit
 
 final class ViewController: UIViewController {
 
-    private enum DisplayType: CaseIterable {
+    private enum DisplayType: Int, CaseIterable {
         case map
         case list
 
@@ -30,12 +30,16 @@ final class ViewController: UIViewController {
     }
 
     // MARK: - Variables
+    private let sectionInsets = UIEdgeInsets(top: 20.0, left: 20.0, bottom: 20.0, right: 20.0)
+    private let itemsPerRow: CGFloat = 3
     private let locationManager = CLLocationManager()
     private var atms = ATMResponse() {
         didSet {
             setupATMsOnMap()
+            sortedAtms = sortAtmsByCities()
         }
     }
+    private var sortedAtms = [ATMResponse]()
     private var isMapDisplayType = true {
         didSet {
             mapView.isHidden = !isMapDisplayType
@@ -64,7 +68,7 @@ final class ViewController: UIViewController {
     private lazy var segmentedControl: UISegmentedControl = {
         let items = DisplayType.allCases
         let segmentedControl = UISegmentedControl(items: items.map { $0.title })
-        segmentedControl.selectedSegmentIndex = 0
+        segmentedControl.selectedSegmentIndex = DisplayType.map.rawValue
 
         segmentedControl.setDividerImage(UIImage(systemName: "rectangle.portrait.lefthalf.inset.filled"),
                                          forLeftSegmentState: .selected,
@@ -93,30 +97,47 @@ final class ViewController: UIViewController {
 
     private lazy var atmCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
-        layout.itemSize = CGSize(width: 60, height: 60)
-
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.isHidden = isMapDisplayType
 
-        collectionView.backgroundColor = .gray //delete
         return collectionView
     }()
 
     // MARK: - Functions
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Банкоматы"
+        title = "Карта Банкоматов"
         view.backgroundColor = .systemBackground
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: refreshButton)
-        atmCollectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "cell") //create custom cell
-
+        atmCollectionView.register(ATMViewCell.self, forCellWithReuseIdentifier: ATMViewCell.identifier)
+        atmCollectionView.register(SectionHeaderView.self,
+                                   forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
+                                   withReuseIdentifier: SectionHeaderView.identifier)
         attemptLocationAccess()
         fetchRequest()
 
         setupViews()
         setupConstraints()
+    }
+
+    private func sortAtmsByCities() -> [ATMResponse] {
+        var atms = atms
+        var sortedAtms = [ATMResponse]()
+
+        while !atms.isEmpty {
+            var array = ATMResponse()
+            let city = atms[0].city
+
+            for atm in atms where atm.city == city {
+                array.append(atm)
+            }
+            atms.removeAll { $0.city == city }
+            sortedAtms.append(array)
+        }
+
+        return sortedAtms.map { $0.sorted { $0.id < $1.id } }
     }
 
     private func attemptLocationAccess() {
@@ -157,6 +178,11 @@ final class ViewController: UIViewController {
 
     @objc private func switchDisplayType() {
         isMapDisplayType = !isMapDisplayType
+        let index = isMapDisplayType ? DisplayType.map.rawValue : DisplayType.list.rawValue
+        segmentedControl.selectedSegmentIndex = index
+        if let title = DisplayType(rawValue: index)?.title {
+            self.title = "\(title) банкоматов"
+        }
     }
 
     private func setupViews() {
@@ -186,23 +212,98 @@ final class ViewController: UIViewController {
 }
 
 // MARK: - Extensions
+// MARK: UICollectionView
 extension ViewController: UICollectionViewDataSource {
+
+    internal func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return sortedAtms.count
+    }
+
     internal func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return atms.count
+        return sortedAtms[section].count
     }
 
     internal func collectionView(_ collectionView: UICollectionView,
                                  cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
-        cell.backgroundColor = .darkGray
+        guard let cell = collectionView.dequeueReusableCell(
+            withReuseIdentifier: ATMViewCell.identifier,
+            for: indexPath) as? ATMViewCell else {
+            return UICollectionViewCell()
+        }
+
+        cell.atm = sortedAtms[indexPath.section][indexPath.row]
 
         return cell
+    }
+
+    internal func collectionView(_ collectionView: UICollectionView,
+                                 viewForSupplementaryElementOfKind kind: String,
+                                 at indexPath: IndexPath) -> UICollectionReusableView {
+        guard let headerView = collectionView.dequeueReusableSupplementaryView(
+            ofKind: kind,
+            withReuseIdentifier: SectionHeaderView.identifier,
+            for: indexPath
+        ) as? SectionHeaderView else {
+            return UICollectionReusableView()
+        }
+
+        headerView.titleLabel.text = sortedAtms[indexPath.section].first?.city
+
+        return headerView
+    }
+
+    internal func collectionView(_ collectionView: UICollectionView,
+                                 layout collectionViewLayout: UICollectionViewLayout,
+                                 referenceSizeForHeaderInSection section: Int) -> CGSize {
+        return CGSize(width: collectionView.frame.width, height: 40.0)
     }
 }
 
 extension ViewController: UICollectionViewDelegate {
+
+    // Открытие аннотации на карте по нажатию на карточку
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let currentId = sortedAtms[indexPath.section][indexPath.row].id
+
+        if let annotation = mapView.annotations.first(where: { annotation in
+            if let atmAnnotation = annotation as? ATMAnnotation {
+                return atmAnnotation.id == currentId
+            } else {
+                return false
+            }
+        }) {
+            switchDisplayType()
+            mapView.selectAnnotation(annotation, animated: true)
+        }
+    }
+
 }
 
+extension ViewController: UICollectionViewDelegateFlowLayout {
+    internal func collectionView(_ collectionView: UICollectionView,
+                                 layout collectionViewLayout: UICollectionViewLayout,
+                                 sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let paddingSpace = sectionInsets.left * (itemsPerRow + 1)
+        let availableWidth = collectionView.frame.width - paddingSpace
+        let itemWidth = availableWidth / itemsPerRow
+
+        return CGSize(width: itemWidth, height: itemWidth)
+    }
+
+    internal func collectionView(_ collectionView: UICollectionView,
+                                 layout collectionViewLayout: UICollectionViewLayout,
+                                 insetForSectionAt section: Int) -> UIEdgeInsets {
+        return sectionInsets
+    }
+
+    internal func collectionView(_ collectionView: UICollectionView,
+                                 layout collectionViewLayout: UICollectionViewLayout,
+                                 minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return sectionInsets.left
+    }
+}
+
+// MARK: CLLocationManager
 extension ViewController: CLLocationManagerDelegate {
     internal func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         if let location = manager.location {
@@ -215,6 +316,7 @@ extension ViewController: CLLocationManagerDelegate {
     }
 }
 
+// MARK: MKMapView
 extension ViewController: MKMapViewDelegate {
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         guard let annotation = annotation as? ATMAnnotation else { return nil }
