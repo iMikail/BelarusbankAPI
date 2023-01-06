@@ -151,16 +151,29 @@ final class ViewController: UIViewController {
         }
     }
 
-    @objc private func fetchRequest() {
-        //add check Internet connection
-        NetworkService.getData { [weak self] data in
-            do {
-                let atms = try ATMResponse(data: data)
-                self?.atms = atms
-                print("atms loaded, \(self?.atms.count)") //delete
-            } catch {
-                print(error)
+    @objc internal func fetchRequest() {
+        guard NetworkMonitor.shared.isConnected else {
+            showNoInternetAlert()
+            return
+        }
+
+        refreshButton.isEnabled = false
+        NetworkService.getData { [weak self] (data, error, enabled) in
+            guard let self = self else { return }
+
+            if let error = error {
+                self.showErrorConnectionAlert(error: error)
             }
+
+            if let data = data {
+                do {
+                    let atms = try ATMResponse(data: data)
+                    self.atms = atms
+                } catch {
+                    print(error)
+                }
+            }
+            self.refreshButton.isEnabled = enabled
         }
     }
 
@@ -180,6 +193,7 @@ final class ViewController: UIViewController {
         isMapDisplayType = !isMapDisplayType
         let index = isMapDisplayType ? DisplayType.map.rawValue : DisplayType.list.rawValue
         segmentedControl.selectedSegmentIndex = index
+
         if let title = DisplayType(rawValue: index)?.title {
             self.title = "\(title) банкоматов"
         }

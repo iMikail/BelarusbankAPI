@@ -13,26 +13,30 @@ final class NetworkService {
 
     private static let link = "https://belarusbank.by/api/atm"
 
-    internal static func getData(completion: @escaping (Data) -> Void) {
-        guard let url = URL(string: link)
-        else {
-            print("urlInvalid")
+    internal static func getData(completion: @escaping (Data?, Error?, Bool) -> Void) {
+        guard let url = URL(string: link) else {
+            let error = URLError(.badURL)
+            completion(nil, error, true)
             return
         }
 
         let session = URLSession.shared
-        session.dataTask(with: URLRequest(url: url)) { (data, _, error) in
+        session.dataTask(with: URLRequest(url: url, timeoutInterval: 30)) { (data, _, error) in
             if let error = error {
-                print(error.localizedDescription)
-                print("noInternetConnection")//?
+                DispatchQueue.main.async {
+                    completion(nil, error, true)
+                }
                 return
             }
+
             if let data = data {
                 DispatchQueue.main.async {
-                    completion(data)
+                    completion(data, nil, true)
                 }
             } else {
-                return
+                DispatchQueue.main.async {
+                    completion(nil, nil, true)
+                }
             }
         }.resume()
     }
