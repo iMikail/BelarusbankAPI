@@ -10,25 +10,6 @@ import SnapKit
 import MapKit
 
 final class ViewController: UIViewController {
-
-    private enum DisplayType: Int, CaseIterable {
-        case map
-        case list
-
-        var title: String {
-            switch self {
-            case .map: return "Карта"
-            case .list: return "Список"
-            }
-        }
-        var image: UIImage? {
-            switch self {
-            case .map: return UIImage(systemName: "map")
-            case .list: return UIImage(systemName: "list.bullet.rectangle")
-            }
-        }
-    }
-
     // MARK: - Properties
     private let sectionInsets = UIEdgeInsets(top: 20.0, left: 20.0, bottom: 20.0, right: 20.0)
     private let itemsPerRow: CGFloat = 3
@@ -56,7 +37,7 @@ final class ViewController: UIViewController {
         var configuration = UIButton.Configuration.plain()
         configuration.title = "Обновить"
         configuration.attributedTitle?.font = UIFont.systemFont(ofSize: 15.0)
-        configuration.image = UIImage(systemName: "arrow.triangle.2.circlepath") //add animation
+        configuration.image = UIImage(systemName: "arrow.triangle.2.circlepath")
         configuration.imagePadding = 5.0
 
         button.configuration = configuration
@@ -161,7 +142,7 @@ final class ViewController: UIViewController {
             return
         }
 
-        refreshButton.isEnabled = false
+        refreshButton.requestingState(true)
         NetworkService.getData { [weak self] (data, error, enabled) in
             guard let self = self else { return }
 
@@ -177,7 +158,7 @@ final class ViewController: UIViewController {
                     print(error)
                 }
             }
-            self.refreshButton.isEnabled = enabled
+            self.refreshButton.requestingState(!enabled)
         }
     }
 
@@ -217,13 +198,10 @@ final class ViewController: UIViewController {
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
             make.centerX.equalToSuperview()
         }
-
-        let spacing: CGFloat = 5.0
         mapView.snp.makeConstraints { make in
             make.leading.trailing.bottom.equalTo(view.safeAreaLayoutGuide)
-            make.top.equalTo(segmentedControl.snp.bottom).offset(spacing)
+            make.top.equalTo(segmentedControl.snp.bottom).offset(5.0)
         }
-
         atmCollectionView.snp.makeConstraints { make in
             make.edges.equalTo(mapView)
         }
@@ -235,7 +213,6 @@ final class ViewController: UIViewController {
                                                 message: "Приложение не работает без доступа к интернету",
                                                 preferredStyle: .alert)
         let action = UIAlertAction(title: "Ок", style: .cancel)
-
         alertController.addAction(action)
 
         present(alertController, animated: true)
@@ -279,7 +256,6 @@ final class ViewController: UIViewController {
 
 // MARK: - Extensions: UICollectionViewDataSource
 extension ViewController: UICollectionViewDataSource {
-
     internal func numberOfSections(in collectionView: UICollectionView) -> Int {
         return sortedAtms.count
     }
@@ -326,8 +302,6 @@ extension ViewController: UICollectionViewDataSource {
 
 // MARK: CollectionViewDelegate
 extension ViewController: UICollectionViewDelegate {
-
-    // Открытие аннотации на карте по нажатию на карточку
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let currentId = sortedAtms[indexPath.section][indexPath.row].id
 
@@ -374,6 +348,7 @@ extension ViewController: UICollectionViewDelegateFlowLayout {
 extension ViewController: CLLocationManagerDelegate {
     internal func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
         if manager.authorizationStatus == .authorizedWhenInUse {
+            locationManager.requestLocation()
             if let location = manager.location {
                 mapView.centerToLocation(location)
             }

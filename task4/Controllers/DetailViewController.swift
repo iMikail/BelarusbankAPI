@@ -5,11 +5,9 @@
 //  Created by Misha Volkov on 4.01.23.
 //
 
-import UIKit
 import MapKit
 
 final class DetailViewController: UIViewController {
-
     // MARK: - Properties
     private let reuseIdentifier = "reuseIdentifier"
     internal var userCoordinate: CLLocationCoordinate2D? {

@@ -22,19 +22,15 @@ final class NetworkService {
 
         let session = URLSession.shared
         session.dataTask(with: URLRequest(url: url, timeoutInterval: 30)) { (data, _, error) in
-            if let error = error {
-                DispatchQueue.main.async {
+            DispatchQueue.main.async {
+                if let error = error {
                     completion(nil, error, true)
+                    return
                 }
-                return
-            }
 
-            if let data = data {
-                DispatchQueue.main.async {
+                if let data = data {
                     completion(data, nil, true)
-                }
-            } else {
-                DispatchQueue.main.async {
+                } else {
                     completion(nil, nil, true)
                 }
             }
