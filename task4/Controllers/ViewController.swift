@@ -149,7 +149,7 @@ final class ViewController: UIViewController {
 
         switch locationManager.authorizationStatus {
         case .notDetermined: locationManager.requestWhenInUseAuthorization()
-        case .denied: break //add go options
+        case .denied: showDeniedAccessAlert()
         default: locationManager.requestLocation()
         }
     }
@@ -256,6 +256,25 @@ final class ViewController: UIViewController {
         present(alertController, animated: true)
     }
 
+    private func showDeniedAccessAlert() {
+        let message = "Без доступа невозможно строить маршруты, перейдите в настройки служб геолокации"
+        let alertController = UIAlertController(title: "Доступ к геолокации запрещён",
+                                                message: message,
+                                                preferredStyle: .alert)
+        let optionAction = UIAlertAction(title: "Настройки", style: .default) { _ in
+            guard let settingUrl = URL(string: UIApplication.openSettingsURLString) else { return }
+
+            if UIApplication.shared.canOpenURL(settingUrl) {
+                UIApplication.shared.open(settingUrl)
+            }
+        }
+        let canselAction = UIAlertAction(title: "Отмена", style: .cancel)
+
+        alertController.addAction(optionAction)
+        alertController.addAction(canselAction)
+
+        present(alertController, animated: true)
+    }
 }
 
 // MARK: - Extensions: UICollectionViewDataSource
@@ -353,6 +372,14 @@ extension ViewController: UICollectionViewDelegateFlowLayout {
 
 // MARK: CLLocationManagerDelegate
 extension ViewController: CLLocationManagerDelegate {
+    internal func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+        if manager.authorizationStatus == .authorizedWhenInUse {
+            if let location = manager.location {
+                mapView.centerToLocation(location)
+            }
+        }
+    }
+
     internal func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         if let location = manager.location {
             mapView.centerToLocation(location)

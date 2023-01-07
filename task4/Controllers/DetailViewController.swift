@@ -12,7 +12,13 @@ final class DetailViewController: UIViewController {
 
     // MARK: - Properties
     private let reuseIdentifier = "reuseIdentifier"
-    internal var userCoordinate: CLLocationCoordinate2D?
+    internal var userCoordinate: CLLocationCoordinate2D? {
+        didSet {
+            if userCoordinate != nil {
+                routeButton.isEnabled = true
+            }
+        }
+    }
     internal var atm: ATM? {
         didSet {
             if let atm = atm {
@@ -43,6 +49,7 @@ final class DetailViewController: UIViewController {
         configuration.titleAlignment = .center
 
         button.configuration = configuration
+        button.isEnabled = false
         button.addTarget(self, action: #selector(buildingRoute), for: .touchUpInside)
 
         return button
