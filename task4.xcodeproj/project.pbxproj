@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		590AA9085723C22FCD5289AA /* Pods_task4.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F7F589BE12D7362054E92066 /* Pods_task4.framework */; };
 		A82F1CEF296870520057BAE7 /* NetworkMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A82F1CEE296870520057BAE7 /* NetworkMonitor.swift */; };
-		A82F1CF1296878220057BAE7 /* ViewController+Ex.swift in Sources */ = {isa = PBXBuildFile; fileRef = A82F1CF0296878210057BAE7 /* ViewController+Ex.swift */; };
 		A8726071295DE65F00666DB9 /* MKMapView+Ex.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8726070295DE65F00666DB9 /* MKMapView+Ex.swift */; };
 		A8726074295DFF8A00666DB9 /* ATMAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8726073295DFF8A00666DB9 /* ATMAnnotation.swift */; };
 		A8C2AEBC296567E000E375E5 /* ATM.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8C2AEBB296567E000E375E5 /* ATM.swift */; };
@@ -22,14 +21,12 @@
 		A8E5F925295C3C2700B18A0B /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8E5F924295C3C2700B18A0B /* ViewController.swift */; };
 		A8E5F92A295C3C2900B18A0B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A8E5F929295C3C2900B18A0B /* Assets.xcassets */; };
 		A8E5F92D295C3C2900B18A0B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A8E5F92B295C3C2900B18A0B /* LaunchScreen.storyboard */; };
-		A8E816E7295C90DB0014A7FD /* ColorSets.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8E816E6295C90DB0014A7FD /* ColorSets.swift */; };
 		A8F2185A295CB63C00447A18 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8F21859295CB63C00447A18 /* NetworkService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		86C81AE4C38043A42C4AB06B /* Pods-task4.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-task4.debug.xcconfig"; path = "Target Support Files/Pods-task4/Pods-task4.debug.xcconfig"; sourceTree = "<group>"; };
 		A82F1CEE296870520057BAE7 /* NetworkMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkMonitor.swift; sourceTree = "<group>"; };
-		A82F1CF0296878210057BAE7 /* ViewController+Ex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewController+Ex.swift"; sourceTree = "<group>"; };
 		A8726070295DE65F00666DB9 /* MKMapView+Ex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MKMapView+Ex.swift"; sourceTree = "<group>"; };
 		A8726073295DFF8A00666DB9 /* ATMAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ATMAnnotation.swift; sourceTree = "<group>"; };
 		A8C2AEBB296567E000E375E5 /* ATM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ATM.swift; sourceTree = "<group>"; };
@@ -44,7 +41,6 @@
 		A8E5F929295C3C2900B18A0B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A8E5F92C295C3C2900B18A0B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A8E5F92E295C3C2900B18A0B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = "task4/Supporting files/Info.plist"; sourceTree = SOURCE_ROOT; };
-		A8E816E6295C90DB0014A7FD /* ColorSets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorSets.swift; sourceTree = "<group>"; };
 		A8F21859295CB63C00447A18 /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
 		E79DBE25C6842647A6282583 /* Pods-task4.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-task4.release.xcconfig"; path = "Target Support Files/Pods-task4/Pods-task4.release.xcconfig"; sourceTree = "<group>"; };
 		F7F589BE12D7362054E92066 /* Pods_task4.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_task4.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -73,7 +69,6 @@
 		A8726072295DE6EA00666DB9 /* Exstensions */ = {
 			isa = PBXGroup;
 			children = (
-				A82F1CF0296878210057BAE7 /* ViewController+Ex.swift */,
 				A8726070295DE65F00666DB9 /* MKMapView+Ex.swift */,
 			);
 			path = Exstensions;
@@ -133,7 +128,6 @@
 			children = (
 				A8E5F920295C3C2700B18A0B /* AppDelegate.swift */,
 				A8E5F922295C3C2700B18A0B /* SceneDelegate.swift */,
-				A8E816E6295C90DB0014A7FD /* ColorSets.swift */,
 				A8E5F929295C3C2900B18A0B /* Assets.xcassets */,
 				A8E5F92B295C3C2900B18A0B /* LaunchScreen.storyboard */,
 				A8E5F92E295C3C2900B18A0B /* Info.plist */,
@@ -315,13 +309,11 @@
 				A8C2AEBE29659F5B00E375E5 /* ATMAnnotationView.swift in Sources */,
 				A8C2AEBC296567E000E375E5 /* ATM.swift in Sources */,
 				A8F2185A295CB63C00447A18 /* NetworkService.swift in Sources */,
-				A8E816E7295C90DB0014A7FD /* ColorSets.swift in Sources */,
 				A8726074295DFF8A00666DB9 /* ATMAnnotation.swift in Sources */,
 				A8E5F925295C3C2700B18A0B /* ViewController.swift in Sources */,
 				A8E5F921295C3C2700B18A0B /* AppDelegate.swift in Sources */,
 				A82F1CEF296870520057BAE7 /* NetworkMonitor.swift in Sources */,
 				A8C2AEC12965D05700E375E5 /* DetailViewController.swift in Sources */,
-				A82F1CF1296878220057BAE7 /* ViewController+Ex.swift in Sources */,
 				A8E5F923295C3C2700B18A0B /* SceneDelegate.swift in Sources */,
 				A8726071295DE65F00666DB9 /* MKMapView+Ex.swift in Sources */,
 			);

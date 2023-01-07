@@ -10,6 +10,7 @@ import MapKit
 
 final class DetailViewController: UIViewController {
 
+    // MARK: - Properties
     private let reuseIdentifier = "reuseIdentifier"
     internal var userCoordinate: CLLocationCoordinate2D?
     internal var atm: ATM? {
@@ -21,10 +22,13 @@ final class DetailViewController: UIViewController {
     }
     private var descriptions = [String]()
 
+    // MARK: - Views
     private lazy var tableView: UITableView = {
         let tableView = UITableView()
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: reuseIdentifier)
         tableView.dataSource = self
+        tableView.separatorColor = .secondaryLabel
+        tableView.separatorInset = UIEdgeInsets.zero
 
         return tableView
     }()
@@ -44,6 +48,7 @@ final class DetailViewController: UIViewController {
         return button
     }()
 
+    // MARK: - Functions
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
@@ -76,7 +81,7 @@ final class DetailViewController: UIViewController {
 
     private func setupConstraints() {
         tableView.snp.makeConstraints { make in
-            make.trailing.top.leading.equalToSuperview()
+            make.trailing.top.leading.equalTo(view.safeAreaLayoutGuide)
             make.bottom.equalTo(routeButton.snp.top).offset(-10.0)
         }
 
@@ -89,6 +94,7 @@ final class DetailViewController: UIViewController {
     }
 }
 
+// MARK: - Extensions
 extension DetailViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return descriptions.count
@@ -96,8 +102,12 @@ extension DetailViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath)
-        cell.textLabel?.numberOfLines = 0
-        cell.textLabel?.text = descriptions[indexPath.row]
+        if let textLabel = cell.textLabel {
+            textLabel.numberOfLines = 0
+            textLabel.text = descriptions[indexPath.row]
+            textLabel.textAlignment = .center
+        }
+        cell.isUserInteractionEnabled = false
 
         return cell
     }

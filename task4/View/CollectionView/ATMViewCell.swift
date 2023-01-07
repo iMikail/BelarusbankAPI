@@ -19,6 +19,7 @@ final class ATMViewCell: UICollectionViewCell {
     private lazy var installPlace: UILabel = createLabel()
     private lazy var workTime: UILabel = createLabel()
     private lazy var currency: UILabel = createLabel()
+
     private lazy var stackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [installPlace, workTime, currency])
         let spacing: CGFloat = 5.0
@@ -26,9 +27,9 @@ final class ATMViewCell: UICollectionViewCell {
         stackView.layoutMargins = UIEdgeInsets(top: spacing, left: spacing, bottom: spacing, right: spacing)
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.axis = .vertical
-        stackView.distribution = .fillEqually
-        stackView.alignment = .center
-        stackView.backgroundColor = .systemMint
+        stackView.distribution = .equalCentering
+        stackView.alignment = .firstBaseline
+        stackView.backgroundColor = .tertiaryLabel
 
         return stackView
     }()
@@ -56,8 +57,7 @@ final class ATMViewCell: UICollectionViewCell {
     private func createLabel() -> UILabel {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 11.0)
-        label.numberOfLines = 3
-        label.textColor = .label
+        label.numberOfLines = 0
 
         return label
     }

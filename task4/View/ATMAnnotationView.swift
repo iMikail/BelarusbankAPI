@@ -10,14 +10,15 @@ import MapKit
 final class ATMAnnotationView: MKMarkerAnnotationView {
     static let identifier = "atm"
 
+    // MARK: - Properties
+    internal var idHandler: (_ id: String) -> Void = { _ in }
     internal var atmAnnotation: ATMAnnotation? {
         didSet {
             setupInfo()
         }
     }
 
-    internal var idHandler: (_ id: String) -> Void = { _ in }
-
+    // MARK: - Views
     private lazy var detailLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 0
@@ -52,22 +53,13 @@ final class ATMAnnotationView: MKMarkerAnnotationView {
         return stackView
     }()
 
-//    private lazy var closeButton: UIButton = {
-//        let action = UIAction { [weak self] _ in
-//            self?.setSelected(false, animated: true)
-//        }
-//        let button = UIButton(type: .close, primaryAction: action)
-//
-//        return button
-//    }()
-
+// MARK: - Funcs
     override init(annotation: MKAnnotation?, reuseIdentifier: String?) {
         super.init(annotation: annotation, reuseIdentifier: reuseIdentifier)
 
         canShowCallout = true
         calloutOffset = CGPoint(x: -5, y: 5)
         detailCalloutAccessoryView = detailView
-        //rightCalloutAccessoryView = closeButton //?
     }
 
     required init?(coder aDecoder: NSCoder) {

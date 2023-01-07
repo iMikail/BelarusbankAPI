@@ -29,7 +29,7 @@ final class ViewController: UIViewController {
         }
     }
 
-    // MARK: - Variables
+    // MARK: - Properties
     private let sectionInsets = UIEdgeInsets(top: 20.0, left: 20.0, bottom: 20.0, right: 20.0)
     private let itemsPerRow: CGFloat = 3
     private let locationManager = CLLocationManager()
@@ -69,16 +69,11 @@ final class ViewController: UIViewController {
         let items = DisplayType.allCases
         let segmentedControl = UISegmentedControl(items: items.map { $0.title })
         segmentedControl.selectedSegmentIndex = DisplayType.map.rawValue
-
-        segmentedControl.setDividerImage(UIImage(systemName: "rectangle.portrait.lefthalf.inset.filled"),
-                                         forLeftSegmentState: .selected,
-                                         rightSegmentState: .normal,
-                                         barMetrics: .default)
-        segmentedControl.setDividerImage(UIImage(systemName: "rectangle.portrait.righthalf.inset.filled"),
-                                         forLeftSegmentState: .normal,
-                                         rightSegmentState: .selected,
-                                         barMetrics: .default)
-        segmentedControl.tintColor = UIColor(named: ColorSets.blackWhite.rawValue)
+        segmentedControl.setDividerImage(UIImage(systemName: "chevron.left.2"), forLeftSegmentState: .selected,
+                                         rightSegmentState: .normal, barMetrics: .default)
+        segmentedControl.setDividerImage(UIImage(systemName: "chevron.right.2"), forLeftSegmentState: .normal,
+                                         rightSegmentState: .selected, barMetrics: .default)
+        segmentedControl.tintColor = .label
         segmentedControl.addTarget(self, action: #selector(switchDisplayType), for: .valueChanged)
 
         return segmentedControl
@@ -105,7 +100,7 @@ final class ViewController: UIViewController {
         return collectionView
     }()
 
-    // MARK: - Functions
+    // MARK: - Overriden funcs
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Карта Банкоматов"
@@ -117,11 +112,19 @@ final class ViewController: UIViewController {
                                    withReuseIdentifier: SectionHeaderView.identifier)
         attemptLocationAccess()
         fetchRequest()
-
         setupViews()
         setupConstraints()
     }
 
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        guard let flowLayout = atmCollectionView.collectionViewLayout as? UICollectionViewFlowLayout else {
+            return
+        }
+        flowLayout.invalidateLayout()
+    }
+
+    // MARK: Private funcs
     private func sortAtmsByCities() -> [ATMResponse] {
         var atms = atms
         var sortedAtms = [ATMResponse]()
@@ -151,7 +154,8 @@ final class ViewController: UIViewController {
         }
     }
 
-    @objc internal func fetchRequest() {
+    // MARK: Action funcs
+    @objc private func fetchRequest() {
         guard NetworkMonitor.shared.isConnected else {
             showNoInternetAlert()
             return
@@ -177,6 +181,17 @@ final class ViewController: UIViewController {
         }
     }
 
+    @objc private func switchDisplayType() {
+        isMapDisplayType = !isMapDisplayType
+        let index = isMapDisplayType ? DisplayType.map.rawValue : DisplayType.list.rawValue
+        segmentedControl.selectedSegmentIndex = index
+
+        if let title = DisplayType(rawValue: index)?.title {
+            self.title = "\(title) банкоматов"
+        }
+    }
+
+    // MARK: Setup funcs
     private func setupATMsOnMap() {
         let oldAnnotations = mapView.annotations
         var newAnnotations = [ATMAnnotation]()
@@ -187,16 +202,6 @@ final class ViewController: UIViewController {
 
         mapView.removeAnnotations(oldAnnotations)
         mapView.addAnnotations(newAnnotations)
-    }
-
-    @objc private func switchDisplayType() {
-        isMapDisplayType = !isMapDisplayType
-        let index = isMapDisplayType ? DisplayType.map.rawValue : DisplayType.list.rawValue
-        segmentedControl.selectedSegmentIndex = index
-
-        if let title = DisplayType(rawValue: index)?.title {
-            self.title = "\(title) банкоматов"
-        }
     }
 
     private func setupViews() {
@@ -223,10 +228,37 @@ final class ViewController: UIViewController {
             make.edges.equalTo(mapView)
         }
     }
+
+    // MARK: AlertController funcs
+    private func showNoInternetAlert() {
+        let alertController = UIAlertController(title: "Отсутствует интернет соединение",
+                                                message: "Приложение не работает без доступа к интернету",
+                                                preferredStyle: .alert)
+        let action = UIAlertAction(title: "Ок", style: .cancel)
+
+        alertController.addAction(action)
+
+        present(alertController, animated: true)
+    }
+
+    private func showErrorConnectionAlert(error: Error) {
+        let alertController = UIAlertController(title: "Ошибка сети",
+                                                message: error.localizedDescription,
+                                                preferredStyle: .alert)
+        let repeatAction = UIAlertAction(title: "Повторить ещё раз", style: .default) { [weak self] _ in
+            self?.fetchRequest()
+        }
+        let canselAction = UIAlertAction(title: "Закрыть", style: .cancel)
+
+        alertController.addAction(repeatAction)
+        alertController.addAction(canselAction)
+
+        present(alertController, animated: true)
+    }
+
 }
 
-// MARK: - Extensions
-// MARK: UICollectionView
+// MARK: - Extensions: UICollectionViewDataSource
 extension ViewController: UICollectionViewDataSource {
 
     internal func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -273,6 +305,7 @@ extension ViewController: UICollectionViewDataSource {
     }
 }
 
+// MARK: CollectionViewDelegate
 extension ViewController: UICollectionViewDelegate {
 
     // Открытие аннотации на карте по нажатию на карточку
@@ -293,6 +326,7 @@ extension ViewController: UICollectionViewDelegate {
 
 }
 
+// MARK: UICollectionViewDelegateFlowLayout
 extension ViewController: UICollectionViewDelegateFlowLayout {
     internal func collectionView(_ collectionView: UICollectionView,
                                  layout collectionViewLayout: UICollectionViewLayout,
@@ -317,7 +351,7 @@ extension ViewController: UICollectionViewDelegateFlowLayout {
     }
 }
 
-// MARK: CLLocationManager
+// MARK: CLLocationManagerDelegate
 extension ViewController: CLLocationManagerDelegate {
     internal func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         if let location = manager.location {
@@ -330,7 +364,7 @@ extension ViewController: CLLocationManagerDelegate {
     }
 }
 
-// MARK: MKMapView
+// MARK: MKMapViewDelegate
 extension ViewController: MKMapViewDelegate {
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         guard let annotation = annotation as? ATMAnnotation else { return nil }
@@ -357,5 +391,4 @@ extension ViewController: MKMapViewDelegate {
 
         return view
     }
-
 }

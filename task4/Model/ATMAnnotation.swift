@@ -14,7 +14,6 @@ final class ATMAnnotation: NSObject, MKAnnotation {
     let currency: String
     let workTime: String
     let cashIn: String
-
     let coordinate: CLLocationCoordinate2D
 
     init(fromATM atm: ATM) {
@@ -22,7 +21,7 @@ final class ATMAnnotation: NSObject, MKAnnotation {
         id = atm.id
         installPlace = atm.installPlace
         currency = atm.currency
-        workTime = atm.workTime //full?
+        workTime = atm.workTime
         cashIn = atm.cashIn
         if let latitude = Double(atm.latitude),
            let longitude = Double(atm.longitude) {
