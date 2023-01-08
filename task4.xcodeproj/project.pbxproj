@@ -11,6 +11,7 @@
 		A82F1CEF296870520057BAE7 /* NetworkMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A82F1CEE296870520057BAE7 /* NetworkMonitor.swift */; };
 		A8726071295DE65F00666DB9 /* MKMapView+Ex.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8726070295DE65F00666DB9 /* MKMapView+Ex.swift */; };
 		A8726074295DFF8A00666DB9 /* ATMAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8726073295DFF8A00666DB9 /* ATMAnnotation.swift */; };
+		A87917B0296AA4B300B45435 /* ViewController+Ex.swift in Sources */ = {isa = PBXBuildFile; fileRef = A87917AF296AA4B300B45435 /* ViewController+Ex.swift */; };
 		A8B5F3982969C83A00D097C4 /* DisplayType.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8B5F3972969C83A00D097C4 /* DisplayType.swift */; };
 		A8B5F39A2969CFC200D097C4 /* UIButton+Ex.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8B5F3992969CFC200D097C4 /* UIButton+Ex.swift */; };
 		A8C2AEBC296567E000E375E5 /* ATM.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8C2AEBB296567E000E375E5 /* ATM.swift */; };
@@ -31,6 +32,7 @@
 		A82F1CEE296870520057BAE7 /* NetworkMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkMonitor.swift; sourceTree = "<group>"; };
 		A8726070295DE65F00666DB9 /* MKMapView+Ex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MKMapView+Ex.swift"; sourceTree = "<group>"; };
 		A8726073295DFF8A00666DB9 /* ATMAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ATMAnnotation.swift; sourceTree = "<group>"; };
+		A87917AF296AA4B300B45435 /* ViewController+Ex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewController+Ex.swift"; sourceTree = "<group>"; };
 		A8B5F3972969C83A00D097C4 /* DisplayType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayType.swift; sourceTree = "<group>"; };
 		A8B5F3992969CFC200D097C4 /* UIButton+Ex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIButton+Ex.swift"; sourceTree = "<group>"; };
 		A8C2AEBB296567E000E375E5 /* ATM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ATM.swift; sourceTree = "<group>"; };
@@ -75,6 +77,7 @@
 			children = (
 				A8726070295DE65F00666DB9 /* MKMapView+Ex.swift */,
 				A8B5F3992969CFC200D097C4 /* UIButton+Ex.swift */,
+				A87917AF296AA4B300B45435 /* ViewController+Ex.swift */,
 			);
 			path = Exstensions;
 			sourceTree = "<group>";
@@ -313,6 +316,7 @@
 				A8C2AEC329671A3F00E375E5 /* SectionHeaderView.swift in Sources */,
 				A8C2AEC529671DFF00E375E5 /* ATMViewCell.swift in Sources */,
 				A8C2AEBE29659F5B00E375E5 /* ATMAnnotationView.swift in Sources */,
+				A87917B0296AA4B300B45435 /* ViewController+Ex.swift in Sources */,
 				A8C2AEBC296567E000E375E5 /* ATM.swift in Sources */,
 				A8F2185A295CB63C00447A18 /* NetworkService.swift in Sources */,
 				A8726074295DFF8A00666DB9 /* ATMAnnotation.swift in Sources */,

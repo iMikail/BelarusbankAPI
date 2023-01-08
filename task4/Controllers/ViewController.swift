@@ -11,8 +11,8 @@ import MapKit
 
 final class ViewController: UIViewController {
     // MARK: - Properties
-    private let sectionInsets = UIEdgeInsets(top: 20.0, left: 20.0, bottom: 20.0, right: 20.0)
-    private let itemsPerRow: CGFloat = 3
+    internal let sectionInsets = UIEdgeInsets(top: 20.0, left: 20.0, bottom: 20.0, right: 20.0)
+    internal let itemsPerRow: CGFloat = 3
     private let locationManager = CLLocationManager()
     private var atms = ATMResponse() {
         didSet {
@@ -319,31 +319,6 @@ extension ViewController: UICollectionViewDelegate {
 
 }
 
-// MARK: UICollectionViewDelegateFlowLayout
-extension ViewController: UICollectionViewDelegateFlowLayout {
-    internal func collectionView(_ collectionView: UICollectionView,
-                                 layout collectionViewLayout: UICollectionViewLayout,
-                                 sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let paddingSpace = sectionInsets.left * (itemsPerRow + 1)
-        let availableWidth = collectionView.frame.width - paddingSpace
-        let itemWidth = availableWidth / itemsPerRow
-
-        return CGSize(width: itemWidth, height: itemWidth)
-    }
-
-    internal func collectionView(_ collectionView: UICollectionView,
-                                 layout collectionViewLayout: UICollectionViewLayout,
-                                 insetForSectionAt section: Int) -> UIEdgeInsets {
-        return sectionInsets
-    }
-
-    internal func collectionView(_ collectionView: UICollectionView,
-                                 layout collectionViewLayout: UICollectionViewLayout,
-                                 minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return sectionInsets.left
-    }
-}
-
 // MARK: CLLocationManagerDelegate
 extension ViewController: CLLocationManagerDelegate {
     internal func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
@@ -379,18 +354,20 @@ extension ViewController: MKMapViewDelegate {
         } else {
             view = ATMAnnotationView(annotation: annotation, reuseIdentifier: ATMAnnotationView.identifier)
         }
-
+        view.delegate = self
         view.atmAnnotation = annotation
-        view.idHandler = { [weak self] id in
-            guard let self = self  else { return }
-
-            let detailVC = DetailViewController()
-            detailVC.atm = self.atms.first(where: { $0.id == id })
-            detailVC.userCoordinate = self.locationManager.location?.coordinate
-
-            self.navigationController?.pushViewController(detailVC, animated: true)
-        }
 
         return view
+    }
+}
+
+// MARK: ATMViewCellDelegate
+extension ViewController: ATMViewCellDelegate {
+    func fetchMoreInfo(forAtmId id: String) {
+        let detailVC = DetailViewController()
+        detailVC.atm = self.atms.first(where: { $0.id == id })
+        detailVC.userCoordinate = self.locationManager.location?.coordinate
+
+        navigationController?.pushViewController(detailVC, animated: true)
     }
 }

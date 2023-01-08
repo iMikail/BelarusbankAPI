@@ -7,16 +7,20 @@
 
 import MapKit
 
+protocol ATMViewCellDelegate: AnyObject {
+    func fetchMoreInfo(forAtmId id: String)
+}
+
 final class ATMAnnotationView: MKMarkerAnnotationView {
     static let identifier = "atm"
 
     // MARK: - Properties
-    internal var idHandler: (_ id: String) -> Void = { _ in }
     internal var atmAnnotation: ATMAnnotation? {
         didSet {
             setupInfo()
         }
     }
+    weak var delegate: ATMViewCellDelegate?
 
     // MARK: - Views
     private lazy var detailLabel: UILabel = {
@@ -34,7 +38,7 @@ final class ATMAnnotationView: MKMarkerAnnotationView {
             guard let self = self else { return }
 
             if let atmAnnotation = self.atmAnnotation {
-                self.idHandler(atmAnnotation.id)
+                self.delegate?.fetchMoreInfo(forAtmId: atmAnnotation.id)
             }
         }
         button.addAction(action, for: .touchUpInside)
@@ -74,5 +78,4 @@ final class ATMAnnotationView: MKMarkerAnnotationView {
             detailLabel.text = "\(atmAnnotation.installPlace)\n\(workTime)\n\(currency)\n\(cashIn)"
         }
     }
-
 }
