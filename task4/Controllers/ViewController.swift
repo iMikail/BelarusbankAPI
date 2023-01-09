@@ -14,13 +14,7 @@ final class ViewController: UIViewController {
     internal let sectionInsets = UIEdgeInsets(top: 20.0, left: 20.0, bottom: 20.0, right: 20.0)
     internal let itemsPerRow: CGFloat = 3
     private let locationManager = CLLocationManager()
-    private var atms = ATMResponse() {
-        didSet {
-            setupATMsOnMap()
-            sortedAtms = sortAtmsByCities()
-        }
-    }
-    private var sortedAtms = [ATMResponse]()
+    private let bankManager = BankManager()
     private var isMapDisplayType = true {
         didSet {
             mapView.isHidden = !isMapDisplayType
@@ -74,7 +68,7 @@ final class ViewController: UIViewController {
     private lazy var atmCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collectionView.dataSource = self
+        collectionView.dataSource = bankManager
         collectionView.delegate = self
         collectionView.isHidden = isMapDisplayType
 
@@ -91,6 +85,7 @@ final class ViewController: UIViewController {
         atmCollectionView.register(SectionHeaderView.self,
                                    forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
                                    withReuseIdentifier: SectionHeaderView.identifier)
+        bankManager.delegate = self
         attemptLocationAccess()
         fetchRequest()
         setupViews()
@@ -106,24 +101,6 @@ final class ViewController: UIViewController {
     }
 
     // MARK: Private funcs
-    private func sortAtmsByCities() -> [ATMResponse] {
-        var atms = atms
-        var sortedAtms = [ATMResponse]()
-
-        while !atms.isEmpty {
-            var array = ATMResponse()
-            let city = atms[0].city
-
-            for atm in atms where atm.city == city {
-                array.append(atm)
-            }
-            atms.removeAll { $0.city == city }
-            sortedAtms.append(array)
-        }
-
-        return sortedAtms.map { $0.sorted { $0.id < $1.id } }
-    }
-
     private func attemptLocationAccess() {
         locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
         locationManager.delegate = self
@@ -151,12 +128,7 @@ final class ViewController: UIViewController {
             }
 
             if let data = data {
-                do {
-                    let atms = try ATMResponse(data: data)
-                    self.atms = atms
-                } catch {
-                    print(error)
-                }
+                self.bankManager.updateAtms(fromData: data)
             }
             self.refreshButton.requestingState(!enabled)
         }
@@ -176,7 +148,7 @@ final class ViewController: UIViewController {
     private func setupATMsOnMap() {
         let oldAnnotations = mapView.annotations
         var newAnnotations = [ATMAnnotation]()
-        atms.forEach { atm in
+            bankManager.atms.forEach { atm in
             let annotation = ATMAnnotation(fromATM: atm)
             newAnnotations.append(annotation)
         }
@@ -254,56 +226,10 @@ final class ViewController: UIViewController {
     }
 }
 
-// MARK: - Extensions: UICollectionViewDataSource
-extension ViewController: UICollectionViewDataSource {
-    internal func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return sortedAtms.count
-    }
-
-    internal func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return sortedAtms[section].count
-    }
-
-    internal func collectionView(_ collectionView: UICollectionView,
-                                 cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(
-            withReuseIdentifier: ATMViewCell.identifier,
-            for: indexPath) as? ATMViewCell else {
-            return UICollectionViewCell()
-        }
-
-        cell.atm = sortedAtms[indexPath.section][indexPath.row]
-
-        return cell
-    }
-
-    internal func collectionView(_ collectionView: UICollectionView,
-                                 viewForSupplementaryElementOfKind kind: String,
-                                 at indexPath: IndexPath) -> UICollectionReusableView {
-        guard let headerView = collectionView.dequeueReusableSupplementaryView(
-            ofKind: kind,
-            withReuseIdentifier: SectionHeaderView.identifier,
-            for: indexPath
-        ) as? SectionHeaderView else {
-            return UICollectionReusableView()
-        }
-
-        headerView.titleLabel.text = sortedAtms[indexPath.section].first?.city
-
-        return headerView
-    }
-
-    internal func collectionView(_ collectionView: UICollectionView,
-                                 layout collectionViewLayout: UICollectionViewLayout,
-                                 referenceSizeForHeaderInSection section: Int) -> CGSize {
-        return CGSize(width: collectionView.frame.width, height: 40.0)
-    }
-}
-
-// MARK: CollectionViewDelegate
+// MARK: - Extensions: CollectionViewDelegate
 extension ViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let currentId = sortedAtms[indexPath.section][indexPath.row].id
+        let currentId = bankManager.sortedAtms[indexPath.section][indexPath.row].id
 
         if let annotation = mapView.annotations.first(where: { annotation in
             if let atmAnnotation = annotation as? ATMAnnotation {
@@ -365,9 +291,16 @@ extension ViewController: MKMapViewDelegate {
 extension ViewController: ATMViewCellDelegate {
     func fetchMoreInfo(forAtmId id: String) {
         let detailVC = DetailViewController()
-        detailVC.atm = self.atms.first(where: { $0.id == id })
-        detailVC.userCoordinate = self.locationManager.location?.coordinate
+        detailVC.atm = bankManager.atms.first(where: { $0.id == id })
+        detailVC.userCoordinate = locationManager.location?.coordinate
 
         navigationController?.pushViewController(detailVC, animated: true)
+    }
+}
+
+// MARK: BankManagerDelegate
+extension ViewController: BankManagerDelegate {
+    func atmsDidUpdate() {
+        setupATMsOnMap()
     }
 }
