@@ -81,7 +81,7 @@ final class ViewController: UIViewController {
         title = "Карта Банкоматов"
         view.backgroundColor = .systemBackground
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: refreshButton)
-        atmCollectionView.register(ATMViewCell.self, forCellWithReuseIdentifier: ATMViewCell.identifier)
+        atmCollectionView.register(ElementViewCell.self, forCellWithReuseIdentifier: ElementViewCell.identifier)
         atmCollectionView.register(SectionHeaderView.self,
                                    forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
                                    withReuseIdentifier: SectionHeaderView.identifier)
@@ -120,7 +120,7 @@ final class ViewController: UIViewController {
         }
 
         refreshButton.requestingState(true)
-        NetworkService.getData { [weak self] (data, error, enabled) in
+        NetworkService.getData(forBankElement: .atm) { [weak self] (data, error) in
             guard let self = self else { return }
 
             if let error = error {
@@ -128,9 +128,9 @@ final class ViewController: UIViewController {
             }
 
             if let data = data {
-                self.bankManager.updateAtms(fromData: data)
+                self.bankManager.updateElements([.atm], fromData: data)
             }
-            self.refreshButton.requestingState(!enabled)
+            self.refreshButton.requestingState(false)
         }
     }
 
@@ -300,6 +300,14 @@ extension ViewController: ATMViewCellDelegate {
 
 // MARK: BankManagerDelegate
 extension ViewController: BankManagerDelegate {
+    func infoboxDidUpdate() {
+
+    }
+
+    func filialsDidUpdate() {
+
+    }
+
     func atmsDidUpdate() {
         setupATMsOnMap()
     }

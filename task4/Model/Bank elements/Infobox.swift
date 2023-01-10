@@ -9,7 +9,7 @@ import Foundation
 
 typealias InfoboxResponse = [Infobox]
 
-struct Infobox: Codable {
+struct Infobox: Codable, ElementResponse {
     let infoID: Int
     let area: String
     let cityType: String
@@ -32,6 +32,9 @@ struct Infobox: Codable {
     let regionPlatej: String
     let popolneniePlatej: String
     let infStatus: String
+
+    var id: String { return String(infoID) }
+    var elementType: BankElements { return .infobox }
 
     enum CodingKeys: String, CodingKey {
         case infoID = "info_id"

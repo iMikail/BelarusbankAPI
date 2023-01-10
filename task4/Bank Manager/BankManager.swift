@@ -9,21 +9,54 @@ import UIKit
 
 protocol BankManagerDelegate: AnyObject {
     func atmsDidUpdate()
+    func infoboxDidUpdate()
+    func filialsDidUpdate()
 }
 
 final class BankManager: NSObject {
+    // MARK: - Properties
     weak var delegate: BankManagerDelegate?
-    internal var atms = ATMResponse() {
-        didSet {
-            delegate?.atmsDidUpdate()
-            sortedAtms = sortAtmsByCities()
-        }
-    }
+    internal var atms = ATMResponse()
+    internal var infoboxes = InfoboxResponse()
+    internal var filials = FilialResponse()
+    private var allBankElements: [ElementResponse] { return atms + infoboxes + filials }
+
     internal var sortedAtms = [ATMResponse]()
 
-    internal func updateAtms(fromData data: Data) {
+    // MARK: - Functions
+    internal func updateElements(_ elements: [BankElements], fromData data: Data) {
+        for element in elements {
+            switch element {
+            case .atm: updateAtms(fromData: data)
+            case .infobox: updateInfobox(fromData: data)
+            case .filial: updateFillials(fromData: data)
+            }
+        }
+    }
+
+    private func updateAtms(fromData data: Data) {
         do {
             atms = try ATMResponse(data: data)
+            delegate?.atmsDidUpdate()
+            sortedAtms = sortAtmsByCities()
+        } catch let error {
+            print(error.localizedDescription)
+        }
+    }
+
+    private func updateInfobox(fromData data: Data) {
+        do {
+            infoboxes = try InfoboxResponse(data: data)
+            delegate?.infoboxDidUpdate()
+        } catch let error {
+            print(error.localizedDescription)
+        }
+    }
+
+    private func updateFillials(fromData data: Data) {
+        do {
+            filials = try FilialResponse(data: data)
+            delegate?.filialsDidUpdate()
         } catch let error {
             print(error.localizedDescription)
         }
@@ -50,46 +83,46 @@ final class BankManager: NSObject {
 
 // MARK: - UICollectionViewDataSource
 extension BankManager: UICollectionViewDataSource {
-    internal func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return sortedAtms.count
-    }
+//    internal func numberOfSections(in collectionView: UICollectionView) -> Int {
+//        return sortedAtms.count
+//    }
 
     internal func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return sortedAtms[section].count
+        return allBankElements.count
     }
 
     internal func collectionView(_ collectionView: UICollectionView,
                                  cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(
-            withReuseIdentifier: ATMViewCell.identifier,
-            for: indexPath) as? ATMViewCell else {
+            withReuseIdentifier: ElementViewCell.identifier,
+            for: indexPath) as? ElementViewCell else {
             return UICollectionViewCell()
         }
 
-        cell.atm = sortedAtms[indexPath.section][indexPath.row]
+        cell.bankElement = allBankElements[indexPath.row]
 
         return cell
     }
 
-    internal func collectionView(_ collectionView: UICollectionView,
-                                 viewForSupplementaryElementOfKind kind: String,
-                                 at indexPath: IndexPath) -> UICollectionReusableView {
-        guard let headerView = collectionView.dequeueReusableSupplementaryView(
-            ofKind: kind,
-            withReuseIdentifier: SectionHeaderView.identifier,
-            for: indexPath
-        ) as? SectionHeaderView else {
-            return UICollectionReusableView()
-        }
-
-        headerView.titleLabel.text = sortedAtms[indexPath.section].first?.city
-
-        return headerView
-    }
-
-    internal func collectionView(_ collectionView: UICollectionView,
-                                 layout collectionViewLayout: UICollectionViewLayout,
-                                 referenceSizeForHeaderInSection section: Int) -> CGSize {
-        return CGSize(width: collectionView.frame.width, height: 40.0)
-    }
+//    internal func collectionView(_ collectionView: UICollectionView,
+//                                 viewForSupplementaryElementOfKind kind: String,
+//                                 at indexPath: IndexPath) -> UICollectionReusableView {
+//        guard let headerView = collectionView.dequeueReusableSupplementaryView(
+//            ofKind: kind,
+//            withReuseIdentifier: SectionHeaderView.identifier,
+//            for: indexPath
+//        ) as? SectionHeaderView else {
+//            return UICollectionReusableView()
+//        }
+//
+//        headerView.titleLabel.text = sortedAtms[indexPath.section].first?.city
+//
+//        return headerView
+//    }
+//
+//    internal func collectionView(_ collectionView: UICollectionView,
+//                                 layout collectionViewLayout: UICollectionViewLayout,
+//                                 referenceSizeForHeaderInSection section: Int) -> CGSize {
+//        return CGSize(width: collectionView.frame.width, height: 40.0)
+//    }
 }

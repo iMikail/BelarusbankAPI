@@ -9,7 +9,7 @@ import Foundation
 
 typealias FilialResponse = [Filial]
 
-struct Filial: Codable {
+struct Filial: Codable, ElementResponse {
     let filialId: String
     let sapId: String
     let filialName: String
@@ -67,6 +67,12 @@ struct Filial: Codable {
     let filialNum: String
     let cbuNum: String
     let otdNum: String
+
+    var id: String { return filialId }
+    var installPlace: String { return streetType + " " + street + ", " + homeNumber }
+    var workTime: String { return infoWorktime }
+    var currency: String { return "" }
+    var elementType: BankElements { return .filial }
 
     enum CodingKeys: String, CodingKey {
         case filialId = "filial_id"

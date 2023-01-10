@@ -7,10 +7,10 @@
 
 import UIKit
 
-final class ATMViewCell: UICollectionViewCell {
+final class ElementViewCell: UICollectionViewCell {
     static let identifier = "atmViewCell"
 
-    internal var atm: ATM? {
+    internal var bankElement: ElementResponse? {
         didSet {
             setupInfo()
         }
@@ -47,11 +47,11 @@ final class ATMViewCell: UICollectionViewCell {
     }
 
     private func setupInfo() {
-        guard let atm = atm else { return }
+        guard let bankElement = bankElement else { return }
 
-        installPlace.text = "\(atm.installPlace)"
-        workTime.text = "Режим работы: \(atm.workTime)"
-        currency.text = "Валюта: \(atm.currency)"
+        installPlace.text = "\(bankElement.installPlace)"
+        workTime.text = "Режим работы: \(bankElement.workTime)"
+        currency.text = "Валюта: \(bankElement.currency)"
     }
 
     private func createLabel() -> UILabel {

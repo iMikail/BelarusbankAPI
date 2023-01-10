@@ -9,7 +9,7 @@ import Foundation
 
 typealias ATMResponse = [ATM]
 
-struct ATM: Codable {
+struct ATM: Codable, ElementResponse {
     let id: String
     let area: String
     let cityType: String
@@ -28,6 +28,8 @@ struct ATM: Codable {
     let currency: String
     let cashIn: String
     let atmPrinter: String
+
+    var elementType: BankElements { return .atm }
 
     enum CodingKeys: String, CodingKey {
         case id, area

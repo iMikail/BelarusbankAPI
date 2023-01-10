@@ -11,12 +11,11 @@ final class NetworkService {
 
     private init() {}
 
-    private static let link = "https://belarusbank.by/api/atm"
-
-    internal static func getData(completion: @escaping (Data?, Error?, Bool) -> Void) {
-        guard let url = URL(string: link) else {
+    internal static func getData(forBankElement element: BankElements,
+                                 completion: @escaping (Data?, Error?) -> Void) {
+        guard let url = URL(string: element.apiLink) else {
             let error = URLError(.badURL)
-            completion(nil, error, true)
+            completion(nil, error)
             return
         }
 
@@ -24,14 +23,14 @@ final class NetworkService {
         session.dataTask(with: URLRequest(url: url, timeoutInterval: 30)) { (data, _, error) in
             DispatchQueue.main.async {
                 if let error = error {
-                    completion(nil, error, true)
+                    completion(nil, error)
                     return
                 }
 
                 if let data = data {
-                    completion(data, nil, true)
+                    completion(data, nil)
                 } else {
-                    completion(nil, nil, true)
+                    completion(nil, nil)
                 }
             }
         }.resume()
