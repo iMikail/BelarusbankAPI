@@ -9,7 +9,7 @@ import Foundation
 
 typealias FilialResponse = [Filial]
 
-struct Filial: Codable, ElementResponse {
+struct Filial: Codable {
     let filialId: String
     let sapId: String
     let filialName: String
@@ -67,13 +67,6 @@ struct Filial: Codable, ElementResponse {
     let filialNum: String
     let cbuNum: String
     let otdNum: String
-
-    var id: String { return filialId }
-    var installPlace: String { return streetType + " " + street + ", " + homeNumber }
-    var workTime: String { return infoWorktime }
-    var currency: String { return "" }
-    var cashIn: String { return "" }
-    var elementType: BankElements { return .filial }
 
     enum CodingKeys: String, CodingKey {
         case filialId = "filial_id"
@@ -228,8 +221,23 @@ struct Filial: Codable, ElementResponse {
     }
 }
 
-extension Array where Element == FilialResponse.Element {
-    init(data: Data) throws {
-        self = try JSONDecoder().decode(FilialResponse.self, from: data)
+extension Filial: ElementDescription {
+    var id: String { return filialId }
+    var installPlace: String { return streetType + " " + street + ", " + homeNumber }
+    var workTime: String { return infoWorktime }
+    var currency: String { return "" }
+    var cashIn: String { return "" }
+    var elementType: BankElements { return .filial }
+
+    internal func arrayDescriptions() -> [String] {
+        var arrayDescriprions = [String]()
+
+        Mirror(reflecting: self).children.forEach { child in
+            if let property = child.label {
+                arrayDescriprions.append("\(property): \(child.value)")
+            }
+        }
+
+        return arrayDescriprions
     }
 }

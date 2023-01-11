@@ -17,10 +17,11 @@ final class DetailViewController: UIViewController {
             }
         }
     }
-    internal var atm: ATM? {
+    
+    internal var element: ElementDescription? {
         didSet {
-            if let atm = atm {
-                descriptions = atm.arrayDescriptions()
+            if let element = element {
+                descriptions = element.arrayDescriptions()
             }
         }
     }
@@ -64,16 +65,16 @@ final class DetailViewController: UIViewController {
     @objc private func buildingRoute() {
         guard
             let userCoordinate = userCoordinate,
-            let atm = atm,
-            let latitude = Double(atm.latitude),
-            let longitude = Double(atm.longitude) else { return }
+            let element = element,
+            let latitude = Double(element.latitude),
+            let longitude = Double(element.longitude) else { return }
 
         let userMapItem = MKMapItem(placemark: MKPlacemark(coordinate: userCoordinate))
         userMapItem.name = "Моё местоположение"
 
         let atmCoordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
         let atmMapItem = MKMapItem(placemark: MKPlacemark(coordinate: atmCoordinate))
-        atmMapItem.name = "АТМ"
+        atmMapItem.name = element.elementType.elementName
 
         MKMapItem.openMaps(with: [userMapItem, atmMapItem],
                            launchOptions: [MKLaunchOptionsDirectionsModeKey: MKLaunchOptionsDirectionsModeWalking])

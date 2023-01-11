@@ -256,7 +256,7 @@ extension ViewController: UICollectionViewDelegate {
 
         if let annotation = mapView.annotations.first(where: { annotation in
             if let atmAnnotation = annotation as? ElementAnnotation {
-                return atmAnnotation.id == currentId
+                return atmAnnotation.id == currentId//+type
             } else {
                 return false
             }
@@ -314,15 +314,8 @@ extension ViewController: MKMapViewDelegate {
 extension ViewController: ATMViewCellDelegate {
     func fetchMoreInfoForElement(_ type: BankElements, id: String) {
         let detailVC = DetailViewController()
-        switch type {
-        case .atm:
-            detailVC.atm = bankManager.atms.first(where: { $0.id == id })
-            detailVC.userCoordinate = locationManager.location?.coordinate
-        case .infobox:
-            break
-        case .filial:
-            break
-        }
+        detailVC.userCoordinate = locationManager.location?.coordinate
+        detailVC.element = bankManager.fetchElement(type, id: id)
 
         navigationController?.pushViewController(detailVC, animated: true)
     }

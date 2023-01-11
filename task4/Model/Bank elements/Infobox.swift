@@ -9,7 +9,7 @@ import Foundation
 
 typealias InfoboxResponse = [Infobox]
 
-struct Infobox: Codable, ElementResponse {
+struct Infobox: Codable {
     let infoID: Int
     let area: String
     let cityType: String
@@ -32,10 +32,6 @@ struct Infobox: Codable, ElementResponse {
     let regionPlatej: String
     let popolneniePlatej: String
     let infStatus: String
-
-    var id: String { return String(infoID) }
-    var elementType: BankElements { return .infobox }
-    var phoneInfo: String { return "" }
 
     enum CodingKeys: String, CodingKey {
         case infoID = "info_id"
@@ -66,8 +62,20 @@ struct Infobox: Codable, ElementResponse {
     }
 }
 
-extension Array where Element == InfoboxResponse.Element {
-    init(data: Data) throws {
-        self = try JSONDecoder().decode(InfoboxResponse.self, from: data)
+extension Infobox: ElementDescription {
+    var id: String { return String(infoID) }
+    var elementType: BankElements { return .infobox }
+    var phoneInfo: String { return "" }
+
+    internal func arrayDescriptions() -> [String] {
+        var arrayDescriprions = [String]()
+
+        Mirror(reflecting: self).children.forEach { child in
+            if let property = child.label {
+                arrayDescriprions.append("\(property): \(child.value)")
+            }
+        }
+
+        return arrayDescriprions
     }
 }

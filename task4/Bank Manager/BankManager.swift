@@ -24,6 +24,14 @@ final class BankManager: NSObject {
     internal var sortedAtms = [ATMResponse]()
 
     // MARK: - Functions
+    internal func fetchElement(_ type: BankElements, id: String) -> ElementDescription? {
+        switch type {
+        case .atm: return atms.first(where: { $0.id == id })
+        case .infobox: return infoboxes.first(where: { $0.id == id })
+        case .filial: return filials.first(where: { $0.id == id })
+        }
+    }
+
     internal func updateElements(_ element: BankElements, fromData data: Data) {
             switch element {
             case .atm: updateAtms(fromData: data)

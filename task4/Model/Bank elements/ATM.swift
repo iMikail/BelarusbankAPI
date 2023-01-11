@@ -9,7 +9,7 @@ import Foundation
 
 typealias ATMResponse = [ATM]
 
-struct ATM: Codable, ElementResponse {
+struct ATM: Codable {
     let id: String
     let area: String
     let cityType: String
@@ -54,7 +54,9 @@ struct ATM: Codable, ElementResponse {
     init(data: Data) throws {
         self = try JSONDecoder().decode(ATM.self, from: data)
     }
+}
 
+extension ATM: ElementDescription {
     internal func arrayDescriptions() -> [String] {
         var descriptions = [String]()
 
@@ -79,11 +81,5 @@ struct ATM: Codable, ElementResponse {
         descriptions.append("Возможность печати чека: \(atmPrinter)")
 
         return descriptions
-    }
-}
-
-extension Array where Element == ATMResponse.Element {
-    init(data: Data) throws {
-        self = try JSONDecoder().decode(ATMResponse.self, from: data)
     }
 }
