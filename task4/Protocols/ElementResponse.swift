@@ -11,6 +11,9 @@ protocol ElementResponse {
     var longitude: String { get }
     var installPlace: String { get }
     var workTime: String { get }
-    var currency: String { get }
     var elementType: BankElements { get }
+    //Разделить atm,infobox / filial?
+    var currency: String { get }
+    var cashIn: String { get }
+    var phoneInfo: String { get }
 }

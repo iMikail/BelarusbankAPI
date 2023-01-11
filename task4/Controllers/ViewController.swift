@@ -57,7 +57,7 @@ final class ViewController: UIViewController {
     private lazy var mapView: MKMapView = {
         let map = MKMapView(frame: .zero)
         map.delegate = self
-        map.register(ATMAnnotationView.self, forAnnotationViewWithReuseIdentifier: ATMAnnotationView.identifier)
+        map.register(ElementAnnotationView.self, forAnnotationViewWithReuseIdentifier: ElementAnnotationView.identifier)
         map.isHidden = !isMapDisplayType
         map.showsUserLocation = true
         map.setRegion(map.belarusRegion, animated: true)
@@ -119,8 +119,12 @@ final class ViewController: UIViewController {
             return
         }
 
-        refreshButton.requestingState(true)
-        NetworkService.getData(forBankElement: .atm) { [weak self] (data, error) in
+        //refreshButton.requestingState(true)
+        BankElements.allCases.forEach { updateData(forBankElement: $0) }
+    }
+
+    private func updateData(forBankElement element: BankElements) {
+        NetworkService.getData(forBankElement: element) { [weak self] (data, error) in
             guard let self = self else { return }
 
             if let error = error {
@@ -128,9 +132,9 @@ final class ViewController: UIViewController {
             }
 
             if let data = data {
-                self.bankManager.updateElements([.atm], fromData: data)
+                self.bankManager.updateElements(element, fromData: data)
             }
-            self.refreshButton.requestingState(false)
+            //self.refreshButton.requestingState(false)
         }
     }
 
@@ -140,19 +144,38 @@ final class ViewController: UIViewController {
         segmentedControl.selectedSegmentIndex = index
 
         if let title = DisplayType(rawValue: index)?.title {
-            self.title = "\(title) банкоматов"
+            self.title = "\(title) банкоматов"//change
         }
     }
 
     // MARK: Setup funcs
-    private func setupATMsOnMap() {
-        let oldAnnotations = mapView.annotations
-        var newAnnotations = [ATMAnnotation]()
-            bankManager.atms.forEach { atm in
-            let annotation = ATMAnnotation(fromATM: atm)
-            newAnnotations.append(annotation)
+    private func setupElementOnMap(_ element: BankElements) {
+        let oldAnnotations = mapView.annotations.filter { annotation in
+            if let elementAnnotation = annotation as? ElementAnnotation {
+                return element.self == elementAnnotation.elementType
+            } else {
+                return false
+            }
         }
-
+        print(oldAnnotations.count)//-
+        var newAnnotations = [ElementAnnotation]()
+        switch element {
+        case .atm:
+                bankManager.atms.forEach { element in
+                    let annotation = ElementAnnotation(fromElement: element)
+                    newAnnotations.append(annotation)
+                }
+        case .infobox:
+                bankManager.infoboxes.forEach { element in
+                    let annotation = ElementAnnotation(fromElement: element)
+                    newAnnotations.append(annotation)
+                }
+        case .filial:
+                bankManager.filials.forEach { element in
+                    let annotation = ElementAnnotation(fromElement: element)
+                    newAnnotations.append(annotation)
+                }
+        }
         mapView.removeAnnotations(oldAnnotations)
         mapView.addAnnotations(newAnnotations)
     }
@@ -232,7 +255,7 @@ extension ViewController: UICollectionViewDelegate {
         let currentId = bankManager.sortedAtms[indexPath.section][indexPath.row].id
 
         if let annotation = mapView.annotations.first(where: { annotation in
-            if let atmAnnotation = annotation as? ATMAnnotation {
+            if let atmAnnotation = annotation as? ElementAnnotation {
                 return atmAnnotation.id == currentId
             } else {
                 return false
@@ -270,15 +293,15 @@ extension ViewController: CLLocationManagerDelegate {
 // MARK: MKMapViewDelegate
 extension ViewController: MKMapViewDelegate {
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-        guard let annotation = annotation as? ATMAnnotation else { return nil }
+        guard let annotation = annotation as? ElementAnnotation else { return nil }
 
-        var view: ATMAnnotationView
+        var view: ElementAnnotationView
         if let dequeuedView = mapView.dequeueReusableAnnotationView(
-            withIdentifier: ATMAnnotationView.identifier) as? ATMAnnotationView {
+            withIdentifier: ElementAnnotationView.identifier) as? ElementAnnotationView {
             dequeuedView.annotation = annotation
             view = dequeuedView
         } else {
-            view = ATMAnnotationView(annotation: annotation, reuseIdentifier: ATMAnnotationView.identifier)
+            view = ElementAnnotationView(annotation: annotation, reuseIdentifier: ElementAnnotationView.identifier)
         }
         view.delegate = self
         view.atmAnnotation = annotation
@@ -300,15 +323,15 @@ extension ViewController: ATMViewCellDelegate {
 
 // MARK: BankManagerDelegate
 extension ViewController: BankManagerDelegate {
-    func infoboxDidUpdate() {
+    func atmsDidUpdate() {
+        setupElementOnMap(.atm)
+    }
 
+    func infoboxDidUpdate() {
+        setupElementOnMap(.infobox)
     }
 
     func filialsDidUpdate() {
-
-    }
-
-    func atmsDidUpdate() {
-        setupATMsOnMap()
+        setupElementOnMap(.filial)
     }
 }

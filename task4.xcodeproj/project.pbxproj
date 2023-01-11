@@ -11,7 +11,7 @@
 		A806F5B9296C3D91000F7BF2 /* BankManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A806F5B8296C3D91000F7BF2 /* BankManager.swift */; };
 		A82F1CEF296870520057BAE7 /* NetworkMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A82F1CEE296870520057BAE7 /* NetworkMonitor.swift */; };
 		A8726071295DE65F00666DB9 /* MKMapView+Ex.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8726070295DE65F00666DB9 /* MKMapView+Ex.swift */; };
-		A8726074295DFF8A00666DB9 /* ATMAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8726073295DFF8A00666DB9 /* ATMAnnotation.swift */; };
+		A8726074295DFF8A00666DB9 /* ElementAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8726073295DFF8A00666DB9 /* ElementAnnotation.swift */; };
 		A87917B0296AA4B300B45435 /* ViewController+Ex.swift in Sources */ = {isa = PBXBuildFile; fileRef = A87917AF296AA4B300B45435 /* ViewController+Ex.swift */; };
 		A8AAA528296C4DC100642B4A /* Infobox.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8AAA527296C4DC100642B4A /* Infobox.swift */; };
 		A8AAA52A296C4DE700642B4A /* Filial.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8AAA529296C4DE700642B4A /* Filial.swift */; };
@@ -20,7 +20,7 @@
 		A8B5F3982969C83A00D097C4 /* DisplayType.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8B5F3972969C83A00D097C4 /* DisplayType.swift */; };
 		A8B5F39A2969CFC200D097C4 /* UIButton+Ex.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8B5F3992969CFC200D097C4 /* UIButton+Ex.swift */; };
 		A8C2AEBC296567E000E375E5 /* ATM.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8C2AEBB296567E000E375E5 /* ATM.swift */; };
-		A8C2AEBE29659F5B00E375E5 /* ATMAnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8C2AEBD29659F5B00E375E5 /* ATMAnnotationView.swift */; };
+		A8C2AEBE29659F5B00E375E5 /* ElementAnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8C2AEBD29659F5B00E375E5 /* ElementAnnotationView.swift */; };
 		A8C2AEC12965D05700E375E5 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8C2AEC02965D05700E375E5 /* DetailViewController.swift */; };
 		A8C2AEC329671A3F00E375E5 /* SectionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8C2AEC229671A3F00E375E5 /* SectionHeaderView.swift */; };
 		A8C2AEC529671DFF00E375E5 /* ElementViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8C2AEC429671DFF00E375E5 /* ElementViewCell.swift */; };
@@ -37,7 +37,7 @@
 		A806F5B8296C3D91000F7BF2 /* BankManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankManager.swift; sourceTree = "<group>"; };
 		A82F1CEE296870520057BAE7 /* NetworkMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkMonitor.swift; sourceTree = "<group>"; };
 		A8726070295DE65F00666DB9 /* MKMapView+Ex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MKMapView+Ex.swift"; sourceTree = "<group>"; };
-		A8726073295DFF8A00666DB9 /* ATMAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ATMAnnotation.swift; sourceTree = "<group>"; };
+		A8726073295DFF8A00666DB9 /* ElementAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElementAnnotation.swift; sourceTree = "<group>"; };
 		A87917AF296AA4B300B45435 /* ViewController+Ex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewController+Ex.swift"; sourceTree = "<group>"; };
 		A8AAA527296C4DC100642B4A /* Infobox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Infobox.swift; sourceTree = "<group>"; };
 		A8AAA529296C4DE700642B4A /* Filial.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Filial.swift; sourceTree = "<group>"; };
@@ -46,7 +46,7 @@
 		A8B5F3972969C83A00D097C4 /* DisplayType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayType.swift; sourceTree = "<group>"; };
 		A8B5F3992969CFC200D097C4 /* UIButton+Ex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIButton+Ex.swift"; sourceTree = "<group>"; };
 		A8C2AEBB296567E000E375E5 /* ATM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ATM.swift; sourceTree = "<group>"; };
-		A8C2AEBD29659F5B00E375E5 /* ATMAnnotationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ATMAnnotationView.swift; sourceTree = "<group>"; };
+		A8C2AEBD29659F5B00E375E5 /* ElementAnnotationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElementAnnotationView.swift; sourceTree = "<group>"; };
 		A8C2AEC02965D05700E375E5 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		A8C2AEC229671A3F00E375E5 /* SectionHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionHeaderView.swift; sourceTree = "<group>"; };
 		A8C2AEC429671DFF00E375E5 /* ElementViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElementViewCell.swift; sourceTree = "<group>"; };
@@ -114,7 +114,7 @@
 		A8AAA52C296D3FED00642B4A /* Annotations */ = {
 			isa = PBXGroup;
 			children = (
-				A8726073295DFF8A00666DB9 /* ATMAnnotation.swift */,
+				A8726073295DFF8A00666DB9 /* ElementAnnotation.swift */,
 			);
 			path = Annotations;
 			sourceTree = "<group>";
@@ -130,7 +130,7 @@
 		A8C2AEBF29659F6300E375E5 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				A8C2AEBD29659F5B00E375E5 /* ATMAnnotationView.swift */,
+				A8C2AEBD29659F5B00E375E5 /* ElementAnnotationView.swift */,
 				A8C2AEC629671F9D00E375E5 /* CollectionView */,
 			);
 			path = View;
@@ -363,12 +363,12 @@
 				A8AAA52E296D441F00642B4A /* BankElements.swift in Sources */,
 				A8C2AEC329671A3F00E375E5 /* SectionHeaderView.swift in Sources */,
 				A8C2AEC529671DFF00E375E5 /* ElementViewCell.swift in Sources */,
-				A8C2AEBE29659F5B00E375E5 /* ATMAnnotationView.swift in Sources */,
+				A8C2AEBE29659F5B00E375E5 /* ElementAnnotationView.swift in Sources */,
 				A806F5B9296C3D91000F7BF2 /* BankManager.swift in Sources */,
 				A87917B0296AA4B300B45435 /* ViewController+Ex.swift in Sources */,
 				A8C2AEBC296567E000E375E5 /* ATM.swift in Sources */,
 				A8F2185A295CB63C00447A18 /* NetworkService.swift in Sources */,
-				A8726074295DFF8A00666DB9 /* ATMAnnotation.swift in Sources */,
+				A8726074295DFF8A00666DB9 /* ElementAnnotation.swift in Sources */,
 				A8AAA52A296C4DE700642B4A /* Filial.swift in Sources */,
 				A8B5F39A2969CFC200D097C4 /* UIButton+Ex.swift in Sources */,
 				A8E5F925295C3C2700B18A0B /* ViewController.swift in Sources */,

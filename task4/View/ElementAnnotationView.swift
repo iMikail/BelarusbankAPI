@@ -11,11 +11,11 @@ protocol ATMViewCellDelegate: AnyObject {
     func fetchMoreInfo(forAtmId id: String)
 }
 
-final class ATMAnnotationView: MKMarkerAnnotationView {
+final class ElementAnnotationView: MKMarkerAnnotationView {
     static let identifier = "atm"
 
     // MARK: - Properties
-    internal var atmAnnotation: ATMAnnotation? {
+    internal var atmAnnotation: ElementAnnotation? {
         didSet {
             setupInfo()
         }

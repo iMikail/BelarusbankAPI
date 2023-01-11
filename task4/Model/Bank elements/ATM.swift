@@ -30,6 +30,7 @@ struct ATM: Codable, ElementResponse {
     let atmPrinter: String
 
     var elementType: BankElements { return .atm }
+    var phoneInfo: String { return "" }
 
     enum CodingKeys: String, CodingKey {
         case id, area

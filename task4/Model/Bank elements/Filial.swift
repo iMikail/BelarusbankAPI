@@ -18,15 +18,15 @@ struct Filial: Codable, ElementResponse {
     let streetType: String
     let street: String
     let homeNumber: String
-    let nameTypePrev: String
-    let namePrev: String
+    let nameTypePrev: String?
+    let namePrev: String?
     let streetTypePrev: String
     let streetPrev: String
     let homeNumberPrev: String
     let infoText: String
     let infoWorktime: String
-    let infoBankBik: String
-    let infoBankUnp: String
+    let infoBankBik: String?
+    let infoBankUnp: String?
     let latitude: String
     let longitude: String
     let belNumberSchet: String
@@ -63,7 +63,7 @@ struct Filial: Codable, ElementResponse {
         uslViplataVozmPoIncasso, uslVklad, uslVozvratNds, uslVydachaNalVBanke, uslVydachaVypiski,
         uslVypllataBelRub, uslVzk, uslPlategiAll, uslPlategiInForeignVal, uslPlategiZaProezdVPolzuBanka,
         uslPlategiMinusMobi, uslPlategiMinusInternet, uslPlategiMinusMobiInternetFull,
-        uslPlategiNalMinusKromeKredit: String
+        uslPlategiNalMinusKromeKredit: String?
     let filialNum: String
     let cbuNum: String
     let otdNum: String
@@ -72,6 +72,7 @@ struct Filial: Codable, ElementResponse {
     var installPlace: String { return streetType + " " + street + ", " + homeNumber }
     var workTime: String { return infoWorktime }
     var currency: String { return "" }
+    var cashIn: String { return "" }
     var elementType: BankElements { return .filial }
 
     enum CodingKeys: String, CodingKey {

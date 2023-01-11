@@ -35,6 +35,7 @@ struct Infobox: Codable, ElementResponse {
 
     var id: String { return String(infoID) }
     var elementType: BankElements { return .infobox }
+    var phoneInfo: String { return "" }
 
     enum CodingKeys: String, CodingKey {
         case infoID = "info_id"

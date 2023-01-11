@@ -19,28 +19,26 @@ final class BankManager: NSObject {
     internal var atms = ATMResponse()
     internal var infoboxes = InfoboxResponse()
     internal var filials = FilialResponse()
-    private var allBankElements: [ElementResponse] { return atms + infoboxes + filials }
+    internal var allBankElements: [ElementResponse] { return atms + infoboxes + filials }
 
     internal var sortedAtms = [ATMResponse]()
 
     // MARK: - Functions
-    internal func updateElements(_ elements: [BankElements], fromData data: Data) {
-        for element in elements {
+    internal func updateElements(_ element: BankElements, fromData data: Data) {
             switch element {
             case .atm: updateAtms(fromData: data)
             case .infobox: updateInfobox(fromData: data)
             case .filial: updateFillials(fromData: data)
             }
-        }
     }
 
     private func updateAtms(fromData data: Data) {
         do {
             atms = try ATMResponse(data: data)
             delegate?.atmsDidUpdate()
-            sortedAtms = sortAtmsByCities()
+            print("atms updated, \(atms.count)")//-
         } catch let error {
-            print(error.localizedDescription)
+            print(error)
         }
     }
 
@@ -48,8 +46,9 @@ final class BankManager: NSObject {
         do {
             infoboxes = try InfoboxResponse(data: data)
             delegate?.infoboxDidUpdate()
+            print("infoboxes updated, \(infoboxes.count)")//-
         } catch let error {
-            print(error.localizedDescription)
+            print(error)
         }
     }
 
@@ -57,8 +56,9 @@ final class BankManager: NSObject {
         do {
             filials = try FilialResponse(data: data)
             delegate?.filialsDidUpdate()
+            print("filials updated, \(filials.count)")//-
         } catch let error {
-            print(error.localizedDescription)
+            print(error)
         }
     }
 

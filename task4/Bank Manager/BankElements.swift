@@ -18,7 +18,7 @@ enum BankElements: Int, CaseIterable {
         }
     }
 
-    var elementType: String {
+    var elementName: String {
         switch self {
         case .atm: return "Банкомат"
         case .infobox: return "Инфокиоск"
