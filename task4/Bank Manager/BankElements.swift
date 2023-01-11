@@ -25,4 +25,12 @@ enum BankElements: Int, CaseIterable {
         case .filial: return "Филиал"
         }
     }
+
+    var imageName: String {
+        switch self {
+        case .atm: return "atm"
+        case .infobox: return "infobox"
+        case .filial: return "filial"
+        }
+    }
 }

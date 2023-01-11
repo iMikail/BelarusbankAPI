@@ -157,7 +157,7 @@ final class ViewController: UIViewController {
                 return false
             }
         }
-        print(oldAnnotations.count)//-
+
         var newAnnotations = [ElementAnnotation]()
         switch element {
         case .atm:
@@ -304,7 +304,7 @@ extension ViewController: MKMapViewDelegate {
             view = ElementAnnotationView(annotation: annotation, reuseIdentifier: ElementAnnotationView.identifier)
         }
         view.delegate = self
-        view.atmAnnotation = annotation
+        view.elementAnnotation = annotation
 
         return view
     }
@@ -312,10 +312,17 @@ extension ViewController: MKMapViewDelegate {
 
 // MARK: ATMViewCellDelegate
 extension ViewController: ATMViewCellDelegate {
-    func fetchMoreInfo(forAtmId id: String) {
+    func fetchMoreInfoForElement(_ type: BankElements, id: String) {
         let detailVC = DetailViewController()
-        detailVC.atm = bankManager.atms.first(where: { $0.id == id })
-        detailVC.userCoordinate = locationManager.location?.coordinate
+        switch type {
+        case .atm:
+            detailVC.atm = bankManager.atms.first(where: { $0.id == id })
+            detailVC.userCoordinate = locationManager.location?.coordinate
+        case .infobox:
+            break
+        case .filial:
+            break
+        }
 
         navigationController?.pushViewController(detailVC, animated: true)
     }

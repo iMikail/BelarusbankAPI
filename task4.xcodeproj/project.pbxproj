@@ -91,6 +91,14 @@
 			path = "Bank Manager";
 			sourceTree = "<group>";
 		};
+		A8412AEA296ECA3000F46526 /* MapView */ = {
+			isa = PBXGroup;
+			children = (
+				A8C2AEBD29659F5B00E375E5 /* ElementAnnotationView.swift */,
+			);
+			path = MapView;
+			sourceTree = "<group>";
+		};
 		A8726072295DE6EA00666DB9 /* Exstensions */ = {
 			isa = PBXGroup;
 			children = (
@@ -130,7 +138,7 @@
 		A8C2AEBF29659F6300E375E5 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				A8C2AEBD29659F5B00E375E5 /* ElementAnnotationView.swift */,
+				A8412AEA296ECA3000F46526 /* MapView */,
 				A8C2AEC629671F9D00E375E5 /* CollectionView */,
 			);
 			path = View;
