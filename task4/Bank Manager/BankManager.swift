@@ -9,20 +9,20 @@ import UIKit
 import CoreLocation
 
 protocol BankManagerDelegate: AnyObject {
-    func atmsDidUpdate()
-    func infoboxDidUpdate()
-    func filialsDidUpdate()
-    func bankElementsWillSorted()
-    func bankElementsDidSorted()
+    func bankElementsDidUpdated()
 }
 
 final class BankManager: NSObject {
     // MARK: - Properties
     weak var delegate: BankManagerDelegate?
+
     internal var atms = ATMResponse()
     internal var infoboxes = InfoboxResponse()
     internal var filials = FilialResponse()
-    internal var sortedBankElements = [[ElementResponse]]()
+    private var sortedBankElements = [[ElementResponse]]()
+
+    private var filteredTypes = BankElements.allCases
+    internal var filteredBankElements = [[ElementResponse]]()
 
     // MARK: - Functions
     internal func fetchElement(_ type: BankElements, id: String) -> ElementDescription? {
@@ -33,6 +33,7 @@ final class BankManager: NSObject {
         }
     }
 
+    // MARK: Updating functions
     internal func updateElements(_ element: BankElements, fromData data: Data, userLocation location: CLLocation) {
         switch element {
         case .atm: updateAtms(fromData: data)
@@ -40,19 +41,23 @@ final class BankManager: NSObject {
         case .filial: updateFillials(fromData: data)
         }
 
-        delegate?.bankElementsWillSorted()
         DispatchQueue.global(qos: .userInitiated).async {
-            self.sortedBankElements = self.sortByCities(self.sortForCurrentLocation(location))
+            let sortedArray = self.sortByCities(self.sortForCurrentLocation(location))
             DispatchQueue.main.async {
-                self.delegate?.bankElementsDidSorted()
+                self.sortedBankElements = sortedArray
+                self.filteredElementsForTypes()
             }
         }
+    }
+
+    internal func updateFilteredTypes(_ types: [BankElements]) {
+        filteredTypes = types
+        filteredElementsForTypes()
     }
 
     private func updateAtms(fromData data: Data) {
         do {
             atms = try ATMResponse(data: data)
-            delegate?.atmsDidUpdate()
             print("atms updated, \(atms.count)")//-
         } catch let error {
             print(error)
@@ -62,7 +67,6 @@ final class BankManager: NSObject {
     private func updateInfobox(fromData data: Data) {
         do {
             infoboxes = try InfoboxResponse(data: data)
-            delegate?.infoboxDidUpdate()
             print("infoboxes updated, \(infoboxes.count)")//-
         } catch let error {
             print(error)
@@ -72,11 +76,20 @@ final class BankManager: NSObject {
     private func updateFillials(fromData data: Data) {
         do {
             filials = try FilialResponse(data: data)
-            delegate?.filialsDidUpdate()
             print("filials updated, \(filials.count)")//-
         } catch let error {
             print(error)
         }
+    }
+
+    // MARK: Filtering/Sorting functions
+    private func filteredElementsForTypes() {
+        filteredBankElements = sortedBankElements.map { elements in
+            elements.filter { element in
+                filteredTypes.contains(element.elementType)
+            }
+        }
+        delegate?.bankElementsDidUpdated()
     }
 
     private func sortForCurrentLocation(_ currentLocation: CLLocation) -> [ElementResponse] {

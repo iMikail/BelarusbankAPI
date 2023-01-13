@@ -22,6 +22,8 @@
 		A8AAA530296D946F00642B4A /* ElementResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8AAA52F296D946F00642B4A /* ElementResponse.swift */; };
 		A8B5F3982969C83A00D097C4 /* DisplayType.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8B5F3972969C83A00D097C4 /* DisplayType.swift */; };
 		A8B5F39A2969CFC200D097C4 /* UIButton+Ex.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8B5F3992969CFC200D097C4 /* UIButton+Ex.swift */; };
+		A8B71EFF297148260056B839 /* CheckboxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8B71EFE297148260056B839 /* CheckboxView.swift */; };
+		A8B71F03297159BF0056B839 /* CheckboxButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8B71F02297159BF0056B839 /* CheckboxButton.swift */; };
 		A8C2AEBC296567E000E375E5 /* ATM.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8C2AEBB296567E000E375E5 /* ATM.swift */; };
 		A8C2AEBE29659F5B00E375E5 /* ElementAnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8C2AEBD29659F5B00E375E5 /* ElementAnnotationView.swift */; };
 		A8C2AEC12965D05700E375E5 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8C2AEC02965D05700E375E5 /* DetailViewController.swift */; };
@@ -51,6 +53,8 @@
 		A8AAA52F296D946F00642B4A /* ElementResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElementResponse.swift; sourceTree = "<group>"; };
 		A8B5F3972969C83A00D097C4 /* DisplayType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayType.swift; sourceTree = "<group>"; };
 		A8B5F3992969CFC200D097C4 /* UIButton+Ex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIButton+Ex.swift"; sourceTree = "<group>"; };
+		A8B71EFE297148260056B839 /* CheckboxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckboxView.swift; sourceTree = "<group>"; };
+		A8B71F02297159BF0056B839 /* CheckboxButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckboxButton.swift; sourceTree = "<group>"; };
 		A8C2AEBB296567E000E375E5 /* ATM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ATM.swift; sourceTree = "<group>"; };
 		A8C2AEBD29659F5B00E375E5 /* ElementAnnotationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElementAnnotationView.swift; sourceTree = "<group>"; };
 		A8C2AEC02965D05700E375E5 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
@@ -147,6 +151,8 @@
 		A8C2AEBF29659F6300E375E5 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				A8B71EFE297148260056B839 /* CheckboxView.swift */,
+				A8B71F02297159BF0056B839 /* CheckboxButton.swift */,
 				A8412AEA296ECA3000F46526 /* MapView */,
 				A8C2AEC629671F9D00E375E5 /* CollectionView */,
 			);
@@ -392,10 +398,12 @@
 				A8AAA52A296C4DE700642B4A /* Filial.swift in Sources */,
 				A8B5F39A2969CFC200D097C4 /* UIButton+Ex.swift in Sources */,
 				A8E5F925295C3C2700B18A0B /* ViewController.swift in Sources */,
+				A8B71EFF297148260056B839 /* CheckboxView.swift in Sources */,
 				A8E5F921295C3C2700B18A0B /* AppDelegate.swift in Sources */,
 				A8AAA530296D946F00642B4A /* ElementResponse.swift in Sources */,
 				A8AAA528296C4DC100642B4A /* Infobox.swift in Sources */,
 				A82F1CEF296870520057BAE7 /* NetworkMonitor.swift in Sources */,
+				A8B71F03297159BF0056B839 /* CheckboxButton.swift in Sources */,
 				A8B5F3982969C83A00D097C4 /* DisplayType.swift in Sources */,
 				A8C2AEC12965D05700E375E5 /* DetailViewController.swift in Sources */,
 				A8E5F923295C3C2700B18A0B /* SceneDelegate.swift in Sources */,

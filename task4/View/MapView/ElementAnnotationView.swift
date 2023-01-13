@@ -7,7 +7,7 @@
 
 import MapKit
 
-protocol ATMViewCellDelegate: AnyObject {
+protocol ElementAnnotationViewDelegate: AnyObject {
     func fetchMoreInfoForElement(_ type: BankElements, id: String)
 }
 
@@ -15,13 +15,14 @@ final class ElementAnnotationView: MKMarkerAnnotationView {
     static let identifier = "element"
 
     // MARK: - Properties
+    weak var delegate: ElementAnnotationViewDelegate?
+
     internal var elementAnnotation: ElementAnnotation? {
         didSet {
             setupInfo()
             configuratingPin()
         }
     }
-    weak var delegate: ATMViewCellDelegate?
 
     // MARK: - Views
     private lazy var detailLabel: UILabel = {
@@ -65,7 +66,7 @@ final class ElementAnnotationView: MKMarkerAnnotationView {
         return imageView
     }()
 
-// MARK: - Funcs
+    // MARK: - Initialization
     override init(annotation: MKAnnotation?, reuseIdentifier: String?) {
         super.init(annotation: annotation, reuseIdentifier: reuseIdentifier)
 
@@ -78,6 +79,7 @@ final class ElementAnnotationView: MKMarkerAnnotationView {
         fatalError("init(coder:) has not been implemented")
     }
 
+    // MARK: - Functions
     private func setupInfo() {
         guard let annotation = elementAnnotation else { return }
 

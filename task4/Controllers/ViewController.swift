@@ -19,10 +19,6 @@ final class ViewController: UIViewController {
         didSet {
             mapView.isHidden = !isMapDisplayType
             collectionView.isHidden = isMapDisplayType
-            if !isMapDisplayType {
-                collectionView.reloadData()
-                collectionView.collectionViewLayout.invalidateLayout()//-?
-            }
         }
     }
 
@@ -76,17 +72,25 @@ final class ViewController: UIViewController {
         return collectionView
     }()
 
+    private lazy var checkboxView = CheckboxView()
+
     // MARK: - Overriden funcs
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Карта"
         view.backgroundColor = .systemBackground
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: refreshButton)
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "mappin.circle"),
+                                                           style: .done,
+                                                           target: self,
+                                                           action: #selector(toggleCheckboxView))
+
         collectionView.register(ElementViewCell.self, forCellWithReuseIdentifier: ElementViewCell.identifier)
         collectionView.register(SectionHeaderView.self,
                                    forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
                                    withReuseIdentifier: SectionHeaderView.identifier)
         bankManager.delegate = self
+        checkboxView.delegate = self
         attemptLocationAccess()
         fetchRequest()
         setupViews()
@@ -114,6 +118,10 @@ final class ViewController: UIViewController {
     }
 
     // MARK: Action funcs
+    @objc private func toggleCheckboxView() {
+        checkboxView.isHidden = !checkboxView.isHidden
+    }
+
     @objc private func fetchRequest() {
         guard NetworkMonitor.shared.isConnected else {
             showNoInternetAlert()
@@ -148,34 +156,25 @@ final class ViewController: UIViewController {
     }
 
     // MARK: Setup funcs
-    private func setupElementOnMap(_ element: BankElements) {
+    private func setupElementsOnMapForTypes(_ types: [BankElements]) {
         let oldAnnotations = mapView.annotations.filter { annotation in
             if let elementAnnotation = annotation as? ElementAnnotation {
-                return element.self == elementAnnotation.elementType
+                return !types.contains(elementAnnotation.elementType)
             } else {
-                return false
+                return true
             }
         }
+        mapView.removeAnnotations(oldAnnotations)
 
         var newAnnotations = [ElementAnnotation]()
-        switch element {
-        case .atm:
-                bankManager.atms.forEach { element in
+        bankManager.filteredBankElements.forEach { elements in
+            elements.forEach { element in
+                if types.contains(element.elementType) {
                     let annotation = ElementAnnotation(fromElement: element)
                     newAnnotations.append(annotation)
                 }
-        case .infobox:
-                bankManager.infoboxes.forEach { element in
-                    let annotation = ElementAnnotation(fromElement: element)
-                    newAnnotations.append(annotation)
-                }
-        case .filial:
-                bankManager.filials.forEach { element in
-                    let annotation = ElementAnnotation(fromElement: element)
-                    newAnnotations.append(annotation)
-                }
+            }
         }
-        mapView.removeAnnotations(oldAnnotations)
         mapView.addAnnotations(newAnnotations)
     }
 
@@ -183,6 +182,7 @@ final class ViewController: UIViewController {
         view.addSubview(segmentedControl)
         view.addSubview(mapView)
         view.addSubview(collectionView)
+        view.addSubview(checkboxView)
     }
 
     private func setupConstraints() {
@@ -198,6 +198,10 @@ final class ViewController: UIViewController {
         }
         collectionView.snp.makeConstraints { make in
             make.edges.equalTo(mapView)
+        }
+        checkboxView.snp.makeConstraints { make in
+            make.left.equalTo(mapView.snp.left)
+            make.top.equalTo(mapView.snp.top)
         }
     }
 
@@ -251,8 +255,8 @@ final class ViewController: UIViewController {
 // MARK: - Extensions: CollectionViewDelegate
 extension ViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let currentId = bankManager.sortedBankElements[indexPath.section][indexPath.row].id
-        let currentType = bankManager.sortedBankElements[indexPath.section][indexPath.row].elementType
+        let currentId = bankManager.filteredBankElements[indexPath.section][indexPath.row].id
+        let currentType = bankManager.filteredBankElements[indexPath.section][indexPath.row].elementType
 
         if let annotation = mapView.annotations.first(where: { annotation in
             if let elementAnnotation = annotation as? ElementAnnotation {
@@ -270,11 +274,11 @@ extension ViewController: UICollectionViewDelegate {
 // MARK: UICollectionViewDataSource
 extension ViewController: UICollectionViewDataSource {
     internal func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return bankManager.sortedBankElements.count
+        return bankManager.filteredBankElements.count
     }
 
     internal func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return bankManager.sortedBankElements[section].count
+        return bankManager.filteredBankElements[section].count
     }
 
     internal func collectionView(_ collectionView: UICollectionView,
@@ -285,11 +289,7 @@ extension ViewController: UICollectionViewDataSource {
             return UICollectionViewCell()
         }
 
-        cell.bankElement = bankManager.sortedBankElements[indexPath.section][indexPath.row]
-        if cell.bankElement?.elementType == .atm {
-            cell.isHidden = true
-
-        }
+        cell.bankElement = bankManager.filteredBankElements[indexPath.section][indexPath.row]
 
         return cell
     }
@@ -305,7 +305,7 @@ extension ViewController: UICollectionViewDataSource {
             return UICollectionReusableView()
         }
 
-        headerView.titleLabel.text = bankManager.sortedBankElements[indexPath.section].first?.city
+        headerView.titleLabel.text = bankManager.filteredBankElements[indexPath.section].first?.city
 
         return headerView
     }
@@ -359,8 +359,8 @@ extension ViewController: MKMapViewDelegate {
     }
 }
 
-// MARK: ATMViewCellDelegate
-extension ViewController: ATMViewCellDelegate {
+// MARK: ElementAnnotationViewDelegate
+extension ViewController: ElementAnnotationViewDelegate {
     func fetchMoreInfoForElement(_ type: BankElements, id: String) {
         let detailVC = DetailViewController()
         detailVC.userCoordinate = locationManager.location?.coordinate
@@ -372,23 +372,17 @@ extension ViewController: ATMViewCellDelegate {
 
 // MARK: BankManagerDelegate
 extension ViewController: BankManagerDelegate {
-    func bankElementsWillSorted() {
-        segmentedControl.isEnabled = false
+    func bankElementsDidUpdated() {
+        collectionView.reloadData()
+        setupElementsOnMapForTypes(checkboxView.selectedTypes)
     }
+}
 
-    func bankElementsDidSorted() {
-        segmentedControl.isEnabled = true
-    }
-
-    func atmsDidUpdate() {
-        setupElementOnMap(.atm)
-    }
-
-    func infoboxDidUpdate() {
-        setupElementOnMap(.infobox)
-    }
-
-    func filialsDidUpdate() {
-        setupElementOnMap(.filial)
+// MARK: - CheckboxViewDelegate
+extension ViewController: CheckboxViewDelegate {
+    func selectedTypesDidChanched(_ types: [BankElements]) {
+        bankManager.updateFilteredTypes(types)
+        setupElementsOnMapForTypes(types)
+        collectionView.reloadData()
     }
 }
