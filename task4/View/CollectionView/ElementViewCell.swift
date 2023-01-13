@@ -8,7 +8,7 @@
 import UIKit
 
 final class ElementViewCell: UICollectionViewCell {
-    static let identifier = "atmViewCell"
+    static let identifier = "elementViewCell"
 
     internal var bankElement: ElementResponse? {
         didSet {
@@ -18,10 +18,10 @@ final class ElementViewCell: UICollectionViewCell {
 
     private lazy var installPlace: UILabel = createLabel()
     private lazy var workTime: UILabel = createLabel()
-    private lazy var currency: UILabel = createLabel()
+    private lazy var dopInfo: UILabel = createLabel()
 
     private lazy var stackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [installPlace, workTime, currency])
+        let stackView = UIStackView(arrangedSubviews: [installPlace, workTime, dopInfo])
         let spacing: CGFloat = 5.0
         stackView.spacing = spacing
         stackView.layoutMargins = UIEdgeInsets(top: spacing, left: spacing, bottom: spacing, right: spacing)
@@ -49,9 +49,15 @@ final class ElementViewCell: UICollectionViewCell {
     private func setupInfo() {
         guard let bankElement = bankElement else { return }
 
-        installPlace.text = "\(bankElement.installPlace)"
-        workTime.text = "Режим работы: \(bankElement.workTime)"
-        currency.text = "Валюта: \(bankElement.currency)"
+        installPlace.text = "\(bankElement.elementType.elementName)\n\(bankElement.installPlace)"
+        let workTime = "Режим работы:"
+        if bankElement.elementType == .filial {
+            self.workTime.text = workTime + "\n" + bankElement.workTime.split(separator: "|").joined(separator: "\n")
+            dopInfo.text = "Номер телефона: \(bankElement.phoneInfo)"
+        } else {
+            self.workTime.text = workTime + " " + bankElement.workTime
+            dopInfo.text = "Валюта: \(bankElement.currency)"
+        }
     }
 
     private func createLabel() -> UILabel {

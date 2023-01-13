@@ -12,6 +12,7 @@
 		A82F1CEF296870520057BAE7 /* NetworkMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A82F1CEE296870520057BAE7 /* NetworkMonitor.swift */; };
 		A8412AEC296EF8F400F46526 /* ElementDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8412AEB296EF8F400F46526 /* ElementDescription.swift */; };
 		A8412AEE296EFD1E00F46526 /* Array+Ex.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8412AED296EFD1E00F46526 /* Array+Ex.swift */; };
+		A86EACCB296FF9470059777D /* CLLocationManager+Ex.swift in Sources */ = {isa = PBXBuildFile; fileRef = A86EACCA296FF9470059777D /* CLLocationManager+Ex.swift */; };
 		A8726071295DE65F00666DB9 /* MKMapView+Ex.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8726070295DE65F00666DB9 /* MKMapView+Ex.swift */; };
 		A8726074295DFF8A00666DB9 /* ElementAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8726073295DFF8A00666DB9 /* ElementAnnotation.swift */; };
 		A87917B0296AA4B300B45435 /* ViewController+Ex.swift in Sources */ = {isa = PBXBuildFile; fileRef = A87917AF296AA4B300B45435 /* ViewController+Ex.swift */; };
@@ -40,6 +41,7 @@
 		A82F1CEE296870520057BAE7 /* NetworkMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkMonitor.swift; sourceTree = "<group>"; };
 		A8412AEB296EF8F400F46526 /* ElementDescription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElementDescription.swift; sourceTree = "<group>"; };
 		A8412AED296EFD1E00F46526 /* Array+Ex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Ex.swift"; sourceTree = "<group>"; };
+		A86EACCA296FF9470059777D /* CLLocationManager+Ex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CLLocationManager+Ex.swift"; sourceTree = "<group>"; };
 		A8726070295DE65F00666DB9 /* MKMapView+Ex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MKMapView+Ex.swift"; sourceTree = "<group>"; };
 		A8726073295DFF8A00666DB9 /* ElementAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElementAnnotation.swift; sourceTree = "<group>"; };
 		A87917AF296AA4B300B45435 /* ViewController+Ex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewController+Ex.swift"; sourceTree = "<group>"; };
@@ -107,6 +109,7 @@
 			isa = PBXGroup;
 			children = (
 				A8726070295DE65F00666DB9 /* MKMapView+Ex.swift */,
+				A86EACCA296FF9470059777D /* CLLocationManager+Ex.swift */,
 				A8B5F3992969CFC200D097C4 /* UIButton+Ex.swift */,
 				A87917AF296AA4B300B45435 /* ViewController+Ex.swift */,
 				A8412AED296EFD1E00F46526 /* Array+Ex.swift */,
@@ -376,6 +379,7 @@
 			files = (
 				A8412AEC296EF8F400F46526 /* ElementDescription.swift in Sources */,
 				A8AAA52E296D441F00642B4A /* BankElements.swift in Sources */,
+				A86EACCB296FF9470059777D /* CLLocationManager+Ex.swift in Sources */,
 				A8412AEE296EFD1E00F46526 /* Array+Ex.swift in Sources */,
 				A8C2AEC329671A3F00E375E5 /* SectionHeaderView.swift in Sources */,
 				A8C2AEC529671DFF00E375E5 /* ElementViewCell.swift in Sources */,

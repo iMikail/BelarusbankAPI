@@ -223,6 +223,7 @@ struct Filial: Codable {
 
 extension Filial: ElementDescription {
     var id: String { return filialId }
+    var city: String { return name }
     var installPlace: String { return streetType + " " + street + ", " + homeNumber }
     var workTime: String { return infoWorktime }
     var currency: String { return "" }

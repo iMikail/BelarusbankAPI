@@ -9,6 +9,7 @@ import MapKit
 
 final class ElementAnnotation: NSObject, MKAnnotation, ElementResponse {
     let id: String
+    let city: String
     let latitude: String
     let longitude: String
     let installPlace: String
@@ -28,6 +29,7 @@ final class ElementAnnotation: NSObject, MKAnnotation, ElementResponse {
 
     init(fromElement element: ElementResponse) {
         id = element.id
+        city = element.city
         latitude = element.latitude
         longitude = element.longitude
         installPlace = element.installPlace

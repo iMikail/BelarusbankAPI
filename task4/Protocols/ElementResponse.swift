@@ -7,6 +7,7 @@
 
 protocol ElementResponse {
     var id: String { get }
+    var city: String { get }
     var latitude: String { get }
     var longitude: String { get }
     var installPlace: String { get }

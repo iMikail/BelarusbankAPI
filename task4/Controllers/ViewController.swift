@@ -18,9 +18,10 @@ final class ViewController: UIViewController {
     private var isMapDisplayType = true {
         didSet {
             mapView.isHidden = !isMapDisplayType
-            atmCollectionView.isHidden = isMapDisplayType
+            collectionView.isHidden = isMapDisplayType
             if !isMapDisplayType {
-                atmCollectionView.reloadData()
+                collectionView.reloadData()
+                collectionView.collectionViewLayout.invalidateLayout()//-?
             }
         }
     }
@@ -65,10 +66,10 @@ final class ViewController: UIViewController {
         return map
     }()
 
-    private lazy var atmCollectionView: UICollectionView = {
+    private lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collectionView.dataSource = bankManager
+        collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.isHidden = isMapDisplayType
 
@@ -78,11 +79,11 @@ final class ViewController: UIViewController {
     // MARK: - Overriden funcs
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Карта Банкоматов"
+        title = "Карта"
         view.backgroundColor = .systemBackground
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: refreshButton)
-        atmCollectionView.register(ElementViewCell.self, forCellWithReuseIdentifier: ElementViewCell.identifier)
-        atmCollectionView.register(SectionHeaderView.self,
+        collectionView.register(ElementViewCell.self, forCellWithReuseIdentifier: ElementViewCell.identifier)
+        collectionView.register(SectionHeaderView.self,
                                    forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
                                    withReuseIdentifier: SectionHeaderView.identifier)
         bankManager.delegate = self
@@ -94,7 +95,7 @@ final class ViewController: UIViewController {
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
-        guard let flowLayout = atmCollectionView.collectionViewLayout as? UICollectionViewFlowLayout else {
+        guard let flowLayout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout else {
             return
         }
         flowLayout.invalidateLayout()
@@ -132,7 +133,8 @@ final class ViewController: UIViewController {
             }
 
             if let data = data {
-                self.bankManager.updateElements(element, fromData: data)
+                let location = self.locationManager.location ?? self.locationManager.defaultLocation
+                self.bankManager.updateElements(element, fromData: data, userLocation: location)
             }
             //self.refreshButton.requestingState(false)
         }
@@ -142,10 +144,7 @@ final class ViewController: UIViewController {
         isMapDisplayType = !isMapDisplayType
         let index = isMapDisplayType ? DisplayType.map.rawValue : DisplayType.list.rawValue
         segmentedControl.selectedSegmentIndex = index
-
-        if let title = DisplayType(rawValue: index)?.title {
-            self.title = "\(title) банкоматов"//change
-        }
+        self.title = DisplayType(rawValue: index)?.title
     }
 
     // MARK: Setup funcs
@@ -183,7 +182,7 @@ final class ViewController: UIViewController {
     private func setupViews() {
         view.addSubview(segmentedControl)
         view.addSubview(mapView)
-        view.addSubview(atmCollectionView)
+        view.addSubview(collectionView)
     }
 
     private func setupConstraints() {
@@ -197,7 +196,7 @@ final class ViewController: UIViewController {
             make.leading.trailing.bottom.equalTo(view.safeAreaLayoutGuide)
             make.top.equalTo(segmentedControl.snp.bottom).offset(5.0)
         }
-        atmCollectionView.snp.makeConstraints { make in
+        collectionView.snp.makeConstraints { make in
             make.edges.equalTo(mapView)
         }
     }
@@ -252,11 +251,12 @@ final class ViewController: UIViewController {
 // MARK: - Extensions: CollectionViewDelegate
 extension ViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let currentId = bankManager.sortedAtms[indexPath.section][indexPath.row].id
+        let currentId = bankManager.sortedBankElements[indexPath.section][indexPath.row].id
+        let currentType = bankManager.sortedBankElements[indexPath.section][indexPath.row].elementType
 
         if let annotation = mapView.annotations.first(where: { annotation in
-            if let atmAnnotation = annotation as? ElementAnnotation {
-                return atmAnnotation.id == currentId//+type
+            if let elementAnnotation = annotation as? ElementAnnotation {
+                return elementAnnotation.id == currentId && elementAnnotation.elementType == currentType
             } else {
                 return false
             }
@@ -265,7 +265,56 @@ extension ViewController: UICollectionViewDelegate {
             mapView.selectAnnotation(annotation, animated: true)
         }
     }
+}
 
+// MARK: UICollectionViewDataSource
+extension ViewController: UICollectionViewDataSource {
+    internal func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return bankManager.sortedBankElements.count
+    }
+
+    internal func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return bankManager.sortedBankElements[section].count
+    }
+
+    internal func collectionView(_ collectionView: UICollectionView,
+                                 cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(
+            withReuseIdentifier: ElementViewCell.identifier,
+            for: indexPath) as? ElementViewCell else {
+            return UICollectionViewCell()
+        }
+
+        cell.bankElement = bankManager.sortedBankElements[indexPath.section][indexPath.row]
+        if cell.bankElement?.elementType == .atm {
+            cell.isHidden = true
+
+        }
+
+        return cell
+    }
+
+    internal func collectionView(_ collectionView: UICollectionView,
+                                 viewForSupplementaryElementOfKind kind: String,
+                                 at indexPath: IndexPath) -> UICollectionReusableView {
+        guard let headerView = collectionView.dequeueReusableSupplementaryView(
+            ofKind: kind,
+            withReuseIdentifier: SectionHeaderView.identifier,
+            for: indexPath
+        ) as? SectionHeaderView else {
+            return UICollectionReusableView()
+        }
+
+        headerView.titleLabel.text = bankManager.sortedBankElements[indexPath.section].first?.city
+
+        return headerView
+    }
+
+    internal func collectionView(_ collectionView: UICollectionView,
+                                 layout collectionViewLayout: UICollectionViewLayout,
+                                 referenceSizeForHeaderInSection section: Int) -> CGSize {
+        return CGSize(width: collectionView.frame.width, height: 40.0)
+    }
 }
 
 // MARK: CLLocationManagerDelegate
@@ -323,6 +372,14 @@ extension ViewController: ATMViewCellDelegate {
 
 // MARK: BankManagerDelegate
 extension ViewController: BankManagerDelegate {
+    func bankElementsWillSorted() {
+        segmentedControl.isEnabled = false
+    }
+
+    func bankElementsDidSorted() {
+        segmentedControl.isEnabled = true
+    }
+
     func atmsDidUpdate() {
         setupElementOnMap(.atm)
     }

@@ -6,11 +6,14 @@
 //
 
 import UIKit
+import CoreLocation
 
 protocol BankManagerDelegate: AnyObject {
     func atmsDidUpdate()
     func infoboxDidUpdate()
     func filialsDidUpdate()
+    func bankElementsWillSorted()
+    func bankElementsDidSorted()
 }
 
 final class BankManager: NSObject {
@@ -19,9 +22,7 @@ final class BankManager: NSObject {
     internal var atms = ATMResponse()
     internal var infoboxes = InfoboxResponse()
     internal var filials = FilialResponse()
-    internal var allBankElements: [ElementResponse] { return atms + infoboxes + filials }
-
-    internal var sortedAtms = [ATMResponse]()
+    internal var sortedBankElements = [[ElementResponse]]()
 
     // MARK: - Functions
     internal func fetchElement(_ type: BankElements, id: String) -> ElementDescription? {
@@ -32,12 +33,20 @@ final class BankManager: NSObject {
         }
     }
 
-    internal func updateElements(_ element: BankElements, fromData data: Data) {
-            switch element {
-            case .atm: updateAtms(fromData: data)
-            case .infobox: updateInfobox(fromData: data)
-            case .filial: updateFillials(fromData: data)
+    internal func updateElements(_ element: BankElements, fromData data: Data, userLocation location: CLLocation) {
+        switch element {
+        case .atm: updateAtms(fromData: data)
+        case .infobox: updateInfobox(fromData: data)
+        case .filial: updateFillials(fromData: data)
+        }
+
+        delegate?.bankElementsWillSorted()
+        DispatchQueue.global(qos: .userInitiated).async {
+            self.sortedBankElements = self.sortByCities(self.sortForCurrentLocation(location))
+            DispatchQueue.main.async {
+                self.delegate?.bankElementsDidSorted()
             }
+        }
     }
 
     private func updateAtms(fromData data: Data) {
@@ -70,67 +79,42 @@ final class BankManager: NSObject {
         }
     }
 
-    private func sortAtmsByCities() -> [ATMResponse] {
-        var atms = atms
-        var sortedAtms = [ATMResponse]()
+    private func sortForCurrentLocation(_ currentLocation: CLLocation) -> [ElementResponse] {
+        let allElements: [ElementResponse] = atms + infoboxes + filials
+        var sortedElements = [ElementResponse]()
 
-        while !atms.isEmpty {
-            var array = ATMResponse()
-            let city = atms[0].city
+        sortedElements = allElements.sorted { (firstElement, secondElement) in
+            if let firstLatitude = Double(firstElement.latitude),
+               let firstLongitude = Double(firstElement.longitude),
+               let secondLatitude = Double(secondElement.latitude),
+               let secondLongitude = Double(secondElement.longitude) {
+                let firstLocation = CLLocation(latitude: firstLatitude, longitude: firstLongitude)
+                let secondLocation = CLLocation(latitude: secondLatitude, longitude: secondLongitude)
 
-            for atm in atms where atm.city == city {
-                array.append(atm)
+                return firstLocation.distance(from: currentLocation) < secondLocation.distance(from: currentLocation)
+            } else {
+                return false
             }
-            atms.removeAll { $0.city == city }
-            sortedAtms.append(array)
         }
 
-        return sortedAtms.map { $0.sorted { $0.id < $1.id } }
-    }
-}
-
-// MARK: - UICollectionViewDataSource
-extension BankManager: UICollectionViewDataSource {
-//    internal func numberOfSections(in collectionView: UICollectionView) -> Int {
-//        return sortedAtms.count
-//    }
-
-    internal func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return allBankElements.count
+        return sortedElements
     }
 
-    internal func collectionView(_ collectionView: UICollectionView,
-                                 cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(
-            withReuseIdentifier: ElementViewCell.identifier,
-            for: indexPath) as? ElementViewCell else {
-            return UICollectionViewCell()
+    private func sortByCities(_ elements: [ElementResponse]) -> [[ElementResponse]] {
+        var allElements: [ElementResponse] = elements
+        var sortedElements = [[ElementResponse]]()
+
+        while !allElements.isEmpty {
+            var array = [ElementResponse]()
+            let city = allElements[0].city
+
+            for element in allElements where element.city == city {
+                array.append(element)
+            }
+            allElements.removeAll { $0.city == city }
+            sortedElements.append(array)
         }
 
-        cell.bankElement = allBankElements[indexPath.row]
-
-        return cell
+        return sortedElements
     }
-
-//    internal func collectionView(_ collectionView: UICollectionView,
-//                                 viewForSupplementaryElementOfKind kind: String,
-//                                 at indexPath: IndexPath) -> UICollectionReusableView {
-//        guard let headerView = collectionView.dequeueReusableSupplementaryView(
-//            ofKind: kind,
-//            withReuseIdentifier: SectionHeaderView.identifier,
-//            for: indexPath
-//        ) as? SectionHeaderView else {
-//            return UICollectionReusableView()
-//        }
-//
-//        headerView.titleLabel.text = sortedAtms[indexPath.section].first?.city
-//
-//        return headerView
-//    }
-//
-//    internal func collectionView(_ collectionView: UICollectionView,
-//                                 layout collectionViewLayout: UICollectionViewLayout,
-//                                 referenceSizeForHeaderInSection section: Int) -> CGSize {
-//        return CGSize(width: collectionView.frame.width, height: 40.0)
-//    }
 }

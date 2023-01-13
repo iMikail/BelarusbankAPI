@@ -17,7 +17,7 @@ final class DetailViewController: UIViewController {
             }
         }
     }
-    
+
     internal var element: ElementDescription? {
         didSet {
             if let element = element {
