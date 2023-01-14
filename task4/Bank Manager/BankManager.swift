@@ -10,18 +10,21 @@ import CoreLocation
 
 protocol BankManagerDelegate: AnyObject {
     func bankElementsDidUpdated()
+    func bankElementsDidFiltered()
 }
 
 final class BankManager: NSObject {
     // MARK: - Properties
+    private let networkService = NetworkService()
+    private var filteredTypes = BankElements.allCases
     weak var delegate: BankManagerDelegate?
 
     internal var atms = ATMResponse()
     internal var infoboxes = InfoboxResponse()
     internal var filials = FilialResponse()
+    
+    internal var allBankElements: [ElementResponse] { return atms + infoboxes + filials }
     private var sortedBankElements = [[ElementResponse]]()
-
-    private var filteredTypes = BankElements.allCases
     internal var filteredBankElements = [[ElementResponse]]()
 
     // MARK: - Functions
@@ -34,18 +37,21 @@ final class BankManager: NSObject {
     }
 
     // MARK: Updating functions
-    internal func updateElements(_ element: BankElements, fromData data: Data, userLocation location: CLLocation) {
-        switch element {
-        case .atm: updateAtms(fromData: data)
-        case .infobox: updateInfobox(fromData: data)
-        case .filial: updateFillials(fromData: data)
+    internal func updateDataForTypes(_ types: [BankElements],
+                                     location: CLLocation,
+                                     completion: ((Bool, [ErrorForElement]?) -> Void)? = nil) {
+        guard NetworkMonitor.shared.isConnected else {
+            completion?(false, nil)
+            return
         }
 
-        DispatchQueue.global(qos: .userInitiated).async {
-            let sortedArray = self.sortByCities(self.sortForCurrentLocation(location))
-            DispatchQueue.main.async {
-                self.sortedBankElements = sortedArray
-                self.filteredElementsForTypes()
+        networkService.getDataForTypes(types) { [weak self] (dataArray, errors) in
+            self?.updateElements(dataArray, userLocation: location)
+
+            if errors.isEmpty {
+                completion?(true, nil)
+            } else {
+                completion?(true, errors)
             }
         }
     }
@@ -53,6 +59,26 @@ final class BankManager: NSObject {
     internal func updateFilteredTypes(_ types: [BankElements]) {
         filteredTypes = types
         filteredElementsForTypes()
+    }
+
+    private func updateElements(_ elements: [DataForElement], userLocation location: CLLocation) {
+        elements.forEach { (data, type) in
+            switch type {
+            case .atm: updateAtms(fromData: data)
+            case .infobox: updateInfobox(fromData: data)
+            case .filial: updateFillials(fromData: data)
+            }
+        }
+        delegate?.bankElementsDidUpdated()
+
+        DispatchQueue.global(qos: .userInteractive).async {
+            let sortedArray = self.sortByCities(self.sortForCurrentLocation(location))
+
+            DispatchQueue.main.async {
+                self.sortedBankElements = sortedArray
+                self.filteredElementsForTypes()
+            }
+        }
     }
 
     private func updateAtms(fromData data: Data) {
@@ -89,14 +115,14 @@ final class BankManager: NSObject {
                 filteredTypes.contains(element.elementType)
             }
         }
-        delegate?.bankElementsDidUpdated()
+        delegate?.bankElementsDidFiltered()
+        print("Element Filtered")//-
     }
 
     private func sortForCurrentLocation(_ currentLocation: CLLocation) -> [ElementResponse] {
-        let allElements: [ElementResponse] = atms + infoboxes + filials
         var sortedElements = [ElementResponse]()
 
-        sortedElements = allElements.sorted { (firstElement, secondElement) in
+        sortedElements = allBankElements.sorted { (firstElement, secondElement) in
             if let firstLatitude = Double(firstElement.latitude),
                let firstLongitude = Double(firstElement.longitude),
                let secondLatitude = Double(secondElement.latitude),

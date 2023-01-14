@@ -19,8 +19,12 @@ final class ViewController: UIViewController {
         didSet {
             mapView.isHidden = !isMapDisplayType
             collectionView.isHidden = isMapDisplayType
+            if bankManager.filteredBankElements.isEmpty {
+                loaderView.setHidden(false)
+            }
         }
     }
+    private var isFirstRequest = true
 
     // MARK: - Views
     private lazy var refreshButton: UIButton = {
@@ -72,6 +76,7 @@ final class ViewController: UIViewController {
         return collectionView
     }()
 
+    private lazy var loaderView = LoaderView(style: .medium)
     private lazy var checkboxView = CheckboxView()
 
     // MARK: - Overriden funcs
@@ -117,35 +122,16 @@ final class ViewController: UIViewController {
         }
     }
 
+    private func setEnabledInterface(_ enabled: Bool) {
+        view.isUserInteractionEnabled = enabled
+        navigationController?.navigationBar.isUserInteractionEnabled = enabled
+        refreshButton.requestingState(!enabled)
+        loaderView.setHidden(enabled)
+    }
+
     // MARK: Action funcs
     @objc private func toggleCheckboxView() {
         checkboxView.isHidden = !checkboxView.isHidden
-    }
-
-    @objc private func fetchRequest() {
-        guard NetworkMonitor.shared.isConnected else {
-            showNoInternetAlert()
-            return
-        }
-
-        //refreshButton.requestingState(true)
-        BankElements.allCases.forEach { updateData(forBankElement: $0) }
-    }
-
-    private func updateData(forBankElement element: BankElements) {
-        NetworkService.getData(forBankElement: element) { [weak self] (data, error) in
-            guard let self = self else { return }
-
-            if let error = error {
-                self.showErrorConnectionAlert(error: error)
-            }
-
-            if let data = data {
-                let location = self.locationManager.location ?? self.locationManager.defaultLocation
-                self.bankManager.updateElements(element, fromData: data, userLocation: location)
-            }
-            //self.refreshButton.requestingState(false)
-        }
     }
 
     @objc private func switchDisplayType() {
@@ -153,6 +139,36 @@ final class ViewController: UIViewController {
         let index = isMapDisplayType ? DisplayType.map.rawValue : DisplayType.list.rawValue
         segmentedControl.selectedSegmentIndex = index
         self.title = DisplayType(rawValue: index)?.title
+    }
+
+    @objc private func fetchRequest() {
+        setEnabledInterface(false)
+        let location = locationManager.location ?? locationManager.defaultLocation
+        if isFirstRequest {
+            bankManager.updateDataForTypes(BankElements.allCases,
+                                           location: location) { [weak self] (connected, errorElements) in
+                guard let self = self else { return }
+                self.setEnabledInterface(true)
+                self.isFirstRequest = false
+
+                if connected {
+                    if let errorElements = errorElements {
+                        self.showErrorConnectionAlert(errorElements: errorElements)
+                    }
+                } else {
+                    self.showNoInternetAlert()
+                }
+            }
+        } else {
+            bankManager.updateDataForTypes([.atm], location: location) { [weak self] (connected, _) in
+                self?.setEnabledInterface(true)
+                if !connected {
+                    self?.showNoInternetAlert()
+                }
+            }
+            bankManager.updateDataForTypes([.infobox], location: location)
+            bankManager.updateDataForTypes([.filial], location: location)
+        }
     }
 
     // MARK: Setup funcs
@@ -167,12 +183,10 @@ final class ViewController: UIViewController {
         mapView.removeAnnotations(oldAnnotations)
 
         var newAnnotations = [ElementAnnotation]()
-        bankManager.filteredBankElements.forEach { elements in
-            elements.forEach { element in
-                if types.contains(element.elementType) {
-                    let annotation = ElementAnnotation(fromElement: element)
-                    newAnnotations.append(annotation)
-                }
+        bankManager.allBankElements.forEach { element in
+            if types.contains(element.elementType) {
+                let annotation = ElementAnnotation(fromElement: element)
+                newAnnotations.append(annotation)
             }
         }
         mapView.addAnnotations(newAnnotations)
@@ -183,6 +197,7 @@ final class ViewController: UIViewController {
         view.addSubview(mapView)
         view.addSubview(collectionView)
         view.addSubview(checkboxView)
+        view.addSubview(loaderView)
     }
 
     private func setupConstraints() {
@@ -203,6 +218,10 @@ final class ViewController: UIViewController {
             make.left.equalTo(mapView.snp.left)
             make.top.equalTo(mapView.snp.top)
         }
+        loaderView.snp.makeConstraints { make in
+            make.width.height.equalTo(100)
+            make.centerX.centerY.equalToSuperview()
+        }
     }
 
     // MARK: AlertController funcs
@@ -216,9 +235,13 @@ final class ViewController: UIViewController {
         present(alertController, animated: true)
     }
 
-    private func showErrorConnectionAlert(error: Error) {
-        let alertController = UIAlertController(title: "Ошибка сети",
-                                                message: error.localizedDescription,
+    private func showErrorConnectionAlert(errorElements: [ErrorForElement]) {
+        var message = ""
+        errorElements.forEach { (error, type) in
+            message += "\(type.elementName): \(error.localizedDescription)\n"
+        }
+        let alertController = UIAlertController(title: "Не удалось обновить элементы",
+                                                message: message,
                                                 preferredStyle: .alert)
         let repeatAction = UIAlertAction(title: "Повторить ещё раз", style: .default) { [weak self] _ in
             self?.fetchRequest()
@@ -372,8 +395,14 @@ extension ViewController: ElementAnnotationViewDelegate {
 
 // MARK: BankManagerDelegate
 extension ViewController: BankManagerDelegate {
-    func bankElementsDidUpdated() {
+    func bankElementsDidFiltered() {
+        if loaderView.isAnimating {
+            loaderView.setHidden(true)
+        }
         collectionView.reloadData()
+    }
+
+    func bankElementsDidUpdated() {
         setupElementsOnMapForTypes(checkboxView.selectedTypes)
     }
 }
@@ -383,6 +412,5 @@ extension ViewController: CheckboxViewDelegate {
     func selectedTypesDidChanched(_ types: [BankElements]) {
         bankManager.updateFilteredTypes(types)
         setupElementsOnMapForTypes(types)
-        collectionView.reloadData()
     }
 }

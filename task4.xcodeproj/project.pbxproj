@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		590AA9085723C22FCD5289AA /* Pods_task4.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F7F589BE12D7362054E92066 /* Pods_task4.framework */; };
 		A806F5B9296C3D91000F7BF2 /* BankManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A806F5B8296C3D91000F7BF2 /* BankManager.swift */; };
+		A80F71632972B8E200789AEE /* LoaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A80F71622972B8E200789AEE /* LoaderView.swift */; };
 		A82F1CEF296870520057BAE7 /* NetworkMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A82F1CEE296870520057BAE7 /* NetworkMonitor.swift */; };
 		A8412AEC296EF8F400F46526 /* ElementDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8412AEB296EF8F400F46526 /* ElementDescription.swift */; };
 		A8412AEE296EFD1E00F46526 /* Array+Ex.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8412AED296EFD1E00F46526 /* Array+Ex.swift */; };
@@ -40,6 +41,7 @@
 /* Begin PBXFileReference section */
 		86C81AE4C38043A42C4AB06B /* Pods-task4.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-task4.debug.xcconfig"; path = "Target Support Files/Pods-task4/Pods-task4.debug.xcconfig"; sourceTree = "<group>"; };
 		A806F5B8296C3D91000F7BF2 /* BankManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankManager.swift; sourceTree = "<group>"; };
+		A80F71622972B8E200789AEE /* LoaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoaderView.swift; sourceTree = "<group>"; };
 		A82F1CEE296870520057BAE7 /* NetworkMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkMonitor.swift; sourceTree = "<group>"; };
 		A8412AEB296EF8F400F46526 /* ElementDescription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElementDescription.swift; sourceTree = "<group>"; };
 		A8412AED296EFD1E00F46526 /* Array+Ex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Ex.swift"; sourceTree = "<group>"; };
@@ -151,6 +153,7 @@
 		A8C2AEBF29659F6300E375E5 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				A80F71622972B8E200789AEE /* LoaderView.swift */,
 				A8B71EFE297148260056B839 /* CheckboxView.swift */,
 				A8B71F02297159BF0056B839 /* CheckboxButton.swift */,
 				A8412AEA296ECA3000F46526 /* MapView */,
@@ -386,6 +389,7 @@
 				A8412AEC296EF8F400F46526 /* ElementDescription.swift in Sources */,
 				A8AAA52E296D441F00642B4A /* BankElements.swift in Sources */,
 				A86EACCB296FF9470059777D /* CLLocationManager+Ex.swift in Sources */,
+				A80F71632972B8E200789AEE /* LoaderView.swift in Sources */,
 				A8412AEE296EFD1E00F46526 /* Array+Ex.swift in Sources */,
 				A8C2AEC329671A3F00E375E5 /* SectionHeaderView.swift in Sources */,
 				A8C2AEC529671DFF00E375E5 /* ElementViewCell.swift in Sources */,
