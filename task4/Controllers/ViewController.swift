@@ -11,14 +11,12 @@ import MapKit
 
 final class ViewController: UIViewController {
     // MARK: - Properties
-    internal let sectionInsets = UIEdgeInsets(top: 20.0, left: 20.0, bottom: 20.0, right: 20.0)
-    internal let itemsPerRow: CGFloat = 3
     private let locationManager = CLLocationManager()
     private let bankManager = BankManager()
     private var isMapDisplayType = true {
         didSet {
             mapView.isHidden = !isMapDisplayType
-            collectionView.isHidden = isMapDisplayType
+            listView.isHidden = isMapDisplayType
             if bankManager.filteredBankElements.isEmpty {
                 loaderView.setHidden(false)
             }
@@ -29,27 +27,15 @@ final class ViewController: UIViewController {
     // MARK: - Views
     private lazy var refreshButton: UIButton = {
         let button = UIButton()
-        var configuration = UIButton.Configuration.plain()
-        configuration.title = "Обновить"
-        configuration.attributedTitle?.font = UIFont.systemFont(ofSize: 15.0)
-        configuration.image = UIImage(systemName: "arrow.triangle.2.circlepath")
-        configuration.imagePadding = 5.0
-
-        button.configuration = configuration
+        button.setupRefreshConfigurating()
         button.addTarget(self, action: #selector(fetchRequest), for: .touchUpInside)
 
         return button
     }()
 
     private lazy var segmentedControl: UISegmentedControl = {
-        let items = DisplayType.allCases
-        let segmentedControl = UISegmentedControl(items: items.map { $0.title })
-        segmentedControl.selectedSegmentIndex = DisplayType.map.rawValue
-        segmentedControl.setDividerImage(UIImage(systemName: "chevron.left.2"), forLeftSegmentState: .selected,
-                                         rightSegmentState: .normal, barMetrics: .default)
-        segmentedControl.setDividerImage(UIImage(systemName: "chevron.right.2"), forLeftSegmentState: .normal,
-                                         rightSegmentState: .selected, barMetrics: .default)
-        segmentedControl.tintColor = .label
+        let segmentedControl = UISegmentedControl(items: DisplayType.allCases.map { $0.title })
+        segmentedControl.setupConfigurating()
         segmentedControl.addTarget(self, action: #selector(switchDisplayType), for: .valueChanged)
 
         return segmentedControl
@@ -57,45 +43,22 @@ final class ViewController: UIViewController {
 
     private lazy var mapView: MKMapView = {
         let map = MKMapView(frame: .zero)
-        map.delegate = self
-        map.register(ElementAnnotationView.self, forAnnotationViewWithReuseIdentifier: ElementAnnotationView.identifier)
-        map.isHidden = !isMapDisplayType
         map.showsUserLocation = true
         map.setRegion(map.belarusRegion, animated: true)
 
         return map
     }()
 
-    private lazy var collectionView: UICollectionView = {
-        let layout = UICollectionViewFlowLayout()
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collectionView.dataSource = self
-        collectionView.delegate = self
-        collectionView.isHidden = isMapDisplayType
-
-        return collectionView
-    }()
-
+    private lazy var listView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
     private lazy var loaderView = LoaderView(style: .medium)
     private lazy var checkboxView = CheckboxView()
 
     // MARK: - Overriden funcs
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Карта"
-        view.backgroundColor = .systemBackground
-        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: refreshButton)
-        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "mappin.circle"),
-                                                           style: .done,
-                                                           target: self,
-                                                           action: #selector(toggleCheckboxView))
-
-        collectionView.register(ElementViewCell.self, forCellWithReuseIdentifier: ElementViewCell.identifier)
-        collectionView.register(SectionHeaderView.self,
-                                   forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
-                                   withReuseIdentifier: SectionHeaderView.identifier)
-        bankManager.delegate = self
-        checkboxView.delegate = self
+        setupFirstOptions()
+        setupDelegates()
+        registerViews()
         attemptLocationAccess()
         fetchRequest()
         setupViews()
@@ -104,17 +67,42 @@ final class ViewController: UIViewController {
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
-        guard let flowLayout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout else {
-            return
-        }
+        guard let flowLayout = listView.collectionViewLayout as? UICollectionViewFlowLayout else { return }
+
         flowLayout.invalidateLayout()
     }
 
     // MARK: Private funcs
+    private func setupFirstOptions() {
+        title = "Карта"
+        view.backgroundColor = .systemBackground
+        let leftItem = UIBarButtonItem(image: UIImage(systemName: "checklist.rtl"), style: .done,
+                                       target: self, action: #selector(toggleCheckboxView))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: refreshButton)
+        navigationItem.leftBarButtonItem = leftItem
+        listView.isHidden = true
+    }
+
+    private func registerViews() {
+        mapView.register(ElementAnnotationView.self,
+                         forAnnotationViewWithReuseIdentifier: ElementAnnotationView.identifier)
+        listView.register(ElementViewCell.self, forCellWithReuseIdentifier: ElementViewCell.identifier)
+        listView.register(SectionHeaderView.self,
+                                   forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
+                                   withReuseIdentifier: SectionHeaderView.identifier)
+    }
+
+    private func setupDelegates() {
+        bankManager.delegate = self
+        locationManager.delegate = self
+        mapView.delegate = self
+        listView.delegate = self
+        listView.dataSource = self
+        checkboxView.delegate = self
+    }
+
     private func attemptLocationAccess() {
         locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
-        locationManager.delegate = self
-
         switch locationManager.authorizationStatus {
         case .notDetermined: locationManager.requestWhenInUseAuthorization()
         case .denied: showDeniedAccessAlert()
@@ -145,8 +133,7 @@ final class ViewController: UIViewController {
         setEnabledInterface(false)
         let location = locationManager.location ?? locationManager.defaultLocation
         if isFirstRequest {
-            bankManager.updateDataForTypes(BankElements.allCases,
-                                           location: location) { [weak self] (connected, errorElements) in
+            bankManager.updateData(location: location) { [weak self] (connected, errorElements) in
                 guard let self = self else { return }
                 self.setEnabledInterface(true)
                 self.isFirstRequest = false
@@ -160,14 +147,14 @@ final class ViewController: UIViewController {
                 }
             }
         } else {
-            bankManager.updateDataForTypes([.atm], location: location) { [weak self] (connected, _) in
+            bankManager.updateData(forTypes: [.atm], location: location) { [weak self] (connected, _) in
                 self?.setEnabledInterface(true)
                 if !connected {
                     self?.showNoInternetAlert()
                 }
             }
-            bankManager.updateDataForTypes([.infobox], location: location)
-            bankManager.updateDataForTypes([.filial], location: location)
+            bankManager.updateData(forTypes: [.infobox], location: location)
+            bankManager.updateData(forTypes: [.filial], location: location)
         }
     }
 
@@ -195,7 +182,7 @@ final class ViewController: UIViewController {
     private func setupViews() {
         view.addSubview(segmentedControl)
         view.addSubview(mapView)
-        view.addSubview(collectionView)
+        view.addSubview(listView)
         view.addSubview(checkboxView)
         view.addSubview(loaderView)
     }
@@ -211,12 +198,12 @@ final class ViewController: UIViewController {
             make.leading.trailing.bottom.equalTo(view.safeAreaLayoutGuide)
             make.top.equalTo(segmentedControl.snp.bottom).offset(5.0)
         }
-        collectionView.snp.makeConstraints { make in
+        listView.snp.makeConstraints { make in
             make.edges.equalTo(mapView)
         }
         checkboxView.snp.makeConstraints { make in
-            make.left.equalTo(mapView.snp.left)
-            make.top.equalTo(mapView.snp.top)
+            make.left.top.equalTo(view.safeAreaLayoutGuide)
+
         }
         loaderView.snp.makeConstraints { make in
             make.width.height.equalTo(100)
@@ -231,7 +218,6 @@ final class ViewController: UIViewController {
                                                 preferredStyle: .alert)
         let action = UIAlertAction(title: "Ок", style: .cancel)
         alertController.addAction(action)
-
         present(alertController, animated: true)
     }
 
@@ -250,7 +236,6 @@ final class ViewController: UIViewController {
 
         alertController.addAction(repeatAction)
         alertController.addAction(canselAction)
-
         present(alertController, animated: true)
     }
 
@@ -270,7 +255,6 @@ final class ViewController: UIViewController {
 
         alertController.addAction(optionAction)
         alertController.addAction(canselAction)
-
         present(alertController, animated: true)
     }
 }
@@ -306,9 +290,8 @@ extension ViewController: UICollectionViewDataSource {
 
     internal func collectionView(_ collectionView: UICollectionView,
                                  cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(
-            withReuseIdentifier: ElementViewCell.identifier,
-            for: indexPath) as? ElementViewCell else {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ElementViewCell.identifier,
+                                                            for: indexPath) as? ElementViewCell else {
             return UICollectionViewCell()
         }
 
@@ -323,8 +306,7 @@ extension ViewController: UICollectionViewDataSource {
         guard let headerView = collectionView.dequeueReusableSupplementaryView(
             ofKind: kind,
             withReuseIdentifier: SectionHeaderView.identifier,
-            for: indexPath
-        ) as? SectionHeaderView else {
+            for: indexPath) as? SectionHeaderView else {
             return UICollectionReusableView()
         }
 
@@ -358,7 +340,7 @@ extension ViewController: CLLocationManagerDelegate {
     }
 
     internal func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        print(error.localizedDescription)
+        print(error)
     }
 }
 
@@ -399,7 +381,7 @@ extension ViewController: BankManagerDelegate {
         if loaderView.isAnimating {
             loaderView.setHidden(true)
         }
-        collectionView.reloadData()
+        listView.reloadData()
     }
 
     func bankElementsDidUpdated() {
@@ -407,7 +389,7 @@ extension ViewController: BankManagerDelegate {
     }
 }
 
-// MARK: - CheckboxViewDelegate
+// MARK: CheckboxViewDelegate
 extension ViewController: CheckboxViewDelegate {
     func selectedTypesDidChanched(_ types: [BankElements]) {
         bankManager.updateFilteredTypes(types)

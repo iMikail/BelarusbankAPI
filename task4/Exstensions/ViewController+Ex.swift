@@ -9,6 +9,10 @@ import UIKit
 
 // MARK: UICollectionViewDelegateFlowLayout
 extension ViewController: UICollectionViewDelegateFlowLayout {
+    private var sectionInsets: UIEdgeInsets {
+        return UIEdgeInsets(top: 20.0, left: 20.0, bottom: 20.0, right: 20.0)
+    }
+    private var itemsPerRow: CGFloat { return 3 }
 
     internal func collectionView(_ collectionView: UICollectionView,
                                  layout collectionViewLayout: UICollectionViewLayout,

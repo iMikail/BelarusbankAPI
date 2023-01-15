@@ -46,7 +46,8 @@ final class CheckboxView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
 
-        backgroundColor = .systemBackground
+        backgroundColor = .secondarySystemBackground
+        layer.cornerRadius = 5
         isHidden = true
         addSubview(stackView)
         stackView.snp.makeConstraints { make in

@@ -22,7 +22,7 @@ final class BankManager: NSObject {
     internal var atms = ATMResponse()
     internal var infoboxes = InfoboxResponse()
     internal var filials = FilialResponse()
-    
+
     internal var allBankElements: [ElementResponse] { return atms + infoboxes + filials }
     private var sortedBankElements = [[ElementResponse]]()
     internal var filteredBankElements = [[ElementResponse]]()
@@ -37,9 +37,9 @@ final class BankManager: NSObject {
     }
 
     // MARK: Updating functions
-    internal func updateDataForTypes(_ types: [BankElements],
-                                     location: CLLocation,
-                                     completion: ((Bool, [ErrorForElement]?) -> Void)? = nil) {
+    internal func updateData(forTypes types: [BankElements] = BankElements.allCases,
+                             location: CLLocation,
+                             completion: ((Bool, [ErrorForElement]?) -> Void)? = nil) {
         guard NetworkMonitor.shared.isConnected else {
             completion?(false, nil)
             return
