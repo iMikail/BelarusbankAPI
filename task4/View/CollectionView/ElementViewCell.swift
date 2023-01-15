@@ -16,26 +16,25 @@ final class ElementViewCell: UICollectionViewCell {
         }
     }
 
-    private lazy var installPlace: UILabel = createLabel()
-    private lazy var workTime: UILabel = createLabel()
-    private lazy var dopInfo: UILabel = createLabel()
+    private lazy var titleLabel: UILabel = createLabelWithSize(13)
+    private lazy var topLabel: UILabel = createLabelWithSize(11)
+    private lazy var mediumLabel: UILabel = createLabelWithSize(11)
+    private lazy var bottomLabel: UILabel = createLabelWithSize(11)
 
     private lazy var stackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [installPlace, workTime, dopInfo])
+        let stackView = UIStackView(arrangedSubviews: [titleLabel, topLabel, mediumLabel, bottomLabel])
         let spacing: CGFloat = 5.0
-        stackView.spacing = spacing
         stackView.layoutMargins = UIEdgeInsets(top: spacing, left: spacing, bottom: spacing, right: spacing)
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.axis = .vertical
-        stackView.distribution = .equalCentering
-        stackView.alignment = .firstBaseline
-        stackView.backgroundColor = .tertiaryLabel
+        stackView.distribution = .equalSpacing
 
         return stackView
     }()
 
     override init(frame: CGRect) {
         super.init(frame: frame)
+        backgroundColor = .tertiaryLabel
         addSubview(stackView)
         stackView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
@@ -49,20 +48,23 @@ final class ElementViewCell: UICollectionViewCell {
     private func setupInfo() {
         guard let bankElement = bankElement else { return }
 
-        installPlace.text = "\(bankElement.elementType.elementName)\n\(bankElement.installPlace)"
+        titleLabel.text = bankElement.elementType.elementName
+        titleLabel.textAlignment = .center
+        topLabel.text = bankElement.installPlace
+
         let workTime = "Режим работы:"
         if bankElement.elementType == .filial {
-            self.workTime.text = workTime + "\n" + bankElement.workTime.split(separator: "|").joined(separator: "\n")
-            dopInfo.text = "Номер телефона: \(bankElement.phoneInfo)"
+            mediumLabel.text = "Номер телефона: \(bankElement.phoneInfo)"
+            bottomLabel.text = workTime + "\n" + bankElement.workTime.split(separator: "|").joined(separator: "\n")
         } else {
-            self.workTime.text = workTime + " " + bankElement.workTime
-            dopInfo.text = "Валюта: \(bankElement.currency)"
+            mediumLabel.text = "Валюта: \(bankElement.currency)"
+            bottomLabel.text = workTime + " " + bankElement.workTime
         }
     }
 
-    private func createLabel() -> UILabel {
+    private func createLabelWithSize(_ size: CGFloat) -> UILabel {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 11.0)
+        label.font = UIFont.systemFont(ofSize: size)
         label.numberOfLines = 0
 
         return label

@@ -88,10 +88,10 @@ final class ElementAnnotationView: MKMarkerAnnotationView {
 
         if annotation.elementType == .filial {
             workTime += "\n" + annotation.workTime.split(separator: "|").joined(separator: "\n")
-            let phoneNumber = "Номер телефона: \(annotation.phoneInfo)"
+            let phoneNumber = "Номер телефона:\n\(annotation.phoneInfo)"
             result += "\n\(workTime)\n\(phoneNumber)"
         } else {
-            workTime += " \(annotation.workTime)"
+            workTime += "\n\(annotation.workTime)"
             let currency = "Валюта: \(annotation.currency)"
             let cashIn = "Приём наличных: \(annotation.cashIn)"
             result += "\n\(workTime)\n\(currency)\n\(cashIn)"
