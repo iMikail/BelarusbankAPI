@@ -84,7 +84,6 @@ final class BankManager: NSObject {
     private func updateAtms(fromData data: Data) {
         do {
             atms = try ATMResponse(data: data)
-            print("atms updated, \(atms.count)")//-
         } catch let error {
             print(error)
         }
@@ -93,7 +92,6 @@ final class BankManager: NSObject {
     private func updateInfobox(fromData data: Data) {
         do {
             infoboxes = try InfoboxResponse(data: data)
-            print("infoboxes updated, \(infoboxes.count)")//-
         } catch let error {
             print(error)
         }
@@ -102,7 +100,6 @@ final class BankManager: NSObject {
     private func updateFillials(fromData data: Data) {
         do {
             filials = try FilialResponse(data: data)
-            print("filials updated, \(filials.count)")//-
         } catch let error {
             print(error)
         }
@@ -116,7 +113,6 @@ final class BankManager: NSObject {
             }
         }
         delegate?.bankElementsDidFiltered()
-        print("Element Filtered")//-
     }
 
     private func sortForCurrentLocation(_ currentLocation: CLLocation) -> [ElementResponse] {

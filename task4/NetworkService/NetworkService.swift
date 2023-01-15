@@ -19,16 +19,13 @@ final class NetworkService {
         let group = DispatchGroup()
         for type in types {
             group.enter()
-            print("\(type) enter")
             fetchData(forBankElement: type) {
                 group.leave()
-                print("\(type) leave")//-
             }
         }
 
         group.notify(queue: .main) { [weak self] in
             guard let self = self else { return }
-            print(self.dataArray, self.errors)//-
             completion(self.dataArray, self.errors)
             self.dataArray = []
             self.errors = []

@@ -18,7 +18,7 @@ final class ViewController: UIViewController {
             mapView.isHidden = !isMapDisplayType
             listView.isHidden = isMapDisplayType
             if bankManager.filteredBankElements.isEmpty {
-                loaderView.setHidden(false)
+                loaderView.setHidden(isMapDisplayType)
             }
         }
     }
