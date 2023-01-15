@@ -8,7 +8,6 @@
 import UIKit
 
 extension UIButton {
-
     internal func requestingState(_ enable: Bool) {
         guard let imageView = imageView else { return }
 
@@ -21,5 +20,15 @@ extension UIButton {
             imageView.transform = .identity
             imageView.layer.removeAllAnimations()
         }
+    }
+
+    internal func setupRefreshConfigurating() {
+        var configuration = UIButton.Configuration.plain()
+        configuration.title = "Обновить"
+        configuration.attributedTitle?.font = UIFont.systemFont(ofSize: 15.0)
+        configuration.image = UIImage(systemName: "arrow.triangle.2.circlepath")
+        configuration.imagePadding = 5.0
+
+        self.configuration = configuration
     }
 }

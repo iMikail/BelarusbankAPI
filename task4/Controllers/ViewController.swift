@@ -11,50 +11,31 @@ import MapKit
 
 final class ViewController: UIViewController {
     // MARK: - Properties
-    internal let sectionInsets = UIEdgeInsets(top: 20.0, left: 20.0, bottom: 20.0, right: 20.0)
-    internal let itemsPerRow: CGFloat = 3
     private let locationManager = CLLocationManager()
-    private var atms = ATMResponse() {
-        didSet {
-            setupATMsOnMap()
-            sortedAtms = sortAtmsByCities()
-        }
-    }
-    private var sortedAtms = [ATMResponse]()
+    private let bankManager = BankManager()
     private var isMapDisplayType = true {
         didSet {
             mapView.isHidden = !isMapDisplayType
-            atmCollectionView.isHidden = isMapDisplayType
-            if !isMapDisplayType {
-                atmCollectionView.reloadData()
+            listView.isHidden = isMapDisplayType
+            if bankManager.filteredBankElements.isEmpty {
+                loaderView.setHidden(isMapDisplayType)
             }
         }
     }
+    private var isFirstRequest = true
 
     // MARK: - Views
     private lazy var refreshButton: UIButton = {
         let button = UIButton()
-        var configuration = UIButton.Configuration.plain()
-        configuration.title = "Обновить"
-        configuration.attributedTitle?.font = UIFont.systemFont(ofSize: 15.0)
-        configuration.image = UIImage(systemName: "arrow.triangle.2.circlepath")
-        configuration.imagePadding = 5.0
-
-        button.configuration = configuration
+        button.setupRefreshConfigurating()
         button.addTarget(self, action: #selector(fetchRequest), for: .touchUpInside)
 
         return button
     }()
 
     private lazy var segmentedControl: UISegmentedControl = {
-        let items = DisplayType.allCases
-        let segmentedControl = UISegmentedControl(items: items.map { $0.title })
-        segmentedControl.selectedSegmentIndex = DisplayType.map.rawValue
-        segmentedControl.setDividerImage(UIImage(systemName: "chevron.left.2"), forLeftSegmentState: .selected,
-                                         rightSegmentState: .normal, barMetrics: .default)
-        segmentedControl.setDividerImage(UIImage(systemName: "chevron.right.2"), forLeftSegmentState: .normal,
-                                         rightSegmentState: .selected, barMetrics: .default)
-        segmentedControl.tintColor = .label
+        let segmentedControl = UISegmentedControl(items: DisplayType.allCases.map { $0.title })
+        segmentedControl.setupConfigurating()
         segmentedControl.addTarget(self, action: #selector(switchDisplayType), for: .valueChanged)
 
         return segmentedControl
@@ -62,35 +43,22 @@ final class ViewController: UIViewController {
 
     private lazy var mapView: MKMapView = {
         let map = MKMapView(frame: .zero)
-        map.delegate = self
-        map.register(ATMAnnotationView.self, forAnnotationViewWithReuseIdentifier: ATMAnnotationView.identifier)
-        map.isHidden = !isMapDisplayType
         map.showsUserLocation = true
         map.setRegion(map.belarusRegion, animated: true)
 
         return map
     }()
 
-    private lazy var atmCollectionView: UICollectionView = {
-        let layout = UICollectionViewFlowLayout()
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collectionView.dataSource = self
-        collectionView.delegate = self
-        collectionView.isHidden = isMapDisplayType
-
-        return collectionView
-    }()
+    private lazy var listView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
+    private lazy var loaderView = LoaderView(style: .medium)
+    private lazy var checkboxView = CheckboxView()
 
     // MARK: - Overriden funcs
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Карта Банкоматов"
-        view.backgroundColor = .systemBackground
-        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: refreshButton)
-        atmCollectionView.register(ATMViewCell.self, forCellWithReuseIdentifier: ATMViewCell.identifier)
-        atmCollectionView.register(SectionHeaderView.self,
-                                   forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
-                                   withReuseIdentifier: SectionHeaderView.identifier)
+        setupFirstOptions()
+        setupDelegates()
+        registerViews()
         attemptLocationAccess()
         fetchRequest()
         setupViews()
@@ -99,35 +67,42 @@ final class ViewController: UIViewController {
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
-        guard let flowLayout = atmCollectionView.collectionViewLayout as? UICollectionViewFlowLayout else {
-            return
-        }
+        guard let flowLayout = listView.collectionViewLayout as? UICollectionViewFlowLayout else { return }
+
         flowLayout.invalidateLayout()
     }
 
     // MARK: Private funcs
-    private func sortAtmsByCities() -> [ATMResponse] {
-        var atms = atms
-        var sortedAtms = [ATMResponse]()
+    private func setupFirstOptions() {
+        title = "Карта"
+        view.backgroundColor = .systemBackground
+        let leftItem = UIBarButtonItem(image: UIImage(systemName: "checklist.rtl"), style: .done,
+                                       target: self, action: #selector(toggleCheckboxView))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: refreshButton)
+        navigationItem.leftBarButtonItem = leftItem
+        listView.isHidden = true
+    }
 
-        while !atms.isEmpty {
-            var array = ATMResponse()
-            let city = atms[0].city
+    private func registerViews() {
+        mapView.register(ElementAnnotationView.self,
+                         forAnnotationViewWithReuseIdentifier: ElementAnnotationView.identifier)
+        listView.register(ElementViewCell.self, forCellWithReuseIdentifier: ElementViewCell.identifier)
+        listView.register(SectionHeaderView.self,
+                                   forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
+                                   withReuseIdentifier: SectionHeaderView.identifier)
+    }
 
-            for atm in atms where atm.city == city {
-                array.append(atm)
-            }
-            atms.removeAll { $0.city == city }
-            sortedAtms.append(array)
-        }
-
-        return sortedAtms.map { $0.sorted { $0.id < $1.id } }
+    private func setupDelegates() {
+        bankManager.delegate = self
+        locationManager.delegate = self
+        mapView.delegate = self
+        listView.delegate = self
+        listView.dataSource = self
+        checkboxView.delegate = self
     }
 
     private func attemptLocationAccess() {
         locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
-        locationManager.delegate = self
-
         switch locationManager.authorizationStatus {
         case .notDetermined: locationManager.requestWhenInUseAuthorization()
         case .denied: showDeniedAccessAlert()
@@ -135,60 +110,81 @@ final class ViewController: UIViewController {
         }
     }
 
+    private func setEnabledInterface(_ enabled: Bool) {
+        view.isUserInteractionEnabled = enabled
+        navigationController?.navigationBar.isUserInteractionEnabled = enabled
+        refreshButton.requestingState(!enabled)
+        loaderView.setHidden(enabled)
+    }
+
     // MARK: Action funcs
-    @objc private func fetchRequest() {
-        guard NetworkMonitor.shared.isConnected else {
-            showNoInternetAlert()
-            return
-        }
-
-        refreshButton.requestingState(true)
-        NetworkService.getData { [weak self] (data, error, enabled) in
-            guard let self = self else { return }
-
-            if let error = error {
-                self.showErrorConnectionAlert(error: error)
-            }
-
-            if let data = data {
-                do {
-                    let atms = try ATMResponse(data: data)
-                    self.atms = atms
-                } catch {
-                    print(error)
-                }
-            }
-            self.refreshButton.requestingState(!enabled)
-        }
+    @objc private func toggleCheckboxView() {
+        checkboxView.isHidden = !checkboxView.isHidden
     }
 
     @objc private func switchDisplayType() {
         isMapDisplayType = !isMapDisplayType
         let index = isMapDisplayType ? DisplayType.map.rawValue : DisplayType.list.rawValue
         segmentedControl.selectedSegmentIndex = index
+        self.title = DisplayType(rawValue: index)?.title
+    }
 
-        if let title = DisplayType(rawValue: index)?.title {
-            self.title = "\(title) банкоматов"
+    @objc private func fetchRequest() {
+        setEnabledInterface(false)
+        let location = locationManager.location ?? locationManager.defaultLocation
+        if isFirstRequest {
+            bankManager.updateData(location: location) { [weak self] (connected, errorElements) in
+                guard let self = self else { return }
+                self.setEnabledInterface(true)
+                self.isFirstRequest = false
+
+                if connected {
+                    if let errorElements = errorElements {
+                        self.showErrorConnectionAlert(errorElements: errorElements)
+                    }
+                } else {
+                    self.showNoInternetAlert()
+                }
+            }
+        } else {
+            bankManager.updateData(forTypes: [.atm], location: location) { [weak self] (connected, _) in
+                self?.setEnabledInterface(true)
+                if !connected {
+                    self?.showNoInternetAlert()
+                }
+            }
+            bankManager.updateData(forTypes: [.infobox], location: location)
+            bankManager.updateData(forTypes: [.filial], location: location)
         }
     }
 
     // MARK: Setup funcs
-    private func setupATMsOnMap() {
-        let oldAnnotations = mapView.annotations
-        var newAnnotations = [ATMAnnotation]()
-        atms.forEach { atm in
-            let annotation = ATMAnnotation(fromATM: atm)
-            newAnnotations.append(annotation)
+    private func setupElementsOnMapForTypes(_ types: [BankElements]) {
+        let oldAnnotations = mapView.annotations.filter { annotation in
+            if let elementAnnotation = annotation as? ElementAnnotation {
+                return !types.contains(elementAnnotation.elementType)
+            } else {
+                return true
+            }
         }
-
         mapView.removeAnnotations(oldAnnotations)
+
+        var newAnnotations = [ElementAnnotation]()
+        bankManager.allBankElements.forEach { element in
+            if types.contains(element.elementType) {
+                let annotation = ElementAnnotation(fromElement: element)
+                newAnnotations.append(annotation)
+            }
+        }
         mapView.addAnnotations(newAnnotations)
     }
 
     private func setupViews() {
         view.addSubview(segmentedControl)
         view.addSubview(mapView)
-        view.addSubview(atmCollectionView)
+        view.addSubview(listView)
+        view.addSubview(checkboxView)
+        view.addSubview(loaderView)
     }
 
     private func setupConstraints() {
@@ -202,8 +198,16 @@ final class ViewController: UIViewController {
             make.leading.trailing.bottom.equalTo(view.safeAreaLayoutGuide)
             make.top.equalTo(segmentedControl.snp.bottom).offset(5.0)
         }
-        atmCollectionView.snp.makeConstraints { make in
+        listView.snp.makeConstraints { make in
             make.edges.equalTo(mapView)
+        }
+        checkboxView.snp.makeConstraints { make in
+            make.left.top.equalTo(view.safeAreaLayoutGuide)
+
+        }
+        loaderView.snp.makeConstraints { make in
+            make.width.height.equalTo(100)
+            make.centerX.centerY.equalToSuperview()
         }
     }
 
@@ -214,13 +218,16 @@ final class ViewController: UIViewController {
                                                 preferredStyle: .alert)
         let action = UIAlertAction(title: "Ок", style: .cancel)
         alertController.addAction(action)
-
         present(alertController, animated: true)
     }
 
-    private func showErrorConnectionAlert(error: Error) {
-        let alertController = UIAlertController(title: "Ошибка сети",
-                                                message: error.localizedDescription,
+    private func showErrorConnectionAlert(errorElements: [ErrorForElement]) {
+        var message = ""
+        errorElements.forEach { (error, type) in
+            message += "\(type.elementName): \(error.localizedDescription)\n"
+        }
+        let alertController = UIAlertController(title: "Не удалось обновить элементы",
+                                                message: message,
                                                 preferredStyle: .alert)
         let repeatAction = UIAlertAction(title: "Повторить ещё раз", style: .default) { [weak self] _ in
             self?.fetchRequest()
@@ -229,7 +236,6 @@ final class ViewController: UIViewController {
 
         alertController.addAction(repeatAction)
         alertController.addAction(canselAction)
-
         present(alertController, animated: true)
     }
 
@@ -249,30 +255,47 @@ final class ViewController: UIViewController {
 
         alertController.addAction(optionAction)
         alertController.addAction(canselAction)
-
         present(alertController, animated: true)
     }
 }
 
-// MARK: - Extensions: UICollectionViewDataSource
+// MARK: - Extensions: CollectionViewDelegate
+extension ViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let currentId = bankManager.filteredBankElements[indexPath.section][indexPath.row].itemId
+        let currentType = bankManager.filteredBankElements[indexPath.section][indexPath.row].elementType
+
+        if let annotation = mapView.annotations.first(where: { annotation in
+            if let elementAnnotation = annotation as? ElementAnnotation {
+                return elementAnnotation.itemId == currentId && elementAnnotation.elementType == currentType
+            } else {
+                return false
+            }
+        }) {
+            switchDisplayType()
+            mapView.selectAnnotation(annotation, animated: true)
+        }
+    }
+}
+
+// MARK: UICollectionViewDataSource
 extension ViewController: UICollectionViewDataSource {
     internal func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return sortedAtms.count
+        return bankManager.filteredBankElements.count
     }
 
     internal func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return sortedAtms[section].count
+        return bankManager.filteredBankElements[section].count
     }
 
     internal func collectionView(_ collectionView: UICollectionView,
                                  cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(
-            withReuseIdentifier: ATMViewCell.identifier,
-            for: indexPath) as? ATMViewCell else {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ElementViewCell.identifier,
+                                                            for: indexPath) as? ElementViewCell else {
             return UICollectionViewCell()
         }
 
-        cell.atm = sortedAtms[indexPath.section][indexPath.row]
+        cell.bankElement = bankManager.filteredBankElements[indexPath.section][indexPath.row]
 
         return cell
     }
@@ -283,12 +306,11 @@ extension ViewController: UICollectionViewDataSource {
         guard let headerView = collectionView.dequeueReusableSupplementaryView(
             ofKind: kind,
             withReuseIdentifier: SectionHeaderView.identifier,
-            for: indexPath
-        ) as? SectionHeaderView else {
+            for: indexPath) as? SectionHeaderView else {
             return UICollectionReusableView()
         }
 
-        headerView.titleLabel.text = sortedAtms[indexPath.section].first?.city
+        headerView.titleLabel.text = bankManager.filteredBankElements[indexPath.section].first?.itemCity
 
         return headerView
     }
@@ -298,25 +320,6 @@ extension ViewController: UICollectionViewDataSource {
                                  referenceSizeForHeaderInSection section: Int) -> CGSize {
         return CGSize(width: collectionView.frame.width, height: 40.0)
     }
-}
-
-// MARK: CollectionViewDelegate
-extension ViewController: UICollectionViewDelegate {
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let currentId = sortedAtms[indexPath.section][indexPath.row].id
-
-        if let annotation = mapView.annotations.first(where: { annotation in
-            if let atmAnnotation = annotation as? ATMAnnotation {
-                return atmAnnotation.id == currentId
-            } else {
-                return false
-            }
-        }) {
-            switchDisplayType()
-            mapView.selectAnnotation(annotation, animated: true)
-        }
-    }
-
 }
 
 // MARK: CLLocationManagerDelegate
@@ -337,37 +340,59 @@ extension ViewController: CLLocationManagerDelegate {
     }
 
     internal func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        print(error.localizedDescription)
+        print(error)
     }
 }
 
 // MARK: MKMapViewDelegate
 extension ViewController: MKMapViewDelegate {
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-        guard let annotation = annotation as? ATMAnnotation else { return nil }
+        guard let annotation = annotation as? ElementAnnotation else { return nil }
 
-        var view: ATMAnnotationView
+        var view: ElementAnnotationView
         if let dequeuedView = mapView.dequeueReusableAnnotationView(
-            withIdentifier: ATMAnnotationView.identifier) as? ATMAnnotationView {
+            withIdentifier: ElementAnnotationView.identifier) as? ElementAnnotationView {
             dequeuedView.annotation = annotation
             view = dequeuedView
         } else {
-            view = ATMAnnotationView(annotation: annotation, reuseIdentifier: ATMAnnotationView.identifier)
+            view = ElementAnnotationView(annotation: annotation, reuseIdentifier: ElementAnnotationView.identifier)
         }
         view.delegate = self
-        view.atmAnnotation = annotation
+        view.elementAnnotation = annotation
 
         return view
     }
 }
 
-// MARK: ATMViewCellDelegate
-extension ViewController: ATMViewCellDelegate {
-    func fetchMoreInfo(forAtmId id: String) {
+// MARK: ElementAnnotationViewDelegate
+extension ViewController: ElementAnnotationViewDelegate {
+    func fetchMoreInfoForElement(_ type: BankElements, id: String) {
         let detailVC = DetailViewController()
-        detailVC.atm = self.atms.first(where: { $0.id == id })
-        detailVC.userCoordinate = self.locationManager.location?.coordinate
+        detailVC.userCoordinate = locationManager.location?.coordinate
+        detailVC.element = bankManager.fetchElement(type, id: id)
 
         navigationController?.pushViewController(detailVC, animated: true)
+    }
+}
+
+// MARK: BankManagerDelegate
+extension ViewController: BankManagerDelegate {
+    func bankElementsDidFiltered() {
+        if loaderView.isAnimating {
+            loaderView.setHidden(true)
+        }
+        listView.reloadData()
+    }
+
+    func bankElementsDidUpdated() {
+        setupElementsOnMapForTypes(checkboxView.selectedTypes)
+    }
+}
+
+// MARK: CheckboxViewDelegate
+extension ViewController: CheckboxViewDelegate {
+    func selectedTypesDidChanched(_ types: [BankElements]) {
+        bankManager.updateFilteredTypes(types)
+        setupElementsOnMapForTypes(types)
     }
 }

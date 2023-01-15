@@ -7,32 +7,52 @@
 
 import Foundation
 
+typealias DataForElement = (data: Data, type: BankElements)
+typealias ErrorForElement = (error: Error, type: BankElements)
+
 final class NetworkService {
+    private var dataArray = [DataForElement]()
+    private var errors = [ErrorForElement]()
 
-    private init() {}
+    internal func getDataForTypes(_ types: [BankElements],
+                                  completion: @escaping ([DataForElement], [ErrorForElement]) -> Void) {
+        let group = DispatchGroup()
+        for type in types {
+            group.enter()
+            fetchData(forBankElement: type) {
+                group.leave()
+            }
+        }
 
-    private static let link = "https://belarusbank.by/api/atm"
+        group.notify(queue: .main) { [weak self] in
+            guard let self = self else { return }
+            completion(self.dataArray, self.errors)
+            self.dataArray = []
+            self.errors = []
+        }
+    }
 
-    internal static func getData(completion: @escaping (Data?, Error?, Bool) -> Void) {
-        guard let url = URL(string: link) else {
+    private func fetchData(forBankElement element: BankElements, completion: @escaping () -> Void) {
+        guard let url = URL(string: element.apiLink) else {
             let error = URLError(.badURL)
-            completion(nil, error, true)
+            errors.append((error, element))
+            completion()
             return
         }
 
         let session = URLSession.shared
-        session.dataTask(with: URLRequest(url: url, timeoutInterval: 30)) { (data, _, error) in
+        session.dataTask(with: URLRequest(url: url, timeoutInterval: 30)) { [weak self] (data, _, error) in
             DispatchQueue.main.async {
                 if let error = error {
-                    completion(nil, error, true)
+                    self?.errors.append((error, element))
+                    completion()
                     return
                 }
 
                 if let data = data {
-                    completion(data, nil, true)
-                } else {
-                    completion(nil, nil, true)
+                    self?.dataArray.append((data, element))
                 }
+                completion()
             }
         }.resume()
     }
