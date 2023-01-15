@@ -6,15 +6,14 @@
 //
 
 protocol ElementResponse {
-    var id: String { get }
-    var city: String { get }
+    var itemId: String { get }
+    var itemCity: String { get }
     var latitude: String { get }
     var longitude: String { get }
-    var installPlace: String { get }
-    var workTime: String { get }
+    var itemInstallPlace: String { get }
+    var itemWorkTime: String { get }
     var elementType: BankElements { get }
-    //Разделить atm,infobox / filial?
-    var currency: String { get }
-    var cashIn: String { get }
-    var phoneInfo: String { get }
+    var itemCurrency: String { get }
+    var itemCashIn: String { get }
+    var itemPhoneInfo: String { get }
 }

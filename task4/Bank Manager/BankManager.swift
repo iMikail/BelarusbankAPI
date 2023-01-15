@@ -30,9 +30,9 @@ final class BankManager: NSObject {
     // MARK: - Functions
     internal func fetchElement(_ type: BankElements, id: String) -> ElementDescription? {
         switch type {
-        case .atm: return atms.first(where: { $0.id == id })
-        case .infobox: return infoboxes.first(where: { $0.id == id })
-        case .filial: return filials.first(where: { $0.id == id })
+        case .atm: return atms.first(where: { $0.itemId == id })
+        case .infobox: return infoboxes.first(where: { $0.itemId == id })
+        case .filial: return filials.first(where: { $0.itemId == id })
         }
     }
 
@@ -145,12 +145,12 @@ final class BankManager: NSObject {
 
         while !allElements.isEmpty {
             var array = [ElementResponse]()
-            let city = allElements[0].city
+            let city = allElements[0].itemCity
 
-            for element in allElements where element.city == city {
+            for element in allElements where element.itemCity == city {
                 array.append(element)
             }
-            allElements.removeAll { $0.city == city }
+            allElements.removeAll { $0.itemCity == city }
             sortedElements.append(array)
         }
 

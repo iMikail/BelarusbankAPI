@@ -262,12 +262,12 @@ final class ViewController: UIViewController {
 // MARK: - Extensions: CollectionViewDelegate
 extension ViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let currentId = bankManager.filteredBankElements[indexPath.section][indexPath.row].id
+        let currentId = bankManager.filteredBankElements[indexPath.section][indexPath.row].itemId
         let currentType = bankManager.filteredBankElements[indexPath.section][indexPath.row].elementType
 
         if let annotation = mapView.annotations.first(where: { annotation in
             if let elementAnnotation = annotation as? ElementAnnotation {
-                return elementAnnotation.id == currentId && elementAnnotation.elementType == currentType
+                return elementAnnotation.itemId == currentId && elementAnnotation.elementType == currentType
             } else {
                 return false
             }
@@ -310,7 +310,7 @@ extension ViewController: UICollectionViewDataSource {
             return UICollectionReusableView()
         }
 
-        headerView.titleLabel.text = bankManager.filteredBankElements[indexPath.section].first?.city
+        headerView.titleLabel.text = bankManager.filteredBankElements[indexPath.section].first?.itemCity
 
         return headerView
     }

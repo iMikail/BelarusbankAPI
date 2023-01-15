@@ -50,15 +50,16 @@ final class ElementViewCell: UICollectionViewCell {
 
         titleLabel.text = bankElement.elementType.elementName
         titleLabel.textAlignment = .center
-        topLabel.text = bankElement.installPlace
+        topLabel.text = bankElement.itemInstallPlace
 
         let workTime = "Режим работы:"
         if bankElement.elementType == .filial {
-            mediumLabel.text = "Номер телефона: \(bankElement.phoneInfo)"
-            bottomLabel.text = workTime + "\n" + bankElement.workTime.split(separator: "|").joined(separator: "\n")
+            mediumLabel.text = "Номер телефона: \(bankElement.itemPhoneInfo)"
+            let text = workTime + "\n" + bankElement.itemWorkTime.split(separator: "|").joined(separator: "\n")
+            bottomLabel.text = text
         } else {
-            mediumLabel.text = "Валюта: \(bankElement.currency)"
-            bottomLabel.text = workTime + " " + bankElement.workTime
+            mediumLabel.text = "Валюта: \(bankElement.itemCurrency)"
+            bottomLabel.text = workTime + " " + bankElement.itemWorkTime
         }
     }
 

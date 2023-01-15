@@ -8,16 +8,16 @@
 import MapKit
 
 final class ElementAnnotation: NSObject, MKAnnotation, ElementResponse {
-    let id: String
-    let city: String
+    let itemId: String
+    let itemCity: String
     let latitude: String
     let longitude: String
-    let installPlace: String
-    let currency: String
-    let workTime: String
-    let cashIn: String
+    let itemInstallPlace: String
+    let itemCurrency: String
+    let itemWorkTime: String
+    let itemCashIn: String
     let elementType: BankElements
-    let phoneInfo: String
+    let itemPhoneInfo: String
 
     var coordinate: CLLocationCoordinate2D {
         if let latitude = Double(latitude), let longitude = Double(longitude) {
@@ -28,15 +28,15 @@ final class ElementAnnotation: NSObject, MKAnnotation, ElementResponse {
     }
 
     init(fromElement element: ElementResponse) {
-        id = element.id
-        city = element.city
+        itemId = element.itemId
+        itemCity = element.itemCity
         latitude = element.latitude
         longitude = element.longitude
-        installPlace = element.installPlace
-        currency = element.currency
-        workTime = element.workTime
-        cashIn = element.cashIn
+        itemInstallPlace = element.itemInstallPlace
+        itemCurrency = element.itemCurrency
+        itemWorkTime = element.itemWorkTime
+        itemCashIn = element.itemCashIn
         elementType = element.elementType
-        phoneInfo = element.phoneInfo
+        itemPhoneInfo = element.itemPhoneInfo
     }
 }

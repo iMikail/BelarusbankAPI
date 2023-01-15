@@ -40,7 +40,7 @@ final class ElementAnnotationView: MKMarkerAnnotationView {
             guard let self = self else { return }
 
             if let annotation = self.elementAnnotation {
-                self.delegate?.fetchMoreInfoForElement(annotation.elementType, id: annotation.id)
+                self.delegate?.fetchMoreInfoForElement(annotation.elementType, id: annotation.itemId)
             }
         }
         button.addAction(action, for: .touchUpInside)
@@ -84,16 +84,16 @@ final class ElementAnnotationView: MKMarkerAnnotationView {
         guard let annotation = elementAnnotation else { return }
 
         var workTime = "Время работы:"
-        var result = "\(annotation.elementType.elementName)\n\(annotation.installPlace)"
+        var result = "\(annotation.elementType.elementName)\n\(annotation.itemInstallPlace)"
 
         if annotation.elementType == .filial {
-            workTime += "\n" + annotation.workTime.split(separator: "|").joined(separator: "\n")
-            let phoneNumber = "Номер телефона:\n\(annotation.phoneInfo)"
+            workTime += "\n" + annotation.itemWorkTime.split(separator: "|").joined(separator: "\n")
+            let phoneNumber = "Номер телефона:\n\(annotation.itemPhoneInfo)"
             result += "\n\(workTime)\n\(phoneNumber)"
         } else {
-            workTime += "\n\(annotation.workTime)"
-            let currency = "Валюта: \(annotation.currency)"
-            let cashIn = "Приём наличных: \(annotation.cashIn)"
+            workTime += "\n\(annotation.itemWorkTime)"
+            let currency = "Валюта: \(annotation.itemCurrency)"
+            let cashIn = "Приём наличных: \(annotation.itemCashIn)"
             result += "\n\(workTime)\n\(currency)\n\(cashIn)"
         }
         detailLabel.text = result

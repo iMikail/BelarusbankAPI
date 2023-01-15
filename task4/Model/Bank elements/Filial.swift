@@ -10,34 +10,33 @@ import Foundation
 typealias FilialResponse = [Filial]
 
 struct Filial: Codable {
-    let filialId: String
-    let sapId: String
-    let filialName: String
-    let nameType: String
-    let name: String
-    let streetType: String
-    let street: String
-    let homeNumber: String
+    let filialId: String?
+    let sapId: String?
+    let filialName: String?
+    let nameType: String?
+    let name: String?
+    let streetType: String?
+    let street: String?
+    let homeNumber: String?
     let nameTypePrev: String?
     let namePrev: String?
-    let streetTypePrev: String
-    let streetPrev: String
-    let homeNumberPrev: String
-    let infoText: String
-    let infoWorktime: String
+    let streetTypePrev: String?
+    let streetPrev: String?
+    let homeNumberPrev: String?
+    let infoText: String?
+    let infoWorktime: String?
     let infoBankBik: String?
     let infoBankUnp: String?
-    let latitude: String
-    let longitude: String
-    let belNumberSchet: String
-    let foreignNumberSchet: String
-    let phoneInfo: String
+    let gpsX: String?
+    let gpsY: String?
+    let belNumberSchet: String?
+    let foreignNumberSchet: String?
+    let phoneInfo: String?
     let infoWeekend1Day, infoWeekend2Day, infoWeekend3Day, infoWeekend4Day,
-        infoWeekend5Day, infoWeekend6Day, infoWeekend7Day: String
+        infoWeekend5Day, infoWeekend6Day, infoWeekend7Day: String?
     let infoWeekend1Time, infoWeekend2Time, infoWeekend3Time, infoWeekend4Time,
-        infoWeekend5Time, infoWeekend6Time, infoWeekend7Time: String
-    let dopNum: String
-    // TODO: type uslugi? uslPriemZayvleniyObsluzhivanieDerzhatelej - 41
+        infoWeekend5Time, infoWeekend6Time, infoWeekend7Time: String?
+    let dopNum: String?
     let uslBroker, uslBuySlitki, uslCardInternet, uslCennieBumagi, uslCheckDoverVnebanka, uslChekiGilie,
         uslChekiImuschestvo, uslClubBarhat, uslClubKartblansh, uslClubLedi, uslClubNastart, uslClubPersona,
         uslClubSchodry, uslClubSvoi, uslClubZclass, uslCoinsExchange, uslDepositariy, uslDepDoverennosti,
@@ -51,7 +50,7 @@ struct Filial: Codable {
         uslPriemCennosteiNaHranenie, uslPriemCennostejNaHranenie, uslPriemDocsFlDepozitOperations,
         uslPriemDocsVidachaSoprLgotIpotech, uslPriemDocNaKreditsOverdrafts, uslPriemDocNaLizing,
         uslPriemInkasso, uslPriemOblMf, uslPriemPlatejeiBynIp, uslPriemPlatejeiEurIp,
-        uslPriemVznosovInostrValOtStraxAgentov, uslPriemZayvleniyObsluzhivanieDerzhatelej, uslProdagaMonet,
+        uslPriemVznosovInostrValOtStraxAgentov, priemZayvleniyObsluzhivanieDerzhatelej, uslProdagaMonet,
         uslRazmenForeignVal, uslRazmProdazhaDocumentarObligacii, uslRbCard, uslRegistrationValDogovor,
         uslReturnBynIspKarts, uslReturnUsdIspKarts, uslRko, uslSeif, uslSoprovKreditVTomChisleMagnit,
         uslStrahovanieAvto, uslStrahovanieAvtoPogran, uslStrahovanieDetei, uslStrahovanieDohodPodZaschitoy,
@@ -64,9 +63,9 @@ struct Filial: Codable {
         uslVypllataBelRub, uslVzk, uslPlategiAll, uslPlategiInForeignVal, uslPlategiZaProezdVPolzuBanka,
         uslPlategiMinusMobi, uslPlategiMinusInternet, uslPlategiMinusMobiInternetFull,
         uslPlategiNalMinusKromeKredit: String?
-    let filialNum: String
-    let cbuNum: String
-    let otdNum: String
+    let filialNum: String?
+    let cbuNum: String?
+    let otdNum: String?
 
     enum CodingKeys: String, CodingKey {
         case filialId = "filial_id"
@@ -86,8 +85,8 @@ struct Filial: Codable {
         case infoWorktime = "info_worktime"
         case infoBankBik = "info_bank_bik"
         case infoBankUnp = "info_bank_unp"
-        case latitude = "GPS_X"
-        case longitude = "GPS_Y"
+        case gpsX = "GPS_X"
+        case gpsY = "GPS_Y"
         case belNumberSchet = "bel_number_schet"
         case foreignNumberSchet = "foreign_number_schet"
         case phoneInfo = "phone_info"
@@ -164,7 +163,7 @@ struct Filial: Codable {
         case uslPriemPlatejeiBynIp = "usl_priem_platejei_byn_ip"
         case uslPriemPlatejeiEurIp = "usl_priem_platejei_eur_ip"
         case uslPriemVznosovInostrValOtStraxAgentov = "usl_priem_vznosov_inostr_val_ot_strax_agentov"
-        case uslPriemZayvleniyObsluzhivanieDerzhatelej = "usl_priem_zayvleniy_obsluzhivanie_derzhatelej"
+        case priemZayvleniyObsluzhivanieDerzhatelej = "usl_priem_zayvleniy_obsluzhivanie_derzhatelej"
         case uslProdagaMonet = "usl_prodaga_monet"
         case uslRazmenForeignVal = "usl_razmen_foreign_val"
         case uslRazmProdazhaDocumentarObligacii = "usl_razm_prodazha_documentar_obligacii"
@@ -222,20 +221,23 @@ struct Filial: Codable {
 }
 
 extension Filial: ElementDescription {
-    var id: String { return filialId }
-    var city: String { return name }
-    var installPlace: String { return streetType + " " + street + ", " + homeNumber }
-    var workTime: String { return infoWorktime }
-    var currency: String { return "" }
-    var cashIn: String { return "" }
+    var itemId: String { return filialId ?? "" }
+    var latitude: String { return gpsX ?? "" }
+    var longitude: String { return gpsY ?? "" }
+    var itemCity: String { return name ?? "" }
+    var itemInstallPlace: String { return (streetType ?? "") + " " + (street ?? "") + ", " + (homeNumber ?? "") }
+    var itemWorkTime: String { return infoWorktime ?? "" }
+    var itemCurrency: String { return "" }
+    var itemCashIn: String { return "" }
+    var itemPhoneInfo: String { return phoneInfo ?? "" }
     var elementType: BankElements { return .filial }
 
     internal func arrayDescriptions() -> [String] {
         var arrayDescriprions = [String]()
 
         Mirror(reflecting: self).children.forEach { child in
-            if let property = child.label {
-                arrayDescriprions.append("\(property): \(child.value)")
+            if let property = child.label, let value = child.value as? String {
+                arrayDescriprions.append("\(property): \(value)")
             }
         }
 
