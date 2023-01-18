@@ -214,7 +214,7 @@ final class ViewController: UIViewController {
     // MARK: AlertController funcs
     private func showNoInternetAlert() {
         let alertController = UIAlertController(title: "Отсутствует интернет соединение",
-                                                message: "Приложение не работает без доступа к интернету",
+                                                message: "Приложение не обновит данные без доступа к интернету",
                                                 preferredStyle: .alert)
         let action = UIAlertAction(title: "Ок", style: .cancel)
         alertController.addAction(action)
