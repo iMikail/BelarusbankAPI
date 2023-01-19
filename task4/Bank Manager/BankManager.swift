@@ -20,27 +20,30 @@ final class BankManager: NSObject {
     private var filteredTypes = BankElements.allCases
     weak var delegate: BankManagerDelegate?
 
-    internal var atms = ATMResponse()
-    internal var infoboxes = InfoboxResponse()
-    internal var filials = FilialResponse()
+    var atms = ATMResponse()
+    var infoboxes = InfoboxResponse()
+    var filials = FilialResponse()
 
-    internal var allBankElements: [ElementResponse] { return atms + infoboxes + filials }
+    var allBankElements: [ElementResponse] { return atms + infoboxes + filials }
     private var sortedBankElements = [[ElementResponse]]()
-    internal var filteredBankElements = [[ElementResponse]]()
+    var filteredBankElements = [[ElementResponse]]()
 
     // MARK: - Functions
-    internal func fetchElement(_ type: BankElements, id: String) -> ElementDescription? {
+    func fetchElement(_ type: BankElements, id: String) -> ElementDescription? {
         switch type {
-        case .atm: return atms.first(where: { $0.itemId == id })
-        case .infobox: return infoboxes.first(where: { $0.itemId == id })
-        case .filial: return filials.first(where: { $0.itemId == id })
+        case .atm:
+            return atms.first(where: { $0.itemId == id })
+        case .infobox:
+            return infoboxes.first(where: { $0.itemId == id })
+        case .filial:
+            return filials.first(where: { $0.itemId == id })
         }
     }
 
     // MARK: Updating functions
-    internal func updateData(forTypes types: [BankElements] = BankElements.allCases,
-                             location: CLLocation,
-                             completion: ((Bool, [ErrorForElement]?) -> Void)? = nil) {
+    func updateData(forTypes types: [BankElements] = BankElements.allCases,
+                    location: CLLocation,
+                    completion: ((Bool, [ErrorForElement]?) -> Void)? = nil) {
         guard NetworkMonitor.shared.isConnected else {
             loadStoreDataForTypes(types, userLocation: location)
             completion?(false, nil)
@@ -49,6 +52,7 @@ final class BankManager: NSObject {
 
         networkService.getDataForTypes(types) { [weak self] (dataArray, errors) in
             guard let self = self  else { return }
+
             self.saveData(dataArray)
             self.updateElements(dataArray, userLocation: location)
 
@@ -63,7 +67,7 @@ final class BankManager: NSObject {
         }
     }
 
-    internal func updateFilteredTypes(_ types: [BankElements]) {
+    func updateFilteredTypes(_ types: [BankElements]) {
         filteredTypes = types
         filteredElementsForTypes()
     }
@@ -73,7 +77,6 @@ final class BankManager: NSObject {
 
         types.forEach { type in
             var data: Data
-
             switch type {
             case .atm:
                 data = coreDataManager.fetchStoreDataForEntity(StoreATM.self)
@@ -107,17 +110,24 @@ final class BankManager: NSObject {
     private func updateElements(_ elements: [DataForElement], userLocation location: CLLocation) {
         elements.forEach { (data, type) in
             switch type {
-            case .atm: updateAtms(fromData: data)
-            case .infobox: updateInfobox(fromData: data)
-            case .filial: updateFillials(fromData: data)
+            case .atm:
+                updateAtms(fromData: data)
+            case .infobox:
+                updateInfobox(fromData: data)
+            case .filial:
+                updateFillials(fromData: data)
             }
         }
         delegate?.bankElementsDidUpdated()
 
-        DispatchQueue.global(qos: .userInteractive).async {
+        DispatchQueue.global(qos: .userInteractive).async { [weak self] in
+            guard let self = self else { return }
+
             let sortedArray = self.sortByCities(self.sortForCurrentLocation(location))
 
-            DispatchQueue.main.async {
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else { return }
+
                 self.sortedBankElements = sortedArray
                 self.filteredElementsForTypes()
             }

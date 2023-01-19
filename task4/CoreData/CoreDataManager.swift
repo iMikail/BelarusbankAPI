@@ -35,7 +35,7 @@ final class CoreDataManager {
     }
 
     func deleteEntity<T: NSManagedObject>(_ entity: T.Type) {
-        var requested = NSFetchRequest<NSFetchRequestResult>(entityName: String(describing: entity))
+        let requested = NSFetchRequest<NSFetchRequestResult>(entityName: String(describing: entity))
         do {
             let fetched = try viewContext.fetch(requested)
             for object in fetched {
@@ -58,7 +58,7 @@ final class CoreDataManager {
 
         var storeEntity = T(entity: entityDescription, insertInto: viewContext)
         storeEntity.data = data
-        print("save context \(entity)")
+        print("save context \(entity)")//-
         saveContext()
     }
 

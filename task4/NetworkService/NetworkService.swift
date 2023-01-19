@@ -14,8 +14,8 @@ final class NetworkService {
     private var dataArray = [DataForElement]()
     private var errors = [ErrorForElement]()
 
-    internal func getDataForTypes(_ types: [BankElements],
-                                  completion: @escaping ([DataForElement], [ErrorForElement]) -> Void) {
+    func getDataForTypes(_ types: [BankElements],
+                         completion: @escaping ([DataForElement], [ErrorForElement]) -> Void) {
         let group = DispatchGroup()
         for type in types {
             group.enter()
@@ -42,15 +42,17 @@ final class NetworkService {
 
         let session = URLSession.shared
         session.dataTask(with: URLRequest(url: url, timeoutInterval: 30)) { [weak self] (data, _, error) in
-            DispatchQueue.main.async {
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else { return }
+
                 if let error = error {
-                    self?.errors.append((error, element))
+                    self.errors.append((error, element))
                     completion()
                     return
                 }
 
                 if let data = data {
-                    self?.dataArray.append((data, element))
+                    self.dataArray.append((data, element))
                 }
                 completion()
             }

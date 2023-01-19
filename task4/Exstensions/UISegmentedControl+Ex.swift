@@ -8,7 +8,7 @@
 import UIKit
 
 extension UISegmentedControl {
-    internal func setupConfigurating() {
+    func setupConfigurating() {
         selectedSegmentIndex = DisplayType.map.rawValue
         setDividerImage(UIImage(systemName: "chevron.left.2"), forLeftSegmentState: .selected,
                                          rightSegmentState: .normal, barMetrics: .default)

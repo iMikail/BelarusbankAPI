@@ -10,7 +10,7 @@ import UIKit
 final class ElementViewCell: UICollectionViewCell {
     static let identifier = "elementViewCell"
 
-    internal var bankElement: ElementResponse? {
+    var bankElement: ElementResponse? {
         didSet {
             setupInfo()
         }

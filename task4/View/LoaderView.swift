@@ -20,7 +20,7 @@ final class LoaderView: UIActivityIndicatorView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    internal func setHidden(_ hidden: Bool) {
+    func setHidden(_ hidden: Bool) {
         if hidden {
             stopAnimating()
         } else {

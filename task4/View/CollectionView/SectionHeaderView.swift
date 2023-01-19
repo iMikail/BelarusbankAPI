@@ -10,7 +10,7 @@ import UIKit
 final class SectionHeaderView: UICollectionReusableView {
     static let identifier = "sectionHeader"
 
-    internal lazy var titleLabel: UILabel = {
+    lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.boldSystemFont(ofSize: 18.0)
         label.textAlignment = .center

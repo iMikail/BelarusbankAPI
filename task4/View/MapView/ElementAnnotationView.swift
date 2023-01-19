@@ -17,7 +17,7 @@ final class ElementAnnotationView: MKMarkerAnnotationView {
     // MARK: - Properties
     weak var delegate: ElementAnnotationViewDelegate?
 
-    internal var elementAnnotation: ElementAnnotation? {
+    var elementAnnotation: ElementAnnotation? {
         didSet {
             setupInfo()
             configuratingPin()

@@ -33,12 +33,4 @@ enum BankElements: Int, CaseIterable {
         case .filial: return "filial"
         }
     }
-
-//    var storeEntity: String {
-//        switch self {
-//        case .atm: return "StoreATM"
-//        case .infobox: return "StoreInfobox"
-//        case .filial: return "StoreFilial"
-//        }
-//    }
 }

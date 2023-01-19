@@ -65,7 +65,7 @@ extension ATM: ElementDescription {
     var itemPhoneInfo: String { return "" }
     var elementType: BankElements { return .atm }
 
-    internal func arrayDescriptions() -> [String] {
+    func arrayDescriptions() -> [String] {
         var descriptions = [String]()
 
         descriptions.append("id банкомата: \(id ?? "")")

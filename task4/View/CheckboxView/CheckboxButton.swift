@@ -9,9 +9,9 @@ import UIKit
 
 final class CheckboxButton: UIButton {
 
-    internal var elementType = BankElements.atm
+    var elementType = BankElements.atm
 
-    internal func setupBankElementType(_ type: BankElements) {
+    func setupBankElementType(_ type: BankElements) {
         elementType = type
         isSelected = true
         setImage(UIImage(systemName: "square"), for: .normal)

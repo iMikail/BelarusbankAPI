@@ -232,7 +232,7 @@ extension Filial: ElementDescription {
     var itemPhoneInfo: String { return phoneInfo ?? "" }
     var elementType: BankElements { return .filial }
 
-    internal func arrayDescriptions() -> [String] {
+    func arrayDescriptions() -> [String] {
         var arrayDescriprions = [String]()
 
         Mirror(reflecting: self).children.forEach { child in

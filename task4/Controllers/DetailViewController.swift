@@ -10,7 +10,7 @@ import MapKit
 final class DetailViewController: UIViewController {
     // MARK: - Properties
     private let reuseIdentifier = "reuseIdentifier"
-    internal var userCoordinate: CLLocationCoordinate2D? {
+    var userCoordinate: CLLocationCoordinate2D? {
         didSet {
             if userCoordinate != nil {
                 routeButton.isEnabled = true
@@ -18,7 +18,7 @@ final class DetailViewController: UIViewController {
         }
     }
 
-    internal var element: ElementDescription? {
+    var element: ElementDescription? {
         didSet {
             if let element = element {
                 descriptions = element.arrayDescriptions()

@@ -80,7 +80,7 @@ extension Infobox: ElementDescription {
     var itemPhoneInfo: String { return "" }
     var elementType: BankElements { return .infobox }
 
-    internal func arrayDescriptions() -> [String] {
+    func arrayDescriptions() -> [String] {
         var arrayDescriprions = [String]()
 
         Mirror(reflecting: self).children.forEach { child in

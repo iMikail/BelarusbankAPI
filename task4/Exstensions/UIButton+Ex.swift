@@ -8,7 +8,7 @@
 import UIKit
 
 extension UIButton {
-    internal func requestingState(_ enable: Bool) {
+    func requestingState(_ enable: Bool) {
         guard let imageView = imageView else { return }
 
         isEnabled = !enable
@@ -22,7 +22,7 @@ extension UIButton {
         }
     }
 
-    internal func setupRefreshConfigurating() {
+    func setupRefreshConfigurating() {
         var configuration = UIButton.Configuration.plain()
         configuration.title = "Обновить"
         configuration.attributedTitle?.font = UIFont.systemFont(ofSize: 15.0)

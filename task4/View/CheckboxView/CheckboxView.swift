@@ -20,7 +20,7 @@ final class CheckboxView: UIView {
     private lazy var infoboxCheckButton = createCheckboxButtonForType(.infobox)
     private lazy var filialCheckButton = createCheckboxButtonForType(.filial)
 
-    internal var selectedTypes = BankElements.allCases {
+    var selectedTypes = BankElements.allCases {
         didSet {
             delegate?.selectedTypesDidChanched(selectedTypes)
         }

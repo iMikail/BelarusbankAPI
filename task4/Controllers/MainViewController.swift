@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  MainViewController.swift
 //  task4
 //
 //  Created by Misha Volkov on 28.12.22.
@@ -9,7 +9,7 @@ import UIKit
 import SnapKit
 import MapKit
 
-final class ViewController: UIViewController {
+final class MainViewController: UIViewController {
     // MARK: - Properties
     private let locationManager = CLLocationManager()
     private let bankManager = BankManager()
@@ -260,7 +260,7 @@ final class ViewController: UIViewController {
 }
 
 // MARK: - Extensions: CollectionViewDelegate
-extension ViewController: UICollectionViewDelegate {
+extension MainViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let currentId = bankManager.filteredBankElements[indexPath.section][indexPath.row].itemId
         let currentType = bankManager.filteredBankElements[indexPath.section][indexPath.row].elementType
@@ -279,17 +279,17 @@ extension ViewController: UICollectionViewDelegate {
 }
 
 // MARK: UICollectionViewDataSource
-extension ViewController: UICollectionViewDataSource {
-    internal func numberOfSections(in collectionView: UICollectionView) -> Int {
+extension MainViewController: UICollectionViewDataSource {
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
         return bankManager.filteredBankElements.count
     }
 
-    internal func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return bankManager.filteredBankElements[section].count
     }
 
-    internal func collectionView(_ collectionView: UICollectionView,
-                                 cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    func collectionView(_ collectionView: UICollectionView,
+                        cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ElementViewCell.identifier,
                                                             for: indexPath) as? ElementViewCell else {
             return UICollectionViewCell()
@@ -300,9 +300,9 @@ extension ViewController: UICollectionViewDataSource {
         return cell
     }
 
-    internal func collectionView(_ collectionView: UICollectionView,
-                                 viewForSupplementaryElementOfKind kind: String,
-                                 at indexPath: IndexPath) -> UICollectionReusableView {
+    func collectionView(_ collectionView: UICollectionView,
+                        viewForSupplementaryElementOfKind kind: String,
+                        at indexPath: IndexPath) -> UICollectionReusableView {
         guard let headerView = collectionView.dequeueReusableSupplementaryView(
             ofKind: kind,
             withReuseIdentifier: SectionHeaderView.identifier,
@@ -315,16 +315,16 @@ extension ViewController: UICollectionViewDataSource {
         return headerView
     }
 
-    internal func collectionView(_ collectionView: UICollectionView,
-                                 layout collectionViewLayout: UICollectionViewLayout,
-                                 referenceSizeForHeaderInSection section: Int) -> CGSize {
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        referenceSizeForHeaderInSection section: Int) -> CGSize {
         return CGSize(width: collectionView.frame.width, height: 40.0)
     }
 }
 
 // MARK: CLLocationManagerDelegate
-extension ViewController: CLLocationManagerDelegate {
-    internal func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+extension MainViewController: CLLocationManagerDelegate {
+    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
         if manager.authorizationStatus == .authorizedWhenInUse {
             locationManager.requestLocation()
             if let location = manager.location {
@@ -333,19 +333,19 @@ extension ViewController: CLLocationManagerDelegate {
         }
     }
 
-    internal func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         if let location = manager.location {
             mapView.centerToLocation(location)
         }
     }
 
-    internal func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         print(error)
     }
 }
 
 // MARK: MKMapViewDelegate
-extension ViewController: MKMapViewDelegate {
+extension MainViewController: MKMapViewDelegate {
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         guard let annotation = annotation as? ElementAnnotation else { return nil }
 
@@ -365,7 +365,7 @@ extension ViewController: MKMapViewDelegate {
 }
 
 // MARK: ElementAnnotationViewDelegate
-extension ViewController: ElementAnnotationViewDelegate {
+extension MainViewController: ElementAnnotationViewDelegate {
     func fetchMoreInfoForElement(_ type: BankElements, id: String) {
         let detailVC = DetailViewController()
         detailVC.userCoordinate = locationManager.location?.coordinate
@@ -376,7 +376,7 @@ extension ViewController: ElementAnnotationViewDelegate {
 }
 
 // MARK: BankManagerDelegate
-extension ViewController: BankManagerDelegate {
+extension MainViewController: BankManagerDelegate {
     func bankElementsDidFiltered() {
         if loaderView.isAnimating {
             loaderView.setHidden(true)
@@ -390,7 +390,7 @@ extension ViewController: BankManagerDelegate {
 }
 
 // MARK: CheckboxViewDelegate
-extension ViewController: CheckboxViewDelegate {
+extension MainViewController: CheckboxViewDelegate {
     func selectedTypesDidChanched(_ types: [BankElements]) {
         bankManager.updateFilteredTypes(types)
         setupElementsOnMapForTypes(types)
