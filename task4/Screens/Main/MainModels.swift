@@ -12,20 +12,34 @@ enum Main {
     enum Model {
         struct Request {
             enum RequestType {
-                case some
+                case setDelegate(delegate: MainViewController)
+                case updateData
+                case attemptLocationAccess
+                case setupElementOnMap(types: [BankElements])
             }
         }
 
         struct Response {
             enum ResponseType {
-                case some
+                case responseData(dataArray: [DataForElement])
+                case alertError(type: Main.AlertType)
+                case enabledInterface
+                case allBankElements(elements: [ElementResponse], types: [BankElements])
             }
         }
 
         struct ViewModel {
             enum ViewModelData {
-                case some
+                case showAlert(alertType: Main.AlertType)
+                case enabledInterface
+                case setupElementOnMap(elements: [ElementResponse], types: [BankElements])
             }
         }
+    }
+
+    enum AlertType {
+        case noInternet
+        case noLocationAccess
+        case errorConnection(errors: [ErrorForElement])
     }
 }

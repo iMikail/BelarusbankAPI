@@ -15,7 +15,16 @@ class MainPresenter: MainPresentationLogic {
     weak var viewController: MainDisplayLogic?
 
     func presentData(response: Main.Model.Response.ResponseType) {
-
+        switch response {
+            case .alertError(let alertType):
+                viewController?.displayData(viewModel: .showAlert(alertType: alertType))
+            case .enabledInterface:
+                viewController?.displayData(viewModel: .enabledInterface)
+            case .responseData(dataArray: let dataArray):
+                break
+            case .allBankElements(let elements, let types):
+                viewController?.displayData(viewModel: .setupElementOnMap(elements: elements, types: types))
+        }
     }
 
 }
