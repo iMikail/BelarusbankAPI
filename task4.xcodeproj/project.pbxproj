@@ -8,6 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		590AA9085723C22FCD5289AA /* Pods_task4.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F7F589BE12D7362054E92066 /* Pods_task4.framework */; };
+		A804F988297960EE005B246E /* MainPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A804F981297960EE005B246E /* MainPresenter.swift */; };
+		A804F989297960EE005B246E /* MainWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = A804F982297960EE005B246E /* MainWorker.swift */; };
+		A804F98A297960EE005B246E /* MainRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A804F983297960EE005B246E /* MainRouter.swift */; };
+		A804F98B297960EE005B246E /* MainModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = A804F984297960EE005B246E /* MainModels.swift */; };
+		A804F98C297960EE005B246E /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A804F985297960EE005B246E /* MainViewController.swift */; };
+		A804F98D297960EE005B246E /* MainInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A804F986297960EE005B246E /* MainInteractor.swift */; };
 		A806F5B9296C3D91000F7BF2 /* BankManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A806F5B8296C3D91000F7BF2 /* BankManager.swift */; };
 		A80F71632972B8E200789AEE /* LoaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A80F71622972B8E200789AEE /* LoaderView.swift */; };
 		A82D737F2972DFDC00CEC1A5 /* UISegmentedControl+Ex.swift in Sources */ = {isa = PBXBuildFile; fileRef = A82D737E2972DFDB00CEC1A5 /* UISegmentedControl+Ex.swift */; };
@@ -37,12 +43,12 @@
 		A8B71F03297159BF0056B839 /* CheckboxButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8B71F02297159BF0056B839 /* CheckboxButton.swift */; };
 		A8C2AEBC296567E000E375E5 /* ATM.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8C2AEBB296567E000E375E5 /* ATM.swift */; };
 		A8C2AEBE29659F5B00E375E5 /* ElementAnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8C2AEBD29659F5B00E375E5 /* ElementAnnotationView.swift */; };
-		A8C2AEC12965D05700E375E5 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8C2AEC02965D05700E375E5 /* DetailViewController.swift */; };
+		A8C2AEC12965D05700E375E5 /* SecondViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8C2AEC02965D05700E375E5 /* SecondViewController.swift */; };
 		A8C2AEC329671A3F00E375E5 /* SectionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8C2AEC229671A3F00E375E5 /* SectionHeaderView.swift */; };
 		A8C2AEC529671DFF00E375E5 /* ElementViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8C2AEC429671DFF00E375E5 /* ElementViewCell.swift */; };
 		A8E5F921295C3C2700B18A0B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8E5F920295C3C2700B18A0B /* AppDelegate.swift */; };
 		A8E5F923295C3C2700B18A0B /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8E5F922295C3C2700B18A0B /* SceneDelegate.swift */; };
-		A8E5F925295C3C2700B18A0B /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8E5F924295C3C2700B18A0B /* MainViewController.swift */; };
+		A8E5F925295C3C2700B18A0B /* FirstViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8E5F924295C3C2700B18A0B /* FirstViewController.swift */; };
 		A8E5F92A295C3C2900B18A0B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A8E5F929295C3C2900B18A0B /* Assets.xcassets */; };
 		A8E5F92D295C3C2900B18A0B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A8E5F92B295C3C2900B18A0B /* LaunchScreen.storyboard */; };
 		A8F2185A295CB63C00447A18 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8F21859295CB63C00447A18 /* NetworkService.swift */; };
@@ -50,6 +56,12 @@
 
 /* Begin PBXFileReference section */
 		86C81AE4C38043A42C4AB06B /* Pods-task4.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-task4.debug.xcconfig"; path = "Target Support Files/Pods-task4/Pods-task4.debug.xcconfig"; sourceTree = "<group>"; };
+		A804F981297960EE005B246E /* MainPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainPresenter.swift; sourceTree = "<group>"; };
+		A804F982297960EE005B246E /* MainWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainWorker.swift; sourceTree = "<group>"; };
+		A804F983297960EE005B246E /* MainRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainRouter.swift; sourceTree = "<group>"; };
+		A804F984297960EE005B246E /* MainModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainModels.swift; sourceTree = "<group>"; };
+		A804F985297960EE005B246E /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
+		A804F986297960EE005B246E /* MainInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainInteractor.swift; sourceTree = "<group>"; };
 		A806F5B8296C3D91000F7BF2 /* BankManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankManager.swift; sourceTree = "<group>"; };
 		A80F71622972B8E200789AEE /* LoaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoaderView.swift; sourceTree = "<group>"; };
 		A82D737E2972DFDB00CEC1A5 /* UISegmentedControl+Ex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UISegmentedControl+Ex.swift"; sourceTree = "<group>"; };
@@ -79,13 +91,13 @@
 		A8B71F02297159BF0056B839 /* CheckboxButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckboxButton.swift; sourceTree = "<group>"; };
 		A8C2AEBB296567E000E375E5 /* ATM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ATM.swift; sourceTree = "<group>"; };
 		A8C2AEBD29659F5B00E375E5 /* ElementAnnotationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElementAnnotationView.swift; sourceTree = "<group>"; };
-		A8C2AEC02965D05700E375E5 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
+		A8C2AEC02965D05700E375E5 /* SecondViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondViewController.swift; sourceTree = "<group>"; };
 		A8C2AEC229671A3F00E375E5 /* SectionHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionHeaderView.swift; sourceTree = "<group>"; };
 		A8C2AEC429671DFF00E375E5 /* ElementViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElementViewCell.swift; sourceTree = "<group>"; };
 		A8E5F91D295C3C2700B18A0B /* task4.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = task4.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A8E5F920295C3C2700B18A0B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A8E5F922295C3C2700B18A0B /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		A8E5F924295C3C2700B18A0B /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
+		A8E5F924295C3C2700B18A0B /* FirstViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstViewController.swift; sourceTree = "<group>"; };
 		A8E5F929295C3C2900B18A0B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A8E5F92C295C3C2900B18A0B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A8E5F92E295C3C2900B18A0B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = "task4/Supporting files/Info.plist"; sourceTree = SOURCE_ROOT; };
@@ -112,6 +124,37 @@
 				F7F589BE12D7362054E92066 /* Pods_task4.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		A804F97E29795E76005B246E /* Screens */ = {
+			isa = PBXGroup;
+			children = (
+				A804F980297960C6005B246E /* Main */,
+			);
+			path = Screens;
+			sourceTree = "<group>";
+		};
+		A804F97F297960AC005B246E /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				A806F5B7296C3D7F000F7BF2 /* Bank Manager */,
+				A8F2185B295CB64200447A18 /* NetworkService */,
+				A872743E2977EBFB00DE3DCC /* CoreData */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		A804F980297960C6005B246E /* Main */ = {
+			isa = PBXGroup;
+			children = (
+				A804F985297960EE005B246E /* MainViewController.swift */,
+				A804F986297960EE005B246E /* MainInteractor.swift */,
+				A804F981297960EE005B246E /* MainPresenter.swift */,
+				A804F984297960EE005B246E /* MainModels.swift */,
+				A804F982297960EE005B246E /* MainWorker.swift */,
+				A804F983297960EE005B246E /* MainRouter.swift */,
+			);
+			path = Main;
 			sourceTree = "<group>";
 		};
 		A806F5B7296C3D7F000F7BF2 /* Bank Manager */ = {
@@ -245,12 +288,11 @@
 		A8E5F91F295C3C2700B18A0B /* task4 */ = {
 			isa = PBXGroup;
 			children = (
+				A804F97E29795E76005B246E /* Screens */,
 				A8F2185E295CB73A00447A18 /* Model */,
 				A8C2AEBF29659F6300E375E5 /* View */,
 				A8E816E5295C50830014A7FD /* Controllers */,
-				A806F5B7296C3D7F000F7BF2 /* Bank Manager */,
-				A8F2185B295CB64200447A18 /* NetworkService */,
-				A872743E2977EBFB00DE3DCC /* CoreData */,
+				A804F97F297960AC005B246E /* Services */,
 				A8E816E4295C505E0014A7FD /* Supporting files */,
 				A8726072295DE6EA00666DB9 /* Exstensions */,
 				A8AAA531296D948D00642B4A /* Protocols */,
@@ -274,8 +316,8 @@
 		A8E816E5295C50830014A7FD /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				A8E5F924295C3C2700B18A0B /* MainViewController.swift */,
-				A8C2AEC02965D05700E375E5 /* DetailViewController.swift */,
+				A8E5F924295C3C2700B18A0B /* FirstViewController.swift */,
+				A8C2AEC02965D05700E375E5 /* SecondViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -445,12 +487,15 @@
 				A8AAA52E296D441F00642B4A /* BankElements.swift in Sources */,
 				A86EACCB296FF9470059777D /* CLLocationManager+Ex.swift in Sources */,
 				A82D737F2972DFDC00CEC1A5 /* UISegmentedControl+Ex.swift in Sources */,
+				A804F98D297960EE005B246E /* MainInteractor.swift in Sources */,
+				A804F98A297960EE005B246E /* MainRouter.swift in Sources */,
 				A80F71632972B8E200789AEE /* LoaderView.swift in Sources */,
 				A8412AEE296EFD1E00F46526 /* Array+Ex.swift in Sources */,
 				A8C2AEC329671A3F00E375E5 /* SectionHeaderView.swift in Sources */,
 				A8C2AEC529671DFF00E375E5 /* ElementViewCell.swift in Sources */,
 				A8C2AEBE29659F5B00E375E5 /* ElementAnnotationView.swift in Sources */,
 				A806F5B9296C3D91000F7BF2 /* BankManager.swift in Sources */,
+				A804F98B297960EE005B246E /* MainModels.swift in Sources */,
 				A87917B0296AA4B300B45435 /* ViewController+Ex.swift in Sources */,
 				A8C2AEBC296567E000E375E5 /* ATM.swift in Sources */,
 				A8F2185A295CB63C00447A18 /* NetworkService.swift in Sources */,
@@ -459,20 +504,23 @@
 				A8AAA52A296C4DE700642B4A /* Filial.swift in Sources */,
 				A872744C2977FC6600DE3DCC /* StoreATM+CoreDataClass.swift in Sources */,
 				A8B5F39A2969CFC200D097C4 /* UIButton+Ex.swift in Sources */,
-				A8E5F925295C3C2700B18A0B /* MainViewController.swift in Sources */,
+				A8E5F925295C3C2700B18A0B /* FirstViewController.swift in Sources */,
 				A8B71EFF297148260056B839 /* CheckboxView.swift in Sources */,
 				A8E5F921295C3C2700B18A0B /* AppDelegate.swift in Sources */,
 				A8AAA530296D946F00642B4A /* ElementResponse.swift in Sources */,
 				A8AAA528296C4DC100642B4A /* Infobox.swift in Sources */,
 				A82F1CEF296870520057BAE7 /* NetworkMonitor.swift in Sources */,
 				A87274482977FC6600DE3DCC /* StoreInfobox+CoreDataClass.swift in Sources */,
+				A804F988297960EE005B246E /* MainPresenter.swift in Sources */,
 				A87274412977EFB800DE3DCC /* StoreElements.xcdatamodeld in Sources */,
 				A8B71F03297159BF0056B839 /* CheckboxButton.swift in Sources */,
 				A872744D2977FC6600DE3DCC /* StoreATM+CoreDataProperties.swift in Sources */,
 				A8B5F3982969C83A00D097C4 /* DisplayType.swift in Sources */,
-				A8C2AEC12965D05700E375E5 /* DetailViewController.swift in Sources */,
+				A8C2AEC12965D05700E375E5 /* SecondViewController.swift in Sources */,
+				A804F98C297960EE005B246E /* MainViewController.swift in Sources */,
 				A8E5F923295C3C2700B18A0B /* SceneDelegate.swift in Sources */,
 				A872744A2977FC6600DE3DCC /* StoreFilial+CoreDataClass.swift in Sources */,
+				A804F989297960EE005B246E /* MainWorker.swift in Sources */,
 				A87274492977FC6600DE3DCC /* StoreInfobox+CoreDataProperties.swift in Sources */,
 				A872743D2977E5D800DE3DCC /* CoreDataManager.swift in Sources */,
 				A8726071295DE65F00666DB9 /* MKMapView+Ex.swift in Sources */,

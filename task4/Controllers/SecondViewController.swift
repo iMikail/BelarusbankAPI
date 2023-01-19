@@ -1,5 +1,5 @@
 //
-//  DetailViewController.swift
+//  SecondViewController.swift
 //  task4
 //
 //  Created by Misha Volkov on 4.01.23.
@@ -7,7 +7,7 @@
 
 import MapKit
 
-final class DetailViewController: UIViewController {
+final class SecondViewController: UIViewController {
     // MARK: - Properties
     private let reuseIdentifier = "reuseIdentifier"
     var userCoordinate: CLLocationCoordinate2D? {
@@ -101,7 +101,7 @@ final class DetailViewController: UIViewController {
 }
 
 // MARK: - Extensions
-extension DetailViewController: UITableViewDataSource {
+extension SecondViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return descriptions.count
     }

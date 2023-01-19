@@ -1,5 +1,5 @@
 //
-//  MainViewController+Ex.swift
+//  FirstViewController+Ex.swift
 //  task4
 //
 //  Created by Misha Volkov on 8.01.23.
@@ -8,7 +8,7 @@
 import UIKit
 
 // MARK: UICollectionViewDelegateFlowLayout
-extension MainViewController: UICollectionViewDelegateFlowLayout {
+extension FirstViewController: UICollectionViewDelegateFlowLayout {
     private var sectionInsets: UIEdgeInsets {
         return UIEdgeInsets(top: 20.0, left: 20.0, bottom: 20.0, right: 20.0)
     }

@@ -1,5 +1,5 @@
 //
-//  MainViewController.swift
+//  FirstViewController.swift
 //  task4
 //
 //  Created by Misha Volkov on 28.12.22.
@@ -9,7 +9,7 @@ import UIKit
 import SnapKit
 import MapKit
 
-final class MainViewController: UIViewController {
+final class FirstViewController: UIViewController {
     // MARK: - Properties
     private let locationManager = CLLocationManager()
     private let bankManager = BankManager()
@@ -260,7 +260,7 @@ final class MainViewController: UIViewController {
 }
 
 // MARK: - Extensions: CollectionViewDelegate
-extension MainViewController: UICollectionViewDelegate {
+extension FirstViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let currentId = bankManager.filteredBankElements[indexPath.section][indexPath.row].itemId
         let currentType = bankManager.filteredBankElements[indexPath.section][indexPath.row].elementType
@@ -279,7 +279,7 @@ extension MainViewController: UICollectionViewDelegate {
 }
 
 // MARK: UICollectionViewDataSource
-extension MainViewController: UICollectionViewDataSource {
+extension FirstViewController: UICollectionViewDataSource {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return bankManager.filteredBankElements.count
     }
@@ -323,7 +323,7 @@ extension MainViewController: UICollectionViewDataSource {
 }
 
 // MARK: CLLocationManagerDelegate
-extension MainViewController: CLLocationManagerDelegate {
+extension FirstViewController: CLLocationManagerDelegate {
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
         if manager.authorizationStatus == .authorizedWhenInUse {
             locationManager.requestLocation()
@@ -345,7 +345,7 @@ extension MainViewController: CLLocationManagerDelegate {
 }
 
 // MARK: MKMapViewDelegate
-extension MainViewController: MKMapViewDelegate {
+extension FirstViewController: MKMapViewDelegate {
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         guard let annotation = annotation as? ElementAnnotation else { return nil }
 
@@ -365,9 +365,9 @@ extension MainViewController: MKMapViewDelegate {
 }
 
 // MARK: ElementAnnotationViewDelegate
-extension MainViewController: ElementAnnotationViewDelegate {
+extension FirstViewController: ElementAnnotationViewDelegate {
     func fetchMoreInfoForElement(_ type: BankElements, id: String) {
-        let detailVC = DetailViewController()
+        let detailVC = SecondViewController()
         detailVC.userCoordinate = locationManager.location?.coordinate
         detailVC.element = bankManager.fetchElement(type, id: id)
 
@@ -376,7 +376,7 @@ extension MainViewController: ElementAnnotationViewDelegate {
 }
 
 // MARK: BankManagerDelegate
-extension MainViewController: BankManagerDelegate {
+extension FirstViewController: BankManagerDelegate {
     func bankElementsDidFiltered() {
         if loaderView.isAnimating {
             loaderView.setHidden(true)
@@ -390,7 +390,7 @@ extension MainViewController: BankManagerDelegate {
 }
 
 // MARK: CheckboxViewDelegate
-extension MainViewController: CheckboxViewDelegate {
+extension FirstViewController: CheckboxViewDelegate {
     func selectedTypesDidChanched(_ types: [BankElements]) {
         bankManager.updateFilteredTypes(types)
         setupElementsOnMapForTypes(types)
