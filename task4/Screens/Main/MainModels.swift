@@ -6,25 +6,27 @@
 //
 
 import UIKit
+import CoreLocation
 
 enum Main {
 
     enum Model {
         struct Request {
             enum RequestType {
-                case setDelegate(delegate: MainViewController)
                 case updateData
                 case attemptLocationAccess
-                case setupElementOnMap(types: [BankElements])
+                case updateElementsOnMap(types: [BankElements])
+                case updateFilteredElements(types: [BankElements])
             }
         }
 
         struct Response {
             enum ResponseType {
-                case responseData(dataArray: [DataForElement])
                 case alertError(type: Main.AlertType)
                 case enabledInterface
-                case allBankElements(elements: [ElementResponse], types: [BankElements])
+                case allBankElements(elements: [ElementResponse])
+                case filteredBankElements(elements: [[ElementResponse]])
+                case currentLocation(location: CLLocation)
             }
         }
 
@@ -32,7 +34,9 @@ enum Main {
             enum ViewModelData {
                 case showAlert(alertType: Main.AlertType)
                 case enabledInterface
-                case setupElementOnMap(elements: [ElementResponse], types: [BankElements])
+                case updateAllBankElements(elements: [ElementResponse])
+                case updateFilteredElements(elements: [[ElementResponse]])
+                case updateLocation(location: CLLocation)
             }
         }
     }

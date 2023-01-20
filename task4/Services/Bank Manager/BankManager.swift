@@ -159,6 +159,7 @@ final class BankManager: NSObject {
     }
 
     // MARK: Filtering/Sorting functions
+    //->Presenter
     private func filteredElementsForTypes() {
         filteredBankElements = sortedBankElements.map { elements in
             elements.filter { element in

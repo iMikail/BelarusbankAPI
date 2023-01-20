@@ -14,17 +14,18 @@ protocol MainDisplayLogic: AnyObject {
 }
 
 class MainViewController: UIViewController, MainDisplayLogic {
-
     var interactor: MainBusinessLogic?
     var router: (NSObjectProtocol & MainRoutingLogic)?
 
+    private var allBankElements = [ElementResponse]()
+    private var filteredBankElements = [[ElementResponse]]()
     private var isMapDisplayType = true {
         didSet {
             mapView.isHidden = !isMapDisplayType
-//            listView.isHidden = isMapDisplayType
-//            if bankManager.filteredBankElements.isEmpty {
-//                loaderView.setHidden(isMapDisplayType)
-//            }
+            listView.isHidden = isMapDisplayType
+            if filteredBankElements.isEmpty {
+                loaderView.setHidden(isMapDisplayType)
+            }
         }
     }
 
@@ -53,7 +54,7 @@ class MainViewController: UIViewController, MainDisplayLogic {
         return map
     }()
 
-    //private lazy var listView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
+    private lazy var listView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
     private lazy var loaderView = LoaderView(style: .medium)
     private lazy var checkboxView = CheckboxView()
 
@@ -86,29 +87,39 @@ class MainViewController: UIViewController, MainDisplayLogic {
         setupConstraints()
     }
 
-//override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-//        super.viewWillTransition(to: size, with: coordinator)
-//        guard let flowLayout = listView.collectionViewLayout as? UICollectionViewFlowLayout else { return }
-//
-//        flowLayout.invalidateLayout()
-//    }
+override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        guard let flowLayout = listView.collectionViewLayout as? UICollectionViewFlowLayout else { return }
+
+        flowLayout.invalidateLayout()
+    }
 
     func displayData(viewModel: Main.Model.ViewModel.ViewModelData) {
         switch viewModel {
-            case .showAlert(let alertType):
-                switch alertType {
-                    case .noInternet:
-                        showNoInternetAlert()
-                    case .noLocationAccess:
-                        showDeniedAccessAlert()
-                    case .errorConnection(let errors):
-                        showErrorConnectionAlert(errorElements: errors)
-                }
-            case .enabledInterface:
-                setEnabledInterface(true)
-            case .setupElementOnMap(let elements, let types):
-                setupElementsOnMap(elements, forTypes: types)
+        case .showAlert(let alertType):
+            switch alertType {
+            case .noInternet:
+                showNoInternetAlert()
+            case .noLocationAccess:
+                showDeniedAccessAlert()
+            case .errorConnection(let errors):
+                showErrorConnectionAlert(errorElements: errors)
+            }
+        case .enabledInterface:
+            setEnabledInterface(true)
+        case .updateAllBankElements(let elements):
+            allBankElements = elements
+            setupElementsOnMap(checkboxView.selectedTypes)
+        case .updateFilteredElements(let elements):
+            filteredBankElements = elements
+            if loaderView.isAnimating {
+                loaderView.setHidden(true)
+            }
+            listView.reloadData()
+        case .updateLocation(let location):
+            mapView.centerToLocation(location)
         }
+
     }
 
     // MARK: Private funcs
@@ -119,24 +130,23 @@ class MainViewController: UIViewController, MainDisplayLogic {
                                        target: self, action: #selector(toggleCheckboxView))
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: refreshButton)
         navigationItem.leftBarButtonItem = leftItem
-        //listView.isHidden = true
+        listView.isHidden = true
     }
 
     private func registerViews() {
         mapView.register(ElementAnnotationView.self,
                          forAnnotationViewWithReuseIdentifier: ElementAnnotationView.identifier)
-        //listView.register(ElementViewCell.self, forCellWithReuseIdentifier: ElementViewCell.identifier)
-        //listView.register(SectionHeaderView.self,
-//                                   forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
-//                                   withReuseIdentifier: SectionHeaderView.identifier)
+        listView.register(ElementViewCell.self, forCellWithReuseIdentifier: ElementViewCell.identifier)
+        listView.register(SectionHeaderView.self,
+                                   forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
+                                   withReuseIdentifier: SectionHeaderView.identifier)
     }
 
     private func setupDelegates() {
         mapView.delegate = self
-        //listView.delegate = self
-        //listView.dataSource = self
+        listView.delegate = self
+        listView.dataSource = self
         checkboxView.delegate = self
-        interactor?.makeRequest(request: .setDelegate(delegate: self))
     }
 
     private func attemptLocationAccess() {
@@ -168,7 +178,7 @@ class MainViewController: UIViewController, MainDisplayLogic {
     }
 
     // MARK: Setup funcs
-    private func setupElementsOnMap(_ elements: [ElementResponse], forTypes: [BankElements]) {
+    private func setupElementsOnMap(_ forTypes: [BankElements]) {
         let oldAnnotations = mapView.annotations.filter { annotation in
             if let elementAnnotation = annotation as? ElementAnnotation {
                 return !forTypes.contains(elementAnnotation.elementType)
@@ -179,7 +189,7 @@ class MainViewController: UIViewController, MainDisplayLogic {
         mapView.removeAnnotations(oldAnnotations)
 
         var newAnnotations = [ElementAnnotation]()
-        elements.forEach { element in
+        allBankElements.forEach { element in
             if forTypes.contains(element.elementType) {
                 let annotation = ElementAnnotation(fromElement: element)
                 newAnnotations.append(annotation)
@@ -191,7 +201,7 @@ class MainViewController: UIViewController, MainDisplayLogic {
     private func setupViews() {
         view.addSubview(segmentedControl)
         view.addSubview(mapView)
-        //view.addSubview(listView)
+        view.addSubview(listView)
         view.addSubview(checkboxView)
         view.addSubview(loaderView)
     }
@@ -207,12 +217,11 @@ class MainViewController: UIViewController, MainDisplayLogic {
             make.leading.trailing.bottom.equalTo(view.safeAreaLayoutGuide)
             make.top.equalTo(segmentedControl.snp.bottom).offset(5.0)
         }
-//        listView.snp.makeConstraints { make in
-//            make.edges.equalTo(mapView)
-//        }
+        listView.snp.makeConstraints { make in
+            make.edges.equalTo(mapView)
+        }
         checkboxView.snp.makeConstraints { make in
             make.left.top.equalTo(view.safeAreaLayoutGuide)
-
         }
         loaderView.snp.makeConstraints { make in
             make.width.height.equalTo(100)
@@ -267,89 +276,67 @@ class MainViewController: UIViewController, MainDisplayLogic {
         present(alertController, animated: true)
     }
 }
-//
-//// MARK: - Extensions: CollectionViewDelegate
-//extension MainViewController: UICollectionViewDelegate {
-//    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-//        let currentId = bankManager.filteredBankElements[indexPath.section][indexPath.row].itemId
-//        let currentType = bankManager.filteredBankElements[indexPath.section][indexPath.row].elementType
-//
-//        if let annotation = mapView.annotations.first(where: { annotation in
-//            if let elementAnnotation = annotation as? ElementAnnotation {
-//                return elementAnnotation.itemId == currentId && elementAnnotation.elementType == currentType
-//            } else {
-//                return false
-//            }
-//        }) {
-//            switchDisplayType()
-//            mapView.selectAnnotation(annotation, animated: true)
-//        }
-//    }
-//}
-//
-//// MARK: UICollectionViewDataSource
-//extension MainViewController: UICollectionViewDataSource {
-//    func numberOfSections(in collectionView: UICollectionView) -> Int {
-//        return bankManager.filteredBankElements.count
-//    }
-//
-//    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-//        return bankManager.filteredBankElements[section].count
-//    }
-//
-//    func collectionView(_ collectionView: UICollectionView,
-//                        cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-//        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ElementViewCell.identifier,
-//                                                            for: indexPath) as? ElementViewCell else {
-//            return UICollectionViewCell()
-//        }
-//
-//        cell.bankElement = bankManager.filteredBankElements[indexPath.section][indexPath.row]
-//
-//        return cell
-//    }
-//
-//    func collectionView(_ collectionView: UICollectionView,
-//                        viewForSupplementaryElementOfKind kind: String,
-//                        at indexPath: IndexPath) -> UICollectionReusableView {
-//        guard let headerView = collectionView.dequeueReusableSupplementaryView(
-//            ofKind: kind,
-//            withReuseIdentifier: SectionHeaderView.identifier,
-//            for: indexPath) as? SectionHeaderView else {
-//            return UICollectionReusableView()
-//        }
-//
-//        headerView.titleLabel.text = bankManager.filteredBankElements[indexPath.section].first?.itemCity
-//
-//        return headerView
-//    }
-//
-//    func collectionView(_ collectionView: UICollectionView,
-//                        layout collectionViewLayout: UICollectionViewLayout,
-//                        referenceSizeForHeaderInSection section: Int) -> CGSize {
-//        return CGSize(width: collectionView.frame.width, height: 40.0)
-//    }
-//}
 
-// MARK: CLLocationManagerDelegate
-extension MainViewController: CLLocationManagerDelegate {
-    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
-        if manager.authorizationStatus == .authorizedWhenInUse {
-            manager.requestLocation()
-            if let location = manager.location {
-                mapView.centerToLocation(location)
+// MARK: - Extensions: CollectionViewDelegate
+extension MainViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let currentId = filteredBankElements[indexPath.section][indexPath.row].itemId
+        let currentType = filteredBankElements[indexPath.section][indexPath.row].elementType
+
+        if let annotation = mapView.annotations.first(where: { annotation in
+            if let elementAnnotation = annotation as? ElementAnnotation {
+                return elementAnnotation.itemId == currentId && elementAnnotation.elementType == currentType
+            } else {
+                return false
             }
+        }) {
+            switchDisplayType()
+            mapView.selectAnnotation(annotation, animated: true)
         }
     }
+}
 
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        if let location = manager.location {
-            mapView.centerToLocation(location)
-        }
+// MARK: UICollectionViewDataSource
+extension MainViewController: UICollectionViewDataSource {
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return filteredBankElements.count
     }
 
-    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        print(error)
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return filteredBankElements[section].count
+    }
+
+    func collectionView(_ collectionView: UICollectionView,
+                        cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ElementViewCell.identifier,
+                                                            for: indexPath) as? ElementViewCell else {
+            return UICollectionViewCell()
+        }
+
+        cell.bankElement = filteredBankElements[indexPath.section][indexPath.row]
+
+        return cell
+    }
+
+    func collectionView(_ collectionView: UICollectionView,
+                        viewForSupplementaryElementOfKind kind: String,
+                        at indexPath: IndexPath) -> UICollectionReusableView {
+        guard let headerView = collectionView.dequeueReusableSupplementaryView(
+            ofKind: kind,
+            withReuseIdentifier: SectionHeaderView.identifier,
+            for: indexPath) as? SectionHeaderView else {
+            return UICollectionReusableView()
+        }
+
+        headerView.titleLabel.text = filteredBankElements[indexPath.section].first?.itemCity
+
+        return headerView
+    }
+
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        referenceSizeForHeaderInSection section: Int) -> CGSize {
+        return CGSize(width: collectionView.frame.width, height: 40.0)
     }
 }
 
@@ -384,25 +371,11 @@ extension MainViewController: ElementAnnotationViewDelegate {
     }
 }
 
-// MARK: BankManagerDelegate
-extension MainViewController: BankManagerDelegate {
-    func bankElementsDidFiltered() {
-        if loaderView.isAnimating {
-            loaderView.setHidden(true)
-        }
-        //listView.reloadData()
-    }
-
-    func bankElementsDidUpdated() {
-        interactor?.makeRequest(request: .setupElementOnMap(types: checkboxView.selectedTypes))
-    }
-}
-
 // MARK: CheckboxViewDelegate
 extension MainViewController: CheckboxViewDelegate {
     func selectedTypesDidChanched(_ types: [BankElements]) {
-        //bankManager.updateFilteredTypes(types)
-        interactor?.makeRequest(request: .setupElementOnMap(types: types))
+        interactor?.makeRequest(request: .updateFilteredElements(types: types))
+        setupElementsOnMap(types)
     }
 }
 

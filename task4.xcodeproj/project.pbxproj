@@ -137,6 +137,7 @@
 		A804F97F297960AC005B246E /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				A8F2185E295CB73A00447A18 /* Models */,
 				A806F5B7296C3D7F000F7BF2 /* Bank Manager */,
 				A8F2185B295CB64200447A18 /* NetworkService */,
 				A872743E2977EBFB00DE3DCC /* CoreData */,
@@ -147,6 +148,8 @@
 		A804F980297960C6005B246E /* Main */ = {
 			isa = PBXGroup;
 			children = (
+				A8AAA52C296D3FED00642B4A /* Annotations */,
+				A8C2AEBF29659F6300E375E5 /* Views */,
 				A804F985297960EE005B246E /* MainViewController.swift */,
 				A804F986297960EE005B246E /* MainInteractor.swift */,
 				A804F981297960EE005B246E /* MainPresenter.swift */,
@@ -247,7 +250,7 @@
 			path = Protocols;
 			sourceTree = "<group>";
 		};
-		A8C2AEBF29659F6300E375E5 /* View */ = {
+		A8C2AEBF29659F6300E375E5 /* Views */ = {
 			isa = PBXGroup;
 			children = (
 				A80F71622972B8E200789AEE /* LoaderView.swift */,
@@ -255,7 +258,7 @@
 				A8412AEA296ECA3000F46526 /* MapView */,
 				A8C2AEC629671F9D00E375E5 /* CollectionView */,
 			);
-			path = View;
+			path = Views;
 			sourceTree = "<group>";
 		};
 		A8C2AEC629671F9D00E375E5 /* CollectionView */ = {
@@ -289,8 +292,6 @@
 			isa = PBXGroup;
 			children = (
 				A804F97E29795E76005B246E /* Screens */,
-				A8F2185E295CB73A00447A18 /* Model */,
-				A8C2AEBF29659F6300E375E5 /* View */,
 				A8E816E5295C50830014A7FD /* Controllers */,
 				A804F97F297960AC005B246E /* Services */,
 				A8E816E4295C505E0014A7FD /* Supporting files */,
@@ -331,13 +332,12 @@
 			path = NetworkService;
 			sourceTree = "<group>";
 		};
-		A8F2185E295CB73A00447A18 /* Model */ = {
+		A8F2185E295CB73A00447A18 /* Models */ = {
 			isa = PBXGroup;
 			children = (
 				A8AAA52B296D3FC000642B4A /* Bank elements */,
-				A8AAA52C296D3FED00642B4A /* Annotations */,
 			);
-			path = Model;
+			path = Models;
 			sourceTree = "<group>";
 		};
 		E4745F531A8ACECCECF45260 /* Pods */ = {

@@ -12,7 +12,7 @@ protocol MainBusinessLogic {
     func makeRequest(request: Main.Model.Request.RequestType)
 }
 
-class MainInteractor: MainBusinessLogic {
+class MainInteractor: NSObject, MainBusinessLogic {
 
     var presenter: MainPresentationLogic?
     var service: MainService?
@@ -21,19 +21,25 @@ class MainInteractor: MainBusinessLogic {
     private let bankManager = BankManager()
     private var isFirstRequest = true
 
+    override init() {
+        super.init()
+        bankManager.delegate = self
+        locationManager.delegate = self
+    }
+
     func makeRequest(request: Main.Model.Request.RequestType) {
         if service == nil {
             service = MainService()
         }
         switch request {
-            case .updateData:
-                updateData()
-            case .setDelegate(let delegate):
-                setupDelegates(delegate: delegate)
-            case .attemptLocationAccess:
-                attemptLocationAccess()
-            case .setupElementOnMap(types: let types):
-                presenter?.presentData(response: .allBankElements(elements: bankManager.allBankElements, types: types))
+        case .updateData:
+            updateData()
+        case .attemptLocationAccess:
+            attemptLocationAccess()
+        case .updateElementsOnMap(let types):
+            presenter?.presentData(response: .allBankElements(elements: bankManager.allBankElements))
+        case .updateFilteredElements(let types):
+            bankManager.updateFilteredTypes(types)
         }
     }
 
@@ -47,7 +53,8 @@ class MainInteractor: MainBusinessLogic {
 
                 if connected {
                     if let errorElements = errorElements {
-                        self.presenter?.presentData(response: .alertError(type: .errorConnection(errors: errorElements)))
+                        self.presenter?.presentData(
+                            response: .alertError(type: .errorConnection(errors: errorElements)))
                     }
                 } else {
                     self.presenter?.presentData(response: .alertError(type: .noInternet))
@@ -65,20 +72,48 @@ class MainInteractor: MainBusinessLogic {
         }
     }
 
-    private func setupDelegates(delegate: MainViewController) {
-        locationManager.delegate = delegate
-        bankManager.delegate = delegate
-    }
-
     private func attemptLocationAccess() {
         locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
         switch locationManager.authorizationStatus {
         case .notDetermined:
             locationManager.requestWhenInUseAuthorization()
         case .denied:
-                presenter?.presentData(response: .alertError(type: .noLocationAccess))
+            presenter?.presentData(response: .alertError(type: .noLocationAccess))
         default:
             locationManager.requestLocation()
         }
+    }
+}
+
+// MARK: BankManagerDelegate
+extension MainInteractor: BankManagerDelegate {
+    func bankElementsDidFiltered() {
+        presenter?.presentData(response: .filteredBankElements(elements: bankManager.filteredBankElements))
+    }
+
+    func bankElementsDidUpdated() {
+        presenter?.presentData(response: .allBankElements(elements: bankManager.allBankElements))
+    }
+}
+
+// MARK: CLLocationManagerDelegate
+extension MainInteractor: CLLocationManagerDelegate {
+    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+        if manager.authorizationStatus == .authorizedWhenInUse {
+            manager.requestLocation()
+            if let location = manager.location {
+                presenter?.presentData(response: .currentLocation(location: location))
+            }
+        }
+    }
+
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        if let location = manager.location {
+            presenter?.presentData(response: .currentLocation(location: location))
+        }
+    }
+
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        print(error)
     }
 }

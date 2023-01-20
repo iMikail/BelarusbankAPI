@@ -16,14 +16,16 @@ class MainPresenter: MainPresentationLogic {
 
     func presentData(response: Main.Model.Response.ResponseType) {
         switch response {
-            case .alertError(let alertType):
-                viewController?.displayData(viewModel: .showAlert(alertType: alertType))
-            case .enabledInterface:
-                viewController?.displayData(viewModel: .enabledInterface)
-            case .responseData(dataArray: let dataArray):
-                break
-            case .allBankElements(let elements, let types):
-                viewController?.displayData(viewModel: .setupElementOnMap(elements: elements, types: types))
+        case .alertError(let alertType):
+            viewController?.displayData(viewModel: .showAlert(alertType: alertType))
+        case .enabledInterface:
+            viewController?.displayData(viewModel: .enabledInterface)
+        case .allBankElements(let elements):
+            viewController?.displayData(viewModel: .updateAllBankElements(elements: elements))
+        case .filteredBankElements(let elements):
+            viewController?.displayData(viewModel: .updateFilteredElements(elements: elements))
+        case .currentLocation(let location):
+            viewController?.displayData(viewModel: .updateLocation(location: location))
         }
     }
 
