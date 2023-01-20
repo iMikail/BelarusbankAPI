@@ -17,6 +17,7 @@ enum Main {
                 case attemptLocationAccess
                 case updateElementsOnMap(types: [BankElements])
                 case updateFilteredElements(types: [BankElements])
+                case updateRouterDataStore(type: BankElements, id: String)
             }
         }
 

@@ -8,12 +8,29 @@
 import UIKit
 
 protocol MainRoutingLogic {
-
+    func navigateToDetail(_ type: BankElements, id: String)
 }
 
-class MainRouter: NSObject, MainRoutingLogic {
+protocol MainDataPassing {
+    var dataStore: MainDataStore? { get set }
+}
+
+class MainRouter: NSObject, MainRoutingLogic, MainDataPassing {
     weak var viewController: MainViewController?
 
-    // MARK: Routing
+    var dataStore: MainDataStore?
 
+    // MARK: Routing
+    func navigateToDetail(_ type: BankElements, id: String) {
+        viewController?.interactor?.makeRequest(request: .updateRouterDataStore(type: type, id: id))
+        let detailVC = DetailViewController()
+        if let mainStore = dataStore, var detailStore = detailVC.router?.dataStore {
+            passDataToDetail(source: mainStore, destination: &detailStore)
+        }
+        viewController?.navigationController?.pushViewController(detailVC, animated: true)
+    }
+
+    private func passDataToDetail(source: MainDataStore, destination: inout DetailDataStore) {
+        destination.detailData = source.detailData
+    }
 }

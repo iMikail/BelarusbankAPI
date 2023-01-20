@@ -14,6 +14,11 @@
 		A804F98B297960EE005B246E /* MainModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = A804F984297960EE005B246E /* MainModels.swift */; };
 		A804F98C297960EE005B246E /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A804F985297960EE005B246E /* MainViewController.swift */; };
 		A804F98D297960EE005B246E /* MainInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A804F986297960EE005B246E /* MainInteractor.swift */; };
+		A804F997297AB86C005B246E /* DetailPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A804F990297AB86B005B246E /* DetailPresenter.swift */; };
+		A804F999297AB86C005B246E /* DetailRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A804F992297AB86C005B246E /* DetailRouter.swift */; };
+		A804F99A297AB86C005B246E /* DetailModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = A804F993297AB86C005B246E /* DetailModels.swift */; };
+		A804F99B297AB86C005B246E /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A804F994297AB86C005B246E /* DetailViewController.swift */; };
+		A804F99C297AB86C005B246E /* DetailInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A804F995297AB86C005B246E /* DetailInteractor.swift */; };
 		A806F5B9296C3D91000F7BF2 /* BankManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A806F5B8296C3D91000F7BF2 /* BankManager.swift */; };
 		A80F71632972B8E200789AEE /* LoaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A80F71622972B8E200789AEE /* LoaderView.swift */; };
 		A82D737F2972DFDC00CEC1A5 /* UISegmentedControl+Ex.swift in Sources */ = {isa = PBXBuildFile; fileRef = A82D737E2972DFDB00CEC1A5 /* UISegmentedControl+Ex.swift */; };
@@ -62,6 +67,11 @@
 		A804F984297960EE005B246E /* MainModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainModels.swift; sourceTree = "<group>"; };
 		A804F985297960EE005B246E /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		A804F986297960EE005B246E /* MainInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainInteractor.swift; sourceTree = "<group>"; };
+		A804F990297AB86B005B246E /* DetailPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailPresenter.swift; sourceTree = "<group>"; };
+		A804F992297AB86C005B246E /* DetailRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailRouter.swift; sourceTree = "<group>"; };
+		A804F993297AB86C005B246E /* DetailModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailModels.swift; sourceTree = "<group>"; };
+		A804F994297AB86C005B246E /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
+		A804F995297AB86C005B246E /* DetailInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailInteractor.swift; sourceTree = "<group>"; };
 		A806F5B8296C3D91000F7BF2 /* BankManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankManager.swift; sourceTree = "<group>"; };
 		A80F71622972B8E200789AEE /* LoaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoaderView.swift; sourceTree = "<group>"; };
 		A82D737E2972DFDB00CEC1A5 /* UISegmentedControl+Ex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UISegmentedControl+Ex.swift"; sourceTree = "<group>"; };
@@ -130,6 +140,7 @@
 			isa = PBXGroup;
 			children = (
 				A804F980297960C6005B246E /* Main */,
+				A804F98F297AB83C005B246E /* Detail */,
 			);
 			path = Screens;
 			sourceTree = "<group>";
@@ -158,6 +169,18 @@
 				A804F983297960EE005B246E /* MainRouter.swift */,
 			);
 			path = Main;
+			sourceTree = "<group>";
+		};
+		A804F98F297AB83C005B246E /* Detail */ = {
+			isa = PBXGroup;
+			children = (
+				A804F994297AB86C005B246E /* DetailViewController.swift */,
+				A804F995297AB86C005B246E /* DetailInteractor.swift */,
+				A804F990297AB86B005B246E /* DetailPresenter.swift */,
+				A804F993297AB86C005B246E /* DetailModels.swift */,
+				A804F992297AB86C005B246E /* DetailRouter.swift */,
+			);
+			path = Detail;
 			sourceTree = "<group>";
 		};
 		A806F5B7296C3D7F000F7BF2 /* Bank Manager */ = {
@@ -483,6 +506,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A8727450297836B400DE3DCC /* StoreElement.swift in Sources */,
+				A804F997297AB86C005B246E /* DetailPresenter.swift in Sources */,
 				A8412AEC296EF8F400F46526 /* ElementDescription.swift in Sources */,
 				A8AAA52E296D441F00642B4A /* BankElements.swift in Sources */,
 				A86EACCB296FF9470059777D /* CLLocationManager+Ex.swift in Sources */,
@@ -494,7 +518,11 @@
 				A8C2AEC329671A3F00E375E5 /* SectionHeaderView.swift in Sources */,
 				A8C2AEC529671DFF00E375E5 /* ElementViewCell.swift in Sources */,
 				A8C2AEBE29659F5B00E375E5 /* ElementAnnotationView.swift in Sources */,
+				A804F99A297AB86C005B246E /* DetailModels.swift in Sources */,
+				A804F99C297AB86C005B246E /* DetailInteractor.swift in Sources */,
 				A806F5B9296C3D91000F7BF2 /* BankManager.swift in Sources */,
+				A804F99B297AB86C005B246E /* DetailViewController.swift in Sources */,
+				A804F999297AB86C005B246E /* DetailRouter.swift in Sources */,
 				A804F98B297960EE005B246E /* MainModels.swift in Sources */,
 				A87917B0296AA4B300B45435 /* ViewController+Ex.swift in Sources */,
 				A8C2AEBC296567E000E375E5 /* ATM.swift in Sources */,

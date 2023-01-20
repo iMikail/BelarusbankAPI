@@ -15,7 +15,7 @@ protocol MainDisplayLogic: AnyObject {
 
 class MainViewController: UIViewController, MainDisplayLogic {
     var interactor: MainBusinessLogic?
-    var router: (NSObjectProtocol & MainRoutingLogic)?
+    var router: (NSObjectProtocol & MainRoutingLogic & MainDataPassing)?
 
     private var allBankElements = [ElementResponse]()
     private var filteredBankElements = [[ElementResponse]]()
@@ -58,26 +58,10 @@ class MainViewController: UIViewController, MainDisplayLogic {
     private lazy var loaderView = LoaderView(style: .medium)
     private lazy var checkboxView = CheckboxView()
 
-    // MARK: Setup
-    private func setup() {
-        let viewController        = self
-        let interactor            = MainInteractor()
-        let presenter             = MainPresenter()
-        let router                = MainRouter()
-        viewController.interactor = interactor
-        viewController.router     = router
-        interactor.presenter      = presenter
-        presenter.viewController  = viewController
-        router.viewController     = viewController
-    }
-
-    // MARK: Routing
-
     // MARK: View lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
-
         setupFirstOptions()
         setupDelegates()
         registerViews()
@@ -87,7 +71,7 @@ class MainViewController: UIViewController, MainDisplayLogic {
         setupConstraints()
     }
 
-override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         guard let flowLayout = listView.collectionViewLayout as? UICollectionViewFlowLayout else { return }
 
@@ -119,7 +103,20 @@ override func viewWillTransition(to size: CGSize, with coordinator: UIViewContro
         case .updateLocation(let location):
             mapView.centerToLocation(location)
         }
+    }
 
+    // MARK: Setup
+    private func setup() {
+        let viewController = self
+        let interactor = MainInteractor()
+        let presenter = MainPresenter()
+        let router = MainRouter()
+        viewController.interactor = interactor
+        viewController.router = router
+        interactor.presenter = presenter
+        presenter.viewController = viewController
+        router.viewController = viewController
+        router.dataStore = interactor
     }
 
     // MARK: Private funcs
@@ -363,11 +360,7 @@ extension MainViewController: MKMapViewDelegate {
 // MARK: ElementAnnotationViewDelegate
 extension MainViewController: ElementAnnotationViewDelegate {
     func fetchMoreInfoForElement(_ type: BankElements, id: String) {
-        let detailVC = SecondViewController()
-        //detailVC.userCoordinate = locationManager.location?.coordinate
-        //detailVC.element = bankManager.fetchElement(type, id: id)
-
-        navigationController?.pushViewController(detailVC, animated: true)
+        router?.navigateToDetail(type, id: id)
     }
 }
 

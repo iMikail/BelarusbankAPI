@@ -12,7 +12,12 @@ protocol MainBusinessLogic {
     func makeRequest(request: Main.Model.Request.RequestType)
 }
 
-class MainInteractor: NSObject, MainBusinessLogic {
+protocol MainDataStore {
+    var detailData: DetailViewModel? { get set }
+}
+
+class MainInteractor: NSObject, MainBusinessLogic, MainDataStore {
+    var detailData: DetailViewModel?
 
     var presenter: MainPresentationLogic?
     var service: MainService?
@@ -40,6 +45,12 @@ class MainInteractor: NSObject, MainBusinessLogic {
             presenter?.presentData(response: .allBankElements(elements: bankManager.allBankElements))
         case .updateFilteredElements(let types):
             bankManager.updateFilteredTypes(types)
+        case.updateRouterDataStore(let type, let id):
+            guard let element = bankManager.fetchElement(type, id: id),
+                  let coordinate = locationManager.location?.coordinate else {
+                return
+            }
+            detailData = DetailViewModel(userCoordinate: coordinate, element: element)
         }
     }
 
