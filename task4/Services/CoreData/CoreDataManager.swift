@@ -34,7 +34,42 @@ final class CoreDataManager {
         }
     }
 
-    func deleteEntity<T: NSManagedObject>(_ entity: T.Type) {
+    func fetchStoreData(forTypes types: [BankElements]) -> [DataForElement] {
+        var dataArray = [DataForElement]()
+
+        types.forEach { type in
+            var data: Data
+            switch type {
+            case .atm:
+                data = fetchStoreDataForEntity(StoreATM.self)
+            case .infobox:
+                data = fetchStoreDataForEntity(StoreInfobox.self)
+            case .filial:
+                data = fetchStoreDataForEntity(StoreFilial.self)
+            }
+            dataArray.append((data, type))
+        }
+
+        return dataArray
+    }
+
+    func updateData(_ dataArray: [DataForElement]) {
+        for (data, type) in dataArray {
+            switch type {
+            case .atm:
+                deleteEntity(StoreATM.self)
+                saveDataForEntity(StoreATM.self, data: data)
+            case .infobox:
+                deleteEntity(StoreInfobox.self)
+                saveDataForEntity(StoreInfobox.self, data: data)
+            case .filial:
+                deleteEntity(StoreFilial.self)
+                saveDataForEntity(StoreFilial.self, data: data)
+            }
+        }
+    }
+
+    private func deleteEntity<T: NSManagedObject>(_ entity: T.Type) {
         let requested = NSFetchRequest<NSFetchRequestResult>(entityName: String(describing: entity))
         do {
             let fetched = try viewContext.fetch(requested)
@@ -50,7 +85,7 @@ final class CoreDataManager {
         }
     }
 
-    func saveDataForEntity<T: NSManagedObject & StoreElement>(_ entity: T.Type, data: Data) {
+    private func saveDataForEntity<T: NSManagedObject & StoreElement>(_ entity: T.Type, data: Data) {
         guard let entityDescription = NSEntityDescription.entity(forEntityName: String(describing: entity),
                                                                  in: viewContext) else {
             return
@@ -62,7 +97,7 @@ final class CoreDataManager {
         saveContext()
     }
 
-    func fetchStoreDataForEntity<T: NSManagedObject & StoreElement>(_ entity: T.Type) -> Data {
+    private func fetchStoreDataForEntity<T: NSManagedObject & StoreElement>(_ entity: T.Type) -> Data {
         var data = Data()
         do {
             let fetchData = NSFetchRequest<T>(entityName: String(describing: entity))

@@ -25,7 +25,6 @@ class MainInteractor: NSObject, MainBusinessLogic, MainDataStore {
 
     private let locationManager = CLLocationManager()
     private let bankManager = BankManager()
-    private var isFirstRequest = true
 
     var detailData: DetailViewModel?
     var filteredTypes = BankElements.allCases
@@ -38,9 +37,9 @@ class MainInteractor: NSObject, MainBusinessLogic, MainDataStore {
     }
 
     func makeRequest(request: Main.Model.Request.RequestType) {
-        if service == nil {
-            service = MainService()
-        }
+//if service == nil {//-?
+//            service = MainService()
+//        }
         switch request {
         case .updateData:
             updateData()
@@ -57,36 +56,26 @@ class MainInteractor: NSObject, MainBusinessLogic, MainDataStore {
         }
     }
 
-    private func updateData() {//refactoring
-        if isFirstRequest {
-            bankManager.updateData { [weak self] (connected, errorElements) in
-                guard let self = self else { return }
+    private func updateData() {
+        service?.updateData { [weak self] (connected, dataArray, errorElements) in
+            guard let self = self else { return }
 
-                self.presenter?.presentData(response: .enabledInterface)
-                self.isFirstRequest = false
-
-                if connected {
-                    if let errorElements = errorElements {
-                        self.presenter?.presentData(
-                            response: .alertError(type: .errorConnection(errors: errorElements)))
-                    }
-                } else {
-                    self.presenter?.presentData(response: .alertError(type: .noInternet))
-                }
+            self.presenter?.presentData(response: .enabledInterface)
+            if let dataArray = dataArray {
+                self.bankManager.updateElements(dataArray)
             }
-        } else {
-            bankManager.updateData(forTypes: [.atm]) { [weak self] (connected, _) in
-                self?.presenter?.presentData(response: .enabledInterface)
-                if !connected {
-                    self?.presenter?.presentData(response: .alertError(type: .noInternet))
+            if connected {
+                if let errorElements = errorElements {
+                    self.presenter?.presentData(
+                        response: .alertError(type: .errorConnection(errors: errorElements)))
                 }
+            } else {
+                self.presenter?.presentData(response: .alertError(type: .noInternet))
             }
-            bankManager.updateData(forTypes: [.infobox])
-            bankManager.updateData(forTypes: [.filial])
         }
     }
 
-    func updateFilteredTypes(_ types: [BankElements]) {
+    private func updateFilteredTypes(_ types: [BankElements]) {
         filteredTypes = types
         if let sortedBankElements = sortedBankElements {
             presenter?.presentData(response: .sortedElements(elements: sortedBankElements,

@@ -109,11 +109,13 @@ class MainViewController: UIViewController, MainDisplayLogic {
     private func setup() {
         let viewController = self
         let interactor = MainInteractor()
+        let worker = MainService()
         let presenter = MainPresenter()
         let router = MainRouter()
         viewController.interactor = interactor
         viewController.router = router
         interactor.presenter = presenter
+        interactor.service = worker
         presenter.viewController = viewController
         router.viewController = viewController
         router.dataStore = interactor
@@ -358,14 +360,14 @@ extension MainViewController: MKMapViewDelegate {
 }
 
 // MARK: ElementAnnotationViewDelegate
-extension MainViewController: ElementAnnotationViewDelegate {
+extension MainViewController: ElementAnnotationViewDelegate {//->router
     func fetchMoreInfoForElement(_ type: BankElements, id: String) {
         router?.navigateToDetail(type, id: id)
     }
 }
 
 // MARK: CheckboxViewDelegate
-extension MainViewController: CheckboxViewDelegate {
+extension MainViewController: CheckboxViewDelegate {//->interactor
     func selectedTypesDidChanched(_ types: [BankElements]) {
         interactor?.makeRequest(request: .updateFilteredElements(types: types))
         setupElementsOnMap(types)

@@ -14,8 +14,8 @@ final class NetworkService {
     private var dataArray = [DataForElement]()
     private var errors = [ErrorForElement]()
 
-    func getDataForTypes(_ types: [BankElements],
-                         completion: @escaping ([DataForElement], [ErrorForElement]) -> Void) {
+    func getData(forTypes types: [BankElements],
+                 completion: @escaping ([DataForElement], [ErrorForElement]) -> Void) {
         let group = DispatchGroup()
         for type in types {
             group.enter()
