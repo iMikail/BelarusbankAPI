@@ -94,11 +94,11 @@ class MainViewController: UIViewController, MainDisplayLogic {
         case .updateAllBankElements(let elements):
             allBankElements = elements
             setupElementsOnMap(checkboxView.selectedTypes)
+        case .updateSortedBankElements(let elements):
+            interactor?.sortedBankElements = elements
         case .updateFilteredElements(let elements):
             filteredBankElements = elements
-            if loaderView.isAnimating {
-                loaderView.setHidden(true)
-            }
+            loaderView.setHidden(true)
             listView.reloadData()
         case .updateLocation(let location):
             mapView.centerToLocation(location)
@@ -175,7 +175,7 @@ class MainViewController: UIViewController, MainDisplayLogic {
     }
 
     // MARK: Setup funcs
-    private func setupElementsOnMap(_ forTypes: [BankElements]) {
+    private func setupElementsOnMap(_ forTypes: [BankElements]) {//->presenter?
         let oldAnnotations = mapView.annotations.filter { annotation in
             if let elementAnnotation = annotation as? ElementAnnotation {
                 return !forTypes.contains(elementAnnotation.elementType)

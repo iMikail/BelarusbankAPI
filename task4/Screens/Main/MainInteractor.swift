@@ -9,6 +9,9 @@ import UIKit
 import CoreLocation
 
 protocol MainBusinessLogic {
+    var filteredTypes: [BankElements] { get set }
+    var sortedBankElements: [[ElementResponse]]? { get set }
+
     func makeRequest(request: Main.Model.Request.RequestType)
 }
 
@@ -17,14 +20,16 @@ protocol MainDataStore {
 }
 
 class MainInteractor: NSObject, MainBusinessLogic, MainDataStore {
-    var detailData: DetailViewModel?
-
     var presenter: MainPresentationLogic?
     var service: MainService?
 
     private let locationManager = CLLocationManager()
     private let bankManager = BankManager()
     private var isFirstRequest = true
+
+    var detailData: DetailViewModel?
+    var filteredTypes = BankElements.allCases
+    var sortedBankElements: [[ElementResponse]]?
 
     override init() {
         super.init()
@@ -41,10 +46,8 @@ class MainInteractor: NSObject, MainBusinessLogic, MainDataStore {
             updateData()
         case .attemptLocationAccess:
             attemptLocationAccess()
-        case .updateElementsOnMap(let types):
-            presenter?.presentData(response: .allBankElements(elements: bankManager.allBankElements))
         case .updateFilteredElements(let types):
-            bankManager.updateFilteredTypes(types)
+            updateFilteredTypes(types)
         case.updateRouterDataStore(let type, let id):
             guard let element = bankManager.fetchElement(type, id: id),
                   let coordinate = locationManager.location?.coordinate else {
@@ -54,11 +57,11 @@ class MainInteractor: NSObject, MainBusinessLogic, MainDataStore {
         }
     }
 
-    private func updateData() {
-        let location = locationManager.location ?? locationManager.defaultLocation
+    private func updateData() {//refactoring
         if isFirstRequest {
-            bankManager.updateData(location: location) { [weak self] (connected, errorElements) in
+            bankManager.updateData { [weak self] (connected, errorElements) in
                 guard let self = self else { return }
+
                 self.presenter?.presentData(response: .enabledInterface)
                 self.isFirstRequest = false
 
@@ -72,14 +75,22 @@ class MainInteractor: NSObject, MainBusinessLogic, MainDataStore {
                 }
             }
         } else {
-            bankManager.updateData(forTypes: [.atm], location: location) { [weak self] (connected, _) in
+            bankManager.updateData(forTypes: [.atm]) { [weak self] (connected, _) in
                 self?.presenter?.presentData(response: .enabledInterface)
                 if !connected {
                     self?.presenter?.presentData(response: .alertError(type: .noInternet))
                 }
             }
-            bankManager.updateData(forTypes: [.infobox], location: location)
-            bankManager.updateData(forTypes: [.filial], location: location)
+            bankManager.updateData(forTypes: [.infobox])
+            bankManager.updateData(forTypes: [.filial])
+        }
+    }
+
+    func updateFilteredTypes(_ types: [BankElements]) {
+        filteredTypes = types
+        if let sortedBankElements = sortedBankElements {
+            presenter?.presentData(response: .sortedElements(elements: sortedBankElements,
+                                                             filteringTypes: filteredTypes))
         }
     }
 
@@ -98,12 +109,11 @@ class MainInteractor: NSObject, MainBusinessLogic, MainDataStore {
 
 // MARK: BankManagerDelegate
 extension MainInteractor: BankManagerDelegate {
-    func bankElementsDidFiltered() {
-        presenter?.presentData(response: .filteredBankElements(elements: bankManager.filteredBankElements))
-    }
-
-    func bankElementsDidUpdated() {
-        presenter?.presentData(response: .allBankElements(elements: bankManager.allBankElements))
+    func bankElementsDidUpdated(_ elements: [ElementResponse]) {
+        let location = locationManager.location ?? locationManager.defaultLocation
+        presenter?.presentData(response: .updatedAllData(elements: elements,
+                                                         types: filteredTypes,
+                                                         location: location))
     }
 }
 

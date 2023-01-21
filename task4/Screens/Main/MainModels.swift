@@ -15,7 +15,6 @@ enum Main {
             enum RequestType {
                 case updateData
                 case attemptLocationAccess
-                case updateElementsOnMap(types: [BankElements])
                 case updateFilteredElements(types: [BankElements])
                 case updateRouterDataStore(type: BankElements, id: String)
             }
@@ -25,8 +24,8 @@ enum Main {
             enum ResponseType {
                 case alertError(type: Main.AlertType)
                 case enabledInterface
-                case allBankElements(elements: [ElementResponse])
-                case filteredBankElements(elements: [[ElementResponse]])
+                case updatedAllData(elements: [ElementResponse], types: [BankElements], location: CLLocation)
+                case sortedElements(elements: [[ElementResponse]], filteringTypes: [BankElements])
                 case currentLocation(location: CLLocation)
             }
         }
@@ -36,6 +35,7 @@ enum Main {
                 case showAlert(alertType: Main.AlertType)
                 case enabledInterface
                 case updateAllBankElements(elements: [ElementResponse])
+                case updateSortedBankElements(elements: [[ElementResponse]])
                 case updateFilteredElements(elements: [[ElementResponse]])
                 case updateLocation(location: CLLocation)
             }

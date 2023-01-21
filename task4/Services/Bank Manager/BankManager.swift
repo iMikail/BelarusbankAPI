@@ -9,15 +9,14 @@ import UIKit
 import CoreLocation
 
 protocol BankManagerDelegate: AnyObject {
-    func bankElementsDidUpdated()
-    func bankElementsDidFiltered()
+    func bankElementsDidUpdated(_ elements: [ElementResponse])
 }
 
 final class BankManager: NSObject {
     // MARK: - Properties
     private let networkService = NetworkService()
     private let coreDataManager = CoreDataManager()
-    private var filteredTypes = BankElements.allCases
+
     weak var delegate: BankManagerDelegate?
 
     var atms = ATMResponse()
@@ -25,8 +24,6 @@ final class BankManager: NSObject {
     var filials = FilialResponse()
 
     var allBankElements: [ElementResponse] { return atms + infoboxes + filials }
-    private var sortedBankElements = [[ElementResponse]]()
-    var filteredBankElements = [[ElementResponse]]()
 
     // MARK: - Functions
     func fetchElement(_ type: BankElements, id: String) -> ElementDescription? {
@@ -42,10 +39,9 @@ final class BankManager: NSObject {
 
     // MARK: Updating functions
     func updateData(forTypes types: [BankElements] = BankElements.allCases,
-                    location: CLLocation,
-                    completion: ((Bool, [ErrorForElement]?) -> Void)? = nil) {
+                    completion: ((Bool, [ErrorForElement]?) -> Void)? = nil) {//->worker
         guard NetworkMonitor.shared.isConnected else {
-            loadStoreDataForTypes(types, userLocation: location)
+            loadStoreData(forTypes: types)
             completion?(false, nil)
             return
         }
@@ -54,25 +50,20 @@ final class BankManager: NSObject {
             guard let self = self  else { return }
 
             self.saveData(dataArray)
-            self.updateElements(dataArray, userLocation: location)
+            self.updateElements(dataArray)
 
             if errors.isEmpty {
                 completion?(true, nil)
             } else {
                 errors.forEach { (_, type) in
-                    self.loadStoreDataForTypes([type], userLocation: location)
+                    self.loadStoreData(forTypes: [type])
                 }
                 completion?(true, errors)
             }
         }
     }
 
-    func updateFilteredTypes(_ types: [BankElements]) {
-        filteredTypes = types
-        filteredElementsForTypes()
-    }
-
-    private func loadStoreDataForTypes(_ types: [BankElements], userLocation: CLLocation) {
+    private func loadStoreData(forTypes types: [BankElements]) {//->worker
         var dataArray = [DataForElement]()
 
         types.forEach { type in
@@ -88,10 +79,10 @@ final class BankManager: NSObject {
             dataArray.append((data, type))
         }
 
-        updateElements(dataArray, userLocation: userLocation)
+        updateElements(dataArray)
     }
 
-    private func saveData(_ dataArray: [DataForElement]) {
+    private func saveData(_ dataArray: [DataForElement]) {//->worker
         for (data, type) in dataArray {
             switch type {
             case .atm:
@@ -107,7 +98,7 @@ final class BankManager: NSObject {
         }
     }
 
-    private func updateElements(_ elements: [DataForElement], userLocation location: CLLocation) {
+    private func updateElements(_ elements: [DataForElement]) {
         elements.forEach { (data, type) in
             switch type {
             case .atm:
@@ -118,20 +109,7 @@ final class BankManager: NSObject {
                 updateFillials(fromData: data)
             }
         }
-        delegate?.bankElementsDidUpdated()
-
-        DispatchQueue.global(qos: .userInteractive).async { [weak self] in
-            guard let self = self else { return }
-
-            let sortedArray = self.sortByCities(self.sortForCurrentLocation(location))
-
-            DispatchQueue.main.async { [weak self] in
-                guard let self = self else { return }
-
-                self.sortedBankElements = sortedArray
-                self.filteredElementsForTypes()
-            }
-        }
+        delegate?.bankElementsDidUpdated(allBankElements)
     }
 
     private func updateAtms(fromData data: Data) {
@@ -156,54 +134,5 @@ final class BankManager: NSObject {
         } catch let error {
             print(error)
         }
-    }
-
-    // MARK: Filtering/Sorting functions
-    //->Presenter
-    private func filteredElementsForTypes() {
-        filteredBankElements = sortedBankElements.map { elements in
-            elements.filter { element in
-                filteredTypes.contains(element.elementType)
-            }
-        }
-        delegate?.bankElementsDidFiltered()
-    }
-
-    private func sortForCurrentLocation(_ currentLocation: CLLocation) -> [ElementResponse] {
-        var sortedElements = [ElementResponse]()
-
-        sortedElements = allBankElements.sorted { (firstElement, secondElement) in
-            if let firstLatitude = Double(firstElement.latitude),
-               let firstLongitude = Double(firstElement.longitude),
-               let secondLatitude = Double(secondElement.latitude),
-               let secondLongitude = Double(secondElement.longitude) {
-                let firstLocation = CLLocation(latitude: firstLatitude, longitude: firstLongitude)
-                let secondLocation = CLLocation(latitude: secondLatitude, longitude: secondLongitude)
-
-                return firstLocation.distance(from: currentLocation) < secondLocation.distance(from: currentLocation)
-            } else {
-                return false
-            }
-        }
-
-        return sortedElements
-    }
-
-    private func sortByCities(_ elements: [ElementResponse]) -> [[ElementResponse]] {
-        var allElements: [ElementResponse] = elements
-        var sortedElements = [[ElementResponse]]()
-
-        while !allElements.isEmpty {
-            var array = [ElementResponse]()
-            let city = allElements[0].itemCity
-
-            for element in allElements where element.itemCity == city {
-                array.append(element)
-            }
-            allElements.removeAll { $0.itemCity == city }
-            sortedElements.append(array)
-        }
-
-        return sortedElements
     }
 }
