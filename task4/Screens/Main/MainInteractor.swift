@@ -27,7 +27,7 @@ class MainInteractor: NSObject, MainBusinessLogic, MainDataStore {
     private let bankManager = BankManager()
 
     var detailData: DetailViewModel?
-    var filteredTypes = BankElements.allCases
+    var filteredTypes = BankElements.allCases//->presenter?
     var sortedBankElements: [[ElementResponse]]?
 
     override init() {
@@ -37,9 +37,6 @@ class MainInteractor: NSObject, MainBusinessLogic, MainDataStore {
     }
 
     func makeRequest(request: Main.Model.Request.RequestType) {
-//if service == nil {//-?
-//            service = MainService()
-//        }
         switch request {
         case .updateData:
             updateData()
@@ -103,6 +100,13 @@ extension MainInteractor: BankManagerDelegate {
         presenter?.presentData(response: .updatedAllData(elements: elements,
                                                          types: filteredTypes,
                                                          location: location))
+    }
+}
+
+// MARK: CheckboxViewDelegate
+extension MainInteractor: CheckboxViewDelegate {
+    func selectedTypesDidChanched(_ types: [BankElements]) {
+        updateFilteredTypes(types)
     }
 }
 

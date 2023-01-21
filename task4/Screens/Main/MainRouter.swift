@@ -34,3 +34,10 @@ class MainRouter: NSObject, MainRoutingLogic, MainDataPassing {
         destination.detailData = source.detailData
     }
 }
+
+// MARK: ElementAnnotationViewDelegate
+extension MainRouter: ElementAnnotationViewDelegate {
+    func fetchMoreInfoForElement(_ type: BankElements, id: String) {
+        navigateToDetail(type, id: id)
+    }
+}
