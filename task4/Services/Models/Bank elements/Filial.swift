@@ -220,15 +220,13 @@ struct Filial: Codable {
     }
 }
 
-extension Filial: ElementDescription {
+extension Filial: FilialElementResponse, ElementDescription {
     var itemId: String { return filialId ?? "" }
     var latitude: String { return gpsX ?? "" }
     var longitude: String { return gpsY ?? "" }
     var itemCity: String { return name ?? "" }
     var itemInstallPlace: String { return (streetType ?? "") + " " + (street ?? "") + ", " + (homeNumber ?? "") }
     var itemWorkTime: String { return infoWorktime ?? "" }
-    var itemCurrency: String { return "" }
-    var itemCashIn: String { return "" }
     var itemPhoneInfo: String { return phoneInfo ?? "" }
     var elementType: BankElements { return .filial }
 

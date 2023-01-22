@@ -8,7 +8,7 @@
 import MapKit
 
 protocol DetailRoutingLogic {
-    func openMap(element: ElementResponse, userCoordinate: CLLocationCoordinate2D)
+    func openMap(element: ElementDescription, userCoordinate: CLLocationCoordinate2D)
 }
 
 protocol DetailDataPassing {
@@ -21,7 +21,7 @@ class DetailRouter: NSObject, DetailRoutingLogic, DetailDataPassing {
     var dataStore: DetailDataStore?
 
     // MARK: Routing
-    func openMap(element: ElementResponse, userCoordinate: CLLocationCoordinate2D) {
+    func openMap(element: ElementDescription, userCoordinate: CLLocationCoordinate2D) {
         guard let latitude = Double(element.latitude),
               let longitude = Double(element.longitude) else { return }
 

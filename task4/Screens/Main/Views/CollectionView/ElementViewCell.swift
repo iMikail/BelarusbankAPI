@@ -53,13 +53,13 @@ final class ElementViewCell: UICollectionViewCell {
         topLabel.text = bankElement.itemInstallPlace
 
         let workTime = "Режим работы:"
-        if bankElement.elementType == .filial {
-            mediumLabel.text = "Номер телефона: \(bankElement.itemPhoneInfo)"
-            let text = workTime + "\n" + bankElement.itemWorkTime.split(separator: "|").joined(separator: "\n")
+        if let filial = bankElement as? FilialElementResponse {
+            mediumLabel.text = "Номер телефона: \(filial.itemPhoneInfo)"
+            let text = workTime + "\n" + filial.itemWorkTime.split(separator: "|").joined(separator: "\n")
             bottomLabel.text = text
-        } else {
-            mediumLabel.text = "Валюта: \(bankElement.itemCurrency)"
-            bottomLabel.text = workTime + " " + bankElement.itemWorkTime
+        } else if let terminal = bankElement as? TerminalElementResponse {
+            mediumLabel.text = "Валюта: \(terminal.itemCurrency)"
+            bottomLabel.text = workTime + " " + terminal.itemWorkTime
         }
     }
 

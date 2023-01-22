@@ -8,7 +8,11 @@
 import UIKit
 import CoreLocation
 
-protocol ElementDescription: ElementResponse {
+protocol ElementDescription {
+    var latitude: String { get }
+    var longitude: String { get }
+    var elementType: BankElements { get }
+
     func arrayDescriptions() -> [String]
 }
 

@@ -62,7 +62,7 @@ struct Infobox: Codable {
     }
 }
 
-extension Infobox: ElementDescription {
+extension Infobox: TerminalElementResponse, ElementDescription {
     var itemId: String {
         if let id = infoID {
             return String(id)
@@ -77,7 +77,6 @@ extension Infobox: ElementDescription {
     var itemWorkTime: String { return workTime ?? "" }
     var itemCurrency: String { return currency ?? "" }
     var itemCashIn: String { return cashIn ?? "" }
-    var itemPhoneInfo: String { return "" }
     var elementType: BankElements { return .infobox }
 
     func arrayDescriptions() -> [String] {

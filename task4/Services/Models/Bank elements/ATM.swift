@@ -53,7 +53,7 @@ struct ATM: Codable {
     }
 }
 
-extension ATM: ElementDescription {
+extension ATM: TerminalElementResponse, ElementDescription {
     var itemId: String { return id ?? "" }
     var latitude: String { return gpsX ?? "" }
     var longitude: String { return gpsY ?? "" }
@@ -62,7 +62,6 @@ extension ATM: ElementDescription {
     var itemWorkTime: String { return workTime ?? "" }
     var itemCurrency: String { return currency ?? "" }
     var itemCashIn: String { return cashIn ?? "" }
-    var itemPhoneInfo: String { return "" }
     var elementType: BankElements { return .atm }
 
     func arrayDescriptions() -> [String] {

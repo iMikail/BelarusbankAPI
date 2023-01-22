@@ -8,6 +8,25 @@
 import UIKit
 import CoreLocation
 
+protocol ElementResponse {
+    var itemId: String { get }
+    var itemCity: String { get }
+    var latitude: String { get }
+    var longitude: String { get }
+    var itemInstallPlace: String { get }
+    var itemWorkTime: String { get }
+    var elementType: BankElements { get }
+}
+
+protocol TerminalElementResponse: ElementResponse {
+    var itemCurrency: String { get }
+    var itemCashIn: String { get }
+}
+
+protocol FilialElementResponse: ElementResponse {
+    var itemPhoneInfo: String { get }
+}
+
 enum Main {
 
     enum Model {

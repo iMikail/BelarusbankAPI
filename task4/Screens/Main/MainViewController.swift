@@ -207,7 +207,7 @@ class MainViewController: UIViewController, MainDisplayLogic {
     private func setupAnnotations(_ annotations: [ElementAnnotation], forTypes: [BankElements]) {
         let oldAnnotations = mapView.annotations.filter { annotation in
             if let elementAnnotation = annotation as? ElementAnnotation {
-                return !forTypes.contains(elementAnnotation.elementType)
+                return !forTypes.contains(elementAnnotation.element.elementType)
             } else {
                 return true
             }
@@ -256,7 +256,8 @@ extension MainViewController: UICollectionViewDelegate {
 
         if let annotation = mapView.annotations.first(where: { annotation in
             if let elementAnnotation = annotation as? ElementAnnotation {
-                return elementAnnotation.itemId == currentId && elementAnnotation.elementType == currentType
+                let element = elementAnnotation.element
+                return element.itemId == currentId && element.elementType == currentType
             } else {
                 return false
             }

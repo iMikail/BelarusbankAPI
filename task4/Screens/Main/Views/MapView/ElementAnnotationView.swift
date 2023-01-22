@@ -39,8 +39,8 @@ final class ElementAnnotationView: MKMarkerAnnotationView {
         let action = UIAction { [weak self] _ in
             guard let self = self else { return }
 
-            if let annotation = self.elementAnnotation {
-                self.delegate?.fetchMoreInfoForElement(annotation.elementType, id: annotation.itemId)
+            if let element = self.elementAnnotation?.element {
+                self.delegate?.fetchMoreInfoForElement(element.elementType, id: element.itemId)
             }
         }
         button.addAction(action, for: .touchUpInside)
@@ -81,29 +81,29 @@ final class ElementAnnotationView: MKMarkerAnnotationView {
 
     // MARK: - Functions
     private func setupInfo() {
-        guard let annotation = elementAnnotation else { return }
+        guard let element = elementAnnotation?.element else { return }
 
         var workTime = "Время работы:"
-        var result = "\(annotation.elementType.elementName)\n\(annotation.itemInstallPlace)"
+        var result = "\(element.elementType.elementName)\n\(element.itemInstallPlace)"
 
-        if annotation.elementType == .filial {
-            workTime += "\n" + annotation.itemWorkTime.split(separator: "|").joined(separator: "\n")
-            let phoneNumber = "Номер телефона:\n\(annotation.itemPhoneInfo)"
+        if let filial = element as? FilialElementResponse {
+            workTime += "\n" + filial.itemWorkTime.split(separator: "|").joined(separator: "\n")
+            let phoneNumber = "Номер телефона:\n\(filial.itemPhoneInfo)"
             result += "\n\(workTime)\n\(phoneNumber)"
-        } else {
-            workTime += "\n\(annotation.itemWorkTime)"
-            let currency = "Валюта: \(annotation.itemCurrency)"
-            let cashIn = "Приём наличных: \(annotation.itemCashIn)"
+        } else if let terminal = element as? TerminalElementResponse {
+            workTime += "\n\(terminal.itemWorkTime)"
+            let currency = "Валюта: \(terminal.itemCurrency)"
+            let cashIn = "Приём наличных: \(terminal.itemCashIn)"
             result += "\n\(workTime)\n\(currency)\n\(cashIn)"
         }
         detailLabel.text = result
-        elementImageView.image = UIImage(named: annotation.elementType.imageName)
+        elementImageView.image = UIImage(named: element.elementType.imageName)
     }
 
     private func configuratingPin() {
         markerTintColor = .secondarySystemBackground
         glyphTintColor = .systemGreen
-        if let firstChar = elementAnnotation?.elementType.elementName.first {
+        if let firstChar = elementAnnotation?.element.elementType.elementName.first {
             glyphText = String(firstChar)
         }
     }
