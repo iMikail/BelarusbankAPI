@@ -27,11 +27,10 @@ class MainViewController: UIViewController, MainDisplayLogic {
     }
 
     // MARK: - Properties
-    var interactor: (MainBusinessLogic & CheckboxViewDelegate)?
+    var interactor: MainBusinessLogic?
     var router: (NSObjectProtocol & MainRoutingLogic & MainDataPassing & ElementAnnotationViewDelegate)?
 
     private var alertManager = AlertManager()
-    private var allBankElements = [ElementResponse]()
     private var filteredBankElements = [[ElementResponse]]()
     private var isMapDisplayType = true {
         didSet {
@@ -86,11 +85,11 @@ class MainViewController: UIViewController, MainDisplayLogic {
     // MARK: View lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        setup()
+        setupVIPCycle()
         setupFirstOptions()
         setupDelegates()
         registerViews()
-        attemptLocationAccess()
+        interactor?.makeRequest(request: .attemptLocationAccess)
         fetchRequest()
         setupViews()
         setupConstraints()
@@ -109,13 +108,11 @@ class MainViewController: UIViewController, MainDisplayLogic {
             showAlert(alertType)
         case .enabledInterface:
             setEnabledInterface(true)
-        case .updateAllBankElements(let elements):
-            allBankElements = elements
-            setupElementsOnMap(checkboxView.selectedTypes)
+        case .updateAnnotations(let annotations, let types):
+            setupAnnotations(annotations, forTypes: types)
         case .updateSortedBankElements(let elements):
             interactor?.sortedBankElements = elements
         case .updateFilteredElements(let elements):
-            setupElementsOnMap(checkboxView.selectedTypes)//?
             filteredBankElements = elements
             loaderView.setHidden(true)
             listView.reloadData()
@@ -125,7 +122,7 @@ class MainViewController: UIViewController, MainDisplayLogic {
     }
 
     // MARK: Setup
-    private func setup() {
+    private func setupVIPCycle() {
         let viewController = self
         let interactor = MainInteractor()
         let worker = MainService()
@@ -164,12 +161,8 @@ class MainViewController: UIViewController, MainDisplayLogic {
         mapView.delegate = self
         listView.delegate = self
         listView.dataSource = self
-        checkboxView.delegate = interactor
+        checkboxView.delegate = self
         alertManager.delegate = self
-    }
-
-    private func attemptLocationAccess() {
-        interactor?.makeRequest(request: .attemptLocationAccess)
     }
 
     private func setEnabledInterface(_ enabled: Bool) {
@@ -211,7 +204,7 @@ class MainViewController: UIViewController, MainDisplayLogic {
     }
 
     // MARK: Setup funcs
-    private func setupElementsOnMap(_ forTypes: [BankElements]) {//->presenter?
+    private func setupAnnotations(_ annotations: [ElementAnnotation], forTypes: [BankElements]) {
         let oldAnnotations = mapView.annotations.filter { annotation in
             if let elementAnnotation = annotation as? ElementAnnotation {
                 return !forTypes.contains(elementAnnotation.elementType)
@@ -220,15 +213,7 @@ class MainViewController: UIViewController, MainDisplayLogic {
             }
         }
         mapView.removeAnnotations(oldAnnotations)
-
-        var newAnnotations = [ElementAnnotation]()
-        allBankElements.forEach { element in
-            if forTypes.contains(element.elementType) {
-                let annotation = ElementAnnotation(fromElement: element)
-                newAnnotations.append(annotation)
-            }
-        }
-        mapView.addAnnotations(newAnnotations)
+        mapView.addAnnotations(annotations)
     }
 
     private func setupViews() {
@@ -350,6 +335,13 @@ extension MainViewController: MKMapViewDelegate {
 extension MainViewController: AlertControllerDelegate {
     func needRepeatRequest() {
         fetchRequest()
+    }
+}
+
+// MARK: CheckboxViewDelegate
+extension MainViewController: CheckboxViewDelegate {
+    func selectedTypesDidChanched(_ types: [BankElements]) {
+        interactor?.makeRequest(request: .updateFilteredTypes(types))
     }
 }
 

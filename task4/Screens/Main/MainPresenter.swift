@@ -18,18 +18,31 @@ class MainPresenter: MainPresentationLogic {
     func presentData(response: Main.Model.Response.ResponseType) {
         switch response {
         case .alertError(let alertType):
-            viewController?.displayData(viewModel: .showAlert(alertType: alertType))
+            viewController?.displayData(viewModel: .showAlert(alertType))
         case .enabledInterface:
             viewController?.displayData(viewModel: .enabledInterface)
         case .updatedAllData(let elements, let types, let location):
-            viewController?.displayData(viewModel: .updateAllBankElements(elements: elements))
+            updateAnnotations(forElements: elements, fromTypes: types)
             updateAllElements(elements, forTypes: types, forLocation: location)
-        case .sortedElements(let elements, let filteringTypes):
-            let filteredElements = filteredElements(elements, forTypes: filteringTypes)
-            viewController?.displayData(viewModel: .updateFilteredElements(elements: filteredElements))
+        case .filteringUpdated(let allElements, let sortedElements, let filteringTypes):
+            updateAnnotations(forElements: allElements, fromTypes: filteringTypes)
+            let filteredElements = filteredElements(sortedElements, forTypes: filteringTypes)
+            viewController?.displayData(viewModel: .updateFilteredElements(filteredElements))
         case .currentLocation(let location):
-            viewController?.displayData(viewModel: .updateLocation(location: location))
+            viewController?.displayData(viewModel: .updateLocation(location))
         }
+    }
+
+    private func updateAnnotations(forElements elements: [ElementResponse],
+                                   fromTypes types: [BankElements]) {
+        var annotations = [ElementAnnotation]()
+        elements.forEach { element in
+            if types.contains(element.elementType) {
+                let annotation = ElementAnnotation(fromElement: element)
+                annotations.append(annotation)
+            }
+        }
+        viewController?.displayData(viewModel: .updateAnnotations(annotations, forTypes: types))
     }
 
     private func updateAllElements(_ elements: [ElementResponse],
@@ -44,8 +57,8 @@ class MainPresenter: MainPresentationLogic {
             DispatchQueue.main.async { [weak self] in
                 guard let self = self else { return }
 
-                self.viewController?.displayData(viewModel: .updateSortedBankElements(elements: sortedArray))
-                self.viewController?.displayData(viewModel: .updateFilteredElements(elements: filteredArray))
+                self.viewController?.displayData(viewModel: .updateSortedBankElements(sortedArray))
+                self.viewController?.displayData(viewModel: .updateFilteredElements(filteredArray))
             }
         }
     }

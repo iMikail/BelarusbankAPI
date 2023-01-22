@@ -15,29 +15,34 @@ enum Main {
             enum RequestType {
                 case updateData
                 case attemptLocationAccess
-                case updateFilteredElements(types: [BankElements])
+                case updateFilteredTypes(_ types: [BankElements])
                 case updateRouterDataStore(type: BankElements, id: String)
             }
         }
 
         struct Response {
             enum ResponseType {
-                case alertError(type: Main.AlertType)
+                case alertError(_ type: Main.AlertType)
                 case enabledInterface
-                case updatedAllData(elements: [ElementResponse], types: [BankElements], location: CLLocation)
-                case sortedElements(elements: [[ElementResponse]], filteringTypes: [BankElements])
-                case currentLocation(location: CLLocation)
+                case updatedAllData(elements: [ElementResponse],
+                                    types: [BankElements],
+                                    location: CLLocation)
+                case filteringUpdated(allElements: [ElementResponse],
+                                      sortedElements: [[ElementResponse]],
+                                      filteringTypes: [BankElements])
+                case currentLocation(_ location: CLLocation)
             }
         }
 
         struct ViewModel {
             enum ViewModelData {
-                case showAlert(alertType: Main.AlertType)
+                case showAlert(_ alertType: Main.AlertType)
                 case enabledInterface
-                case updateAllBankElements(elements: [ElementResponse])
-                case updateSortedBankElements(elements: [[ElementResponse]])
-                case updateFilteredElements(elements: [[ElementResponse]])
-                case updateLocation(location: CLLocation)
+                case updateAnnotations(_ annotations: [ElementAnnotation],
+                                       forTypes: [BankElements])
+                case updateSortedBankElements(_ elements: [[ElementResponse]])
+                case updateFilteredElements(_ elements: [[ElementResponse]])
+                case updateLocation(_ location: CLLocation)
             }
         }
     }

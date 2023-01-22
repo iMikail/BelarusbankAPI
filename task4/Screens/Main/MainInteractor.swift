@@ -27,7 +27,7 @@ class MainInteractor: NSObject, MainBusinessLogic, MainDataStore {
     private let bankManager = BankManager()
 
     var detailData: DetailViewModel?
-    var filteredTypes = BankElements.allCases//->presenter?
+    var filteredTypes = BankElements.allCases
     var sortedBankElements: [[ElementResponse]]?
 
     override init() {
@@ -42,7 +42,7 @@ class MainInteractor: NSObject, MainBusinessLogic, MainDataStore {
             updateData()
         case .attemptLocationAccess:
             attemptLocationAccess()
-        case .updateFilteredElements(let types):
+        case .updateFilteredTypes(let types):
             updateFilteredTypes(types)
         case.updateRouterDataStore(let type, let id):
             guard let element = bankManager.fetchElement(type, id: id),
@@ -64,10 +64,10 @@ class MainInteractor: NSObject, MainBusinessLogic, MainDataStore {
             if connected {
                 if let errorElements = errorElements {
                     self.presenter?.presentData(
-                        response: .alertError(type: .errorConnection(errors: errorElements)))
+                        response: .alertError(.errorConnection(errors: errorElements)))
                 }
             } else {
-                self.presenter?.presentData(response: .alertError(type: .noInternet))
+                self.presenter?.presentData(response: .alertError(.noInternet))
             }
         }
     }
@@ -75,8 +75,10 @@ class MainInteractor: NSObject, MainBusinessLogic, MainDataStore {
     private func updateFilteredTypes(_ types: [BankElements]) {
         filteredTypes = types
         if let sortedBankElements = sortedBankElements {
-            presenter?.presentData(response: .sortedElements(elements: sortedBankElements,
-                                                             filteringTypes: filteredTypes))
+            presenter?.presentData(
+                response: .filteringUpdated(allElements: bankManager.allBankElements,
+                                            sortedElements: sortedBankElements,
+                                            filteringTypes: filteredTypes))
         }
     }
 
@@ -86,7 +88,7 @@ class MainInteractor: NSObject, MainBusinessLogic, MainDataStore {
         case .notDetermined:
             locationManager.requestWhenInUseAuthorization()
         case .denied:
-            presenter?.presentData(response: .alertError(type: .noLocationAccess))
+                presenter?.presentData(response: .alertError(.noLocationAccess))
         default:
             locationManager.requestLocation()
         }
@@ -103,27 +105,20 @@ extension MainInteractor: BankManagerDelegate {
     }
 }
 
-// MARK: CheckboxViewDelegate
-extension MainInteractor: CheckboxViewDelegate {
-    func selectedTypesDidChanched(_ types: [BankElements]) {
-        updateFilteredTypes(types)
-    }
-}
-
 // MARK: CLLocationManagerDelegate
 extension MainInteractor: CLLocationManagerDelegate {
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
         if manager.authorizationStatus == .authorizedWhenInUse {
             manager.requestLocation()
             if let location = manager.location {
-                presenter?.presentData(response: .currentLocation(location: location))
+                presenter?.presentData(response: .currentLocation(location))
             }
         }
     }
 
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         if let location = manager.location {
-            presenter?.presentData(response: .currentLocation(location: location))
+            presenter?.presentData(response: .currentLocation(location))
         }
     }
 

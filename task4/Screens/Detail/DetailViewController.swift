@@ -64,7 +64,7 @@ class DetailViewController: UIViewController, DetailDisplayLogic {
     // MARK: - Initialization
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
-        setup()
+        setupVIPCycle()
     }
 
     required init?(coder: NSCoder) {
@@ -88,7 +88,7 @@ class DetailViewController: UIViewController, DetailDisplayLogic {
         }
     }
 
-    private func setup() {
+    private func setupVIPCycle() {
         let viewController = self
         let interactor = DetailInteractor()
         let presenter = DetailPresenter()
