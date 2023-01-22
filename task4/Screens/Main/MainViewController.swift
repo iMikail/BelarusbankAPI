@@ -17,6 +17,7 @@ class MainViewController: UIViewController, MainDisplayLogic {
     var interactor: (MainBusinessLogic & CheckboxViewDelegate)?
     var router: (NSObjectProtocol & MainRoutingLogic & MainDataPassing & ElementAnnotationViewDelegate)?
 
+    private var alertManager = AlertManager()
     private var allBankElements = [ElementResponse]()
     private var filteredBankElements = [[ElementResponse]]()
     private var isMapDisplayType = true {
@@ -81,14 +82,7 @@ class MainViewController: UIViewController, MainDisplayLogic {
     func displayData(viewModel: Main.Model.ViewModel.ViewModelData) {
         switch viewModel {
         case .showAlert(let alertType):
-            switch alertType {
-            case .noInternet:
-                showNoInternetAlert()
-            case .noLocationAccess:
-                showDeniedAccessAlert()
-            case .errorConnection(let errors):
-                showErrorConnectionAlert(errorElements: errors)
-            }
+            showAlert(alertType)
         case .enabledInterface:
             setEnabledInterface(true)
         case .updateAllBankElements(let elements):
@@ -147,6 +141,7 @@ class MainViewController: UIViewController, MainDisplayLogic {
         listView.delegate = self
         listView.dataSource = self
         checkboxView.delegate = interactor
+        alertManager.delegate = self
     }
 
     private func attemptLocationAccess() {
@@ -158,6 +153,20 @@ class MainViewController: UIViewController, MainDisplayLogic {
         navigationController?.navigationBar.isUserInteractionEnabled = enabled
         refreshButton.requestingState(!enabled)
         loaderView.setHidden(enabled)
+    }
+
+    private func showAlert(_ alertType: Main.AlertType) {
+        var alertController: UIAlertController
+        switch alertType {
+        case .noInternet:
+            alertController = alertManager.createNoInternetAlert()
+        case .noLocationAccess:
+            alertController = alertManager.createDeniedAccessAlert()
+        case .errorConnection(let errors):
+            alertController = alertManager.createErrorConnectionAlert(errors)
+        }
+
+        present(alertController, animated: true)
     }
 
     // MARK: Action funcs
@@ -227,53 +236,6 @@ class MainViewController: UIViewController, MainDisplayLogic {
             make.width.height.equalTo(100)
             make.centerX.centerY.equalToSuperview()
         }
-    }
-
-    // MARK: AlertController funcs
-    private func showNoInternetAlert() {
-        let alertController = UIAlertController(title: "Отсутствует интернет соединение",
-                                                message: "Приложение не обновит данные без доступа к интернету",
-                                                preferredStyle: .alert)
-        let action = UIAlertAction(title: "Ок", style: .cancel)
-        alertController.addAction(action)
-        present(alertController, animated: true)
-    }
-
-    private func showErrorConnectionAlert(errorElements: [ErrorForElement]) {
-        var message = ""
-        errorElements.forEach { (error, type) in
-            message += "\(type.elementName): \(error.localizedDescription)\n"
-        }
-        let alertController = UIAlertController(title: "Не удалось обновить элементы",
-                                                message: message,
-                                                preferredStyle: .alert)
-        let repeatAction = UIAlertAction(title: "Повторить ещё раз", style: .default) { [weak self] _ in
-            self?.fetchRequest()
-        }
-        let canselAction = UIAlertAction(title: "Закрыть", style: .cancel)
-
-        alertController.addAction(repeatAction)
-        alertController.addAction(canselAction)
-        present(alertController, animated: true)
-    }
-
-    private func showDeniedAccessAlert() {
-        let message = "Без доступа невозможно строить маршруты, перейдите в настройки служб геолокации"
-        let alertController = UIAlertController(title: "Доступ к геолокации запрещён",
-                                                message: message,
-                                                preferredStyle: .alert)
-        let optionAction = UIAlertAction(title: "Настройки", style: .default) { _ in
-            guard let settingUrl = URL(string: UIApplication.openSettingsURLString) else { return }
-
-            if UIApplication.shared.canOpenURL(settingUrl) {
-                UIApplication.shared.open(settingUrl)
-            }
-        }
-        let canselAction = UIAlertAction(title: "Отмена", style: .cancel)
-
-        alertController.addAction(optionAction)
-        alertController.addAction(canselAction)
-        present(alertController, animated: true)
     }
 }
 
@@ -357,6 +319,13 @@ extension MainViewController: MKMapViewDelegate {
         view.elementAnnotation = annotation
 
         return view
+    }
+}
+
+// MARK: AlertControllerDelegate
+extension MainViewController: AlertControllerDelegate {
+    func needRepeatRequest() {
+        fetchRequest()
     }
 }
 

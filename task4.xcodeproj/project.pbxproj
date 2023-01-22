@@ -25,6 +25,7 @@
 		A82F1CEF296870520057BAE7 /* NetworkMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A82F1CEE296870520057BAE7 /* NetworkMonitor.swift */; };
 		A8412AEC296EF8F400F46526 /* ElementDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8412AEB296EF8F400F46526 /* ElementDescription.swift */; };
 		A8412AEE296EFD1E00F46526 /* Array+Ex.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8412AED296EFD1E00F46526 /* Array+Ex.swift */; };
+		A8549029297D7AB90008C059 /* AlertManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8549028297D7AB90008C059 /* AlertManager.swift */; };
 		A86EACCB296FF9470059777D /* CLLocationManager+Ex.swift in Sources */ = {isa = PBXBuildFile; fileRef = A86EACCA296FF9470059777D /* CLLocationManager+Ex.swift */; };
 		A8726071295DE65F00666DB9 /* MKMapView+Ex.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8726070295DE65F00666DB9 /* MKMapView+Ex.swift */; };
 		A8726074295DFF8A00666DB9 /* ElementAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8726073295DFF8A00666DB9 /* ElementAnnotation.swift */; };
@@ -78,6 +79,7 @@
 		A82F1CEE296870520057BAE7 /* NetworkMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkMonitor.swift; sourceTree = "<group>"; };
 		A8412AEB296EF8F400F46526 /* ElementDescription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElementDescription.swift; sourceTree = "<group>"; };
 		A8412AED296EFD1E00F46526 /* Array+Ex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Ex.swift"; sourceTree = "<group>"; };
+		A8549028297D7AB90008C059 /* AlertManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertManager.swift; sourceTree = "<group>"; };
 		A86EACCA296FF9470059777D /* CLLocationManager+Ex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CLLocationManager+Ex.swift"; sourceTree = "<group>"; };
 		A8726070295DE65F00666DB9 /* MKMapView+Ex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MKMapView+Ex.swift"; sourceTree = "<group>"; };
 		A8726073295DFF8A00666DB9 /* ElementAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElementAnnotation.swift; sourceTree = "<group>"; };
@@ -161,6 +163,7 @@
 			children = (
 				A8AAA52C296D3FED00642B4A /* Annotations */,
 				A8C2AEBF29659F6300E375E5 /* Views */,
+				A854902A297D7F760008C059 /* Alert Manager */,
 				A804F985297960EE005B246E /* MainViewController.swift */,
 				A804F986297960EE005B246E /* MainInteractor.swift */,
 				A804F981297960EE005B246E /* MainPresenter.swift */,
@@ -207,6 +210,14 @@
 				A8C2AEBD29659F5B00E375E5 /* ElementAnnotationView.swift */,
 			);
 			path = MapView;
+			sourceTree = "<group>";
+		};
+		A854902A297D7F760008C059 /* Alert Manager */ = {
+			isa = PBXGroup;
+			children = (
+				A8549028297D7AB90008C059 /* AlertManager.swift */,
+			);
+			path = "Alert Manager";
 			sourceTree = "<group>";
 		};
 		A8726072295DE6EA00666DB9 /* Exstensions */ = {
@@ -505,6 +516,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A8549029297D7AB90008C059 /* AlertManager.swift in Sources */,
 				A8727450297836B400DE3DCC /* StoreElement.swift in Sources */,
 				A804F997297AB86C005B246E /* DetailPresenter.swift in Sources */,
 				A8412AEC296EF8F400F46526 /* ElementDescription.swift in Sources */,
