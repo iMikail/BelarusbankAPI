@@ -36,6 +36,6 @@ enum Detail {
 }
 
 struct DetailViewModel {
-    var userCoordinate: CLLocationCoordinate2D
-    var element: ElementDescription
+    var userCoordinate: CLLocationCoordinate2D?
+    var element: ElementDescription?
 }

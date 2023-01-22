@@ -45,10 +45,8 @@ class MainInteractor: NSObject, MainBusinessLogic, MainDataStore {
         case .updateFilteredTypes(let types):
             updateFilteredTypes(types)
         case.updateRouterDataStore(let type, let id):
-            guard let element = bankManager.fetchElement(type, id: id),
-                  let coordinate = locationManager.location?.coordinate else {
-                return
-            }
+            let element = bankManager.fetchElement(type, id: id)
+            let coordinate = locationManager.location?.coordinate
             detailData = DetailViewModel(userCoordinate: coordinate, element: element)
         }
     }

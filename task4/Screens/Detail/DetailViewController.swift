@@ -5,7 +5,8 @@
 //  Created by Misha Volkov on 20.01.23.
 //
 
-import MapKit
+import UIKit
+import CoreLocation
 
 protocol DetailDisplayLogic: AnyObject {
     func displayData(viewModel: Detail.Model.ViewModel.ViewModelData)
@@ -17,21 +18,8 @@ class DetailViewController: UIViewController, DetailDisplayLogic {
 
     // MARK: - Properties
     private let reuseIdentifier = "reuseIdentifier"
-    var userCoordinate: CLLocationCoordinate2D? {
-        didSet {
-            if userCoordinate != nil {
-                routeButton.isEnabled = true
-            }
-        }
-    }
-
-    var element: ElementDescription? {
-        didSet {
-            if let element = element {
-                descriptions = element.arrayDescriptions()
-            }
-        }
-    }
+    private var userCoordinate: CLLocationCoordinate2D?
+    private var element: ElementDescription?
     private var descriptions = [String]()
 
     // MARK: - Views
@@ -39,8 +27,7 @@ class DetailViewController: UIViewController, DetailDisplayLogic {
         let tableView = UITableView()
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: reuseIdentifier)
         tableView.dataSource = self
-        tableView.separatorColor = .secondaryLabel
-        tableView.separatorInset = UIEdgeInsets.zero
+        tableView.separatorStyle = .none
 
         return tableView
     }()
@@ -85,9 +72,23 @@ class DetailViewController: UIViewController, DetailDisplayLogic {
         case .updateView(let detailData):
             userCoordinate = detailData.userCoordinate
             element = detailData.element
+            if let element = element {
+                descriptions = element.arrayDescriptions()
+                if userCoordinate != nil {
+                    routeButton.isEnabled = true
+                }
+            }
         }
     }
 
+    // MARK: Action funcs
+    @objc private func buildingRoute() {
+        guard let userCoordinate = userCoordinate, let element = element else { return }
+
+        router?.openMap(element: element, userCoordinate: userCoordinate)
+    }
+
+    // MARK: Setup funcs
     private func setupVIPCycle() {
         let viewController = self
         let interactor = DetailInteractor()
@@ -99,24 +100,6 @@ class DetailViewController: UIViewController, DetailDisplayLogic {
         presenter.viewController = viewController
         router.viewController = viewController
         router.dataStore = interactor
-    }
-
-    @objc private func buildingRoute() {
-        guard
-            let userCoordinate = userCoordinate,
-            let element = element,
-            let latitude = Double(element.latitude),
-            let longitude = Double(element.longitude) else { return }
-
-        let userMapItem = MKMapItem(placemark: MKPlacemark(coordinate: userCoordinate))
-        userMapItem.name = "Моё местоположение"
-
-        let atmCoordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
-        let atmMapItem = MKMapItem(placemark: MKPlacemark(coordinate: atmCoordinate))
-        atmMapItem.name = element.elementType.elementName
-
-        MKMapItem.openMaps(with: [userMapItem, atmMapItem],
-                           launchOptions: [MKLaunchOptionsDirectionsModeKey: MKLaunchOptionsDirectionsModeWalking])
     }
 
     private func setupSubviews() {
@@ -147,11 +130,11 @@ extension DetailViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath)
-        if let textLabel = cell.textLabel {
-            textLabel.numberOfLines = 0
-            textLabel.text = descriptions[indexPath.row]
-            textLabel.textAlignment = .center
-        }
+        var content = cell.defaultContentConfiguration()
+        content.text = descriptions[indexPath.row]
+        content.textProperties.numberOfLines = 0
+        content.textProperties.color = .label
+        cell.contentConfiguration = content
         cell.isUserInteractionEnabled = false
 
         return cell
