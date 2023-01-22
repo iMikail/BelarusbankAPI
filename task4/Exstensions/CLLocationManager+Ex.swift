@@ -8,7 +8,7 @@
 import CoreLocation
 
 extension CLLocationManager {
-    internal var defaultLocation: CLLocation {
+    var defaultLocation: CLLocation {
         return CLLocation(latitude: 52.425163, longitude: 31.015039)
     }
 }
