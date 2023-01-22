@@ -38,7 +38,6 @@
 		A872744C2977FC6600DE3DCC /* StoreATM+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = A87274462977FC6600DE3DCC /* StoreATM+CoreDataClass.swift */; };
 		A872744D2977FC6600DE3DCC /* StoreATM+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = A87274472977FC6600DE3DCC /* StoreATM+CoreDataProperties.swift */; };
 		A8727450297836B400DE3DCC /* StoreElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = A872744F297836B400DE3DCC /* StoreElement.swift */; };
-		A87917B0296AA4B300B45435 /* ViewController+Ex.swift in Sources */ = {isa = PBXBuildFile; fileRef = A87917AF296AA4B300B45435 /* ViewController+Ex.swift */; };
 		A8AAA528296C4DC100642B4A /* Infobox.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8AAA527296C4DC100642B4A /* Infobox.swift */; };
 		A8AAA52A296C4DE700642B4A /* Filial.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8AAA529296C4DE700642B4A /* Filial.swift */; };
 		A8AAA52E296D441F00642B4A /* BankElements.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8AAA52D296D441F00642B4A /* BankElements.swift */; };
@@ -49,12 +48,10 @@
 		A8B71F03297159BF0056B839 /* CheckboxButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8B71F02297159BF0056B839 /* CheckboxButton.swift */; };
 		A8C2AEBC296567E000E375E5 /* ATM.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8C2AEBB296567E000E375E5 /* ATM.swift */; };
 		A8C2AEBE29659F5B00E375E5 /* ElementAnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8C2AEBD29659F5B00E375E5 /* ElementAnnotationView.swift */; };
-		A8C2AEC12965D05700E375E5 /* SecondViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8C2AEC02965D05700E375E5 /* SecondViewController.swift */; };
 		A8C2AEC329671A3F00E375E5 /* SectionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8C2AEC229671A3F00E375E5 /* SectionHeaderView.swift */; };
 		A8C2AEC529671DFF00E375E5 /* ElementViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8C2AEC429671DFF00E375E5 /* ElementViewCell.swift */; };
 		A8E5F921295C3C2700B18A0B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8E5F920295C3C2700B18A0B /* AppDelegate.swift */; };
 		A8E5F923295C3C2700B18A0B /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8E5F922295C3C2700B18A0B /* SceneDelegate.swift */; };
-		A8E5F925295C3C2700B18A0B /* FirstViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8E5F924295C3C2700B18A0B /* FirstViewController.swift */; };
 		A8E5F92A295C3C2900B18A0B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A8E5F929295C3C2900B18A0B /* Assets.xcassets */; };
 		A8E5F92D295C3C2900B18A0B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A8E5F92B295C3C2900B18A0B /* LaunchScreen.storyboard */; };
 		A8F2185A295CB63C00447A18 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8F21859295CB63C00447A18 /* NetworkService.swift */; };
@@ -92,7 +89,6 @@
 		A87274462977FC6600DE3DCC /* StoreATM+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StoreATM+CoreDataClass.swift"; sourceTree = "<group>"; };
 		A87274472977FC6600DE3DCC /* StoreATM+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StoreATM+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		A872744F297836B400DE3DCC /* StoreElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreElement.swift; sourceTree = "<group>"; };
-		A87917AF296AA4B300B45435 /* ViewController+Ex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewController+Ex.swift"; sourceTree = "<group>"; };
 		A8AAA527296C4DC100642B4A /* Infobox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Infobox.swift; sourceTree = "<group>"; };
 		A8AAA529296C4DE700642B4A /* Filial.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Filial.swift; sourceTree = "<group>"; };
 		A8AAA52D296D441F00642B4A /* BankElements.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankElements.swift; sourceTree = "<group>"; };
@@ -103,13 +99,11 @@
 		A8B71F02297159BF0056B839 /* CheckboxButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckboxButton.swift; sourceTree = "<group>"; };
 		A8C2AEBB296567E000E375E5 /* ATM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ATM.swift; sourceTree = "<group>"; };
 		A8C2AEBD29659F5B00E375E5 /* ElementAnnotationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElementAnnotationView.swift; sourceTree = "<group>"; };
-		A8C2AEC02965D05700E375E5 /* SecondViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondViewController.swift; sourceTree = "<group>"; };
 		A8C2AEC229671A3F00E375E5 /* SectionHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionHeaderView.swift; sourceTree = "<group>"; };
 		A8C2AEC429671DFF00E375E5 /* ElementViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElementViewCell.swift; sourceTree = "<group>"; };
 		A8E5F91D295C3C2700B18A0B /* task4.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = task4.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A8E5F920295C3C2700B18A0B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A8E5F922295C3C2700B18A0B /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		A8E5F924295C3C2700B18A0B /* FirstViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstViewController.swift; sourceTree = "<group>"; };
 		A8E5F929295C3C2900B18A0B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A8E5F92C295C3C2900B18A0B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A8E5F92E295C3C2900B18A0B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = "task4/Supporting files/Info.plist"; sourceTree = SOURCE_ROOT; };
@@ -227,7 +221,6 @@
 				A82D737E2972DFDB00CEC1A5 /* UISegmentedControl+Ex.swift */,
 				A86EACCA296FF9470059777D /* CLLocationManager+Ex.swift */,
 				A8B5F3992969CFC200D097C4 /* UIButton+Ex.swift */,
-				A87917AF296AA4B300B45435 /* ViewController+Ex.swift */,
 				A8412AED296EFD1E00F46526 /* Array+Ex.swift */,
 			);
 			path = Exstensions;
@@ -326,7 +319,6 @@
 			isa = PBXGroup;
 			children = (
 				A804F97E29795E76005B246E /* Screens */,
-				A8E816E5295C50830014A7FD /* Controllers */,
 				A804F97F297960AC005B246E /* Services */,
 				A8E816E4295C505E0014A7FD /* Supporting files */,
 				A8726072295DE6EA00666DB9 /* Exstensions */,
@@ -346,15 +338,6 @@
 				A8E5F92E295C3C2900B18A0B /* Info.plist */,
 			);
 			path = "Supporting files";
-			sourceTree = "<group>";
-		};
-		A8E816E5295C50830014A7FD /* Controllers */ = {
-			isa = PBXGroup;
-			children = (
-				A8E5F924295C3C2700B18A0B /* FirstViewController.swift */,
-				A8C2AEC02965D05700E375E5 /* SecondViewController.swift */,
-			);
-			path = Controllers;
 			sourceTree = "<group>";
 		};
 		A8F2185B295CB64200447A18 /* NetworkService */ = {
@@ -536,7 +519,6 @@
 				A804F99B297AB86C005B246E /* DetailViewController.swift in Sources */,
 				A804F999297AB86C005B246E /* DetailRouter.swift in Sources */,
 				A804F98B297960EE005B246E /* MainModels.swift in Sources */,
-				A87917B0296AA4B300B45435 /* ViewController+Ex.swift in Sources */,
 				A8C2AEBC296567E000E375E5 /* ATM.swift in Sources */,
 				A8F2185A295CB63C00447A18 /* NetworkService.swift in Sources */,
 				A8726074295DFF8A00666DB9 /* ElementAnnotation.swift in Sources */,
@@ -544,7 +526,6 @@
 				A8AAA52A296C4DE700642B4A /* Filial.swift in Sources */,
 				A872744C2977FC6600DE3DCC /* StoreATM+CoreDataClass.swift in Sources */,
 				A8B5F39A2969CFC200D097C4 /* UIButton+Ex.swift in Sources */,
-				A8E5F925295C3C2700B18A0B /* FirstViewController.swift in Sources */,
 				A8B71EFF297148260056B839 /* CheckboxView.swift in Sources */,
 				A8E5F921295C3C2700B18A0B /* AppDelegate.swift in Sources */,
 				A8AAA530296D946F00642B4A /* ElementResponse.swift in Sources */,
@@ -556,7 +537,6 @@
 				A8B71F03297159BF0056B839 /* CheckboxButton.swift in Sources */,
 				A872744D2977FC6600DE3DCC /* StoreATM+CoreDataProperties.swift in Sources */,
 				A8B5F3982969C83A00D097C4 /* DisplayType.swift in Sources */,
-				A8C2AEC12965D05700E375E5 /* SecondViewController.swift in Sources */,
 				A804F98C297960EE005B246E /* MainViewController.swift in Sources */,
 				A8E5F923295C3C2700B18A0B /* SceneDelegate.swift in Sources */,
 				A872744A2977FC6600DE3DCC /* StoreFilial+CoreDataClass.swift in Sources */,

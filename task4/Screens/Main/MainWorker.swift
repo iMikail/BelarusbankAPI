@@ -27,6 +27,7 @@ class MainService {
                 completion?(false, nil, nil)
                 return
             }
+
             BankElements.allCases.forEach {
                 getData(forTypes: [$0]) { (dataArray, errors) in
                     if errors == nil {
@@ -36,15 +37,6 @@ class MainService {
                     }
                 }
             }
-//fetchData(forTypes: [.atm]) { (dataArray, _) in
-//                completion?(true, dataArray, nil)
-//            }
-//            fetchData(forTypes: [.infobox]) { (dataArray, _) in
-//                completion?(true, dataArray, nil)
-//            }
-//            fetchData(forTypes: [.filial]) { (dataArray, _) in
-//                completion?(true, dataArray, nil)
-//            }
         }
     }
 
