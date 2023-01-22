@@ -21,14 +21,4 @@ extension UIButton {
             imageView.layer.removeAllAnimations()
         }
     }
-
-    func setupRefreshConfigurating() {
-        var configuration = UIButton.Configuration.plain()
-        configuration.title = "Обновить"
-        configuration.attributedTitle?.font = UIFont.systemFont(ofSize: 15.0)
-        configuration.image = UIImage(systemName: "arrow.triangle.2.circlepath")
-        configuration.imagePadding = 5.0
-
-        self.configuration = configuration
-    }
 }

@@ -7,6 +7,19 @@
 
 import MapKit
 
+protocol ElementResponse {
+    var itemId: String { get }
+    var itemCity: String { get }
+    var latitude: String { get }
+    var longitude: String { get }
+    var itemInstallPlace: String { get }
+    var itemWorkTime: String { get }
+    var elementType: BankElements { get }
+    var itemCurrency: String { get }
+    var itemCashIn: String { get }
+    var itemPhoneInfo: String { get }
+}
+
 final class ElementAnnotation: NSObject, MKAnnotation, ElementResponse {
     let itemId: String
     let itemCity: String

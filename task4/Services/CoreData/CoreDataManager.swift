@@ -8,6 +8,10 @@
 import Foundation
 import CoreData
 
+protocol StoreElement {
+    var data: Data? { get set }
+}
+
 final class CoreDataManager {
     lazy var persistentContainer: NSPersistentContainer = {
 

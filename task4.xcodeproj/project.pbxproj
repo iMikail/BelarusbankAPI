@@ -21,9 +21,7 @@
 		A804F99C297AB86C005B246E /* DetailInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A804F995297AB86C005B246E /* DetailInteractor.swift */; };
 		A806F5B9296C3D91000F7BF2 /* BankManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A806F5B8296C3D91000F7BF2 /* BankManager.swift */; };
 		A80F71632972B8E200789AEE /* LoaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A80F71622972B8E200789AEE /* LoaderView.swift */; };
-		A82D737F2972DFDC00CEC1A5 /* UISegmentedControl+Ex.swift in Sources */ = {isa = PBXBuildFile; fileRef = A82D737E2972DFDB00CEC1A5 /* UISegmentedControl+Ex.swift */; };
 		A82F1CEF296870520057BAE7 /* NetworkMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A82F1CEE296870520057BAE7 /* NetworkMonitor.swift */; };
-		A8412AEC296EF8F400F46526 /* ElementDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8412AEB296EF8F400F46526 /* ElementDescription.swift */; };
 		A8412AEE296EFD1E00F46526 /* Array+Ex.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8412AED296EFD1E00F46526 /* Array+Ex.swift */; };
 		A8549029297D7AB90008C059 /* AlertManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8549028297D7AB90008C059 /* AlertManager.swift */; };
 		A86EACCB296FF9470059777D /* CLLocationManager+Ex.swift in Sources */ = {isa = PBXBuildFile; fileRef = A86EACCA296FF9470059777D /* CLLocationManager+Ex.swift */; };
@@ -37,12 +35,9 @@
 		A872744B2977FC6600DE3DCC /* StoreFilial+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = A87274452977FC6600DE3DCC /* StoreFilial+CoreDataProperties.swift */; };
 		A872744C2977FC6600DE3DCC /* StoreATM+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = A87274462977FC6600DE3DCC /* StoreATM+CoreDataClass.swift */; };
 		A872744D2977FC6600DE3DCC /* StoreATM+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = A87274472977FC6600DE3DCC /* StoreATM+CoreDataProperties.swift */; };
-		A8727450297836B400DE3DCC /* StoreElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = A872744F297836B400DE3DCC /* StoreElement.swift */; };
 		A8AAA528296C4DC100642B4A /* Infobox.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8AAA527296C4DC100642B4A /* Infobox.swift */; };
 		A8AAA52A296C4DE700642B4A /* Filial.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8AAA529296C4DE700642B4A /* Filial.swift */; };
 		A8AAA52E296D441F00642B4A /* BankElements.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8AAA52D296D441F00642B4A /* BankElements.swift */; };
-		A8AAA530296D946F00642B4A /* ElementResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8AAA52F296D946F00642B4A /* ElementResponse.swift */; };
-		A8B5F3982969C83A00D097C4 /* DisplayType.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8B5F3972969C83A00D097C4 /* DisplayType.swift */; };
 		A8B5F39A2969CFC200D097C4 /* UIButton+Ex.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8B5F3992969CFC200D097C4 /* UIButton+Ex.swift */; };
 		A8B71EFF297148260056B839 /* CheckboxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8B71EFE297148260056B839 /* CheckboxView.swift */; };
 		A8B71F03297159BF0056B839 /* CheckboxButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8B71F02297159BF0056B839 /* CheckboxButton.swift */; };
@@ -72,9 +67,7 @@
 		A804F995297AB86C005B246E /* DetailInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailInteractor.swift; sourceTree = "<group>"; };
 		A806F5B8296C3D91000F7BF2 /* BankManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankManager.swift; sourceTree = "<group>"; };
 		A80F71622972B8E200789AEE /* LoaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoaderView.swift; sourceTree = "<group>"; };
-		A82D737E2972DFDB00CEC1A5 /* UISegmentedControl+Ex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UISegmentedControl+Ex.swift"; sourceTree = "<group>"; };
 		A82F1CEE296870520057BAE7 /* NetworkMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkMonitor.swift; sourceTree = "<group>"; };
-		A8412AEB296EF8F400F46526 /* ElementDescription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElementDescription.swift; sourceTree = "<group>"; };
 		A8412AED296EFD1E00F46526 /* Array+Ex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Ex.swift"; sourceTree = "<group>"; };
 		A8549028297D7AB90008C059 /* AlertManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertManager.swift; sourceTree = "<group>"; };
 		A86EACCA296FF9470059777D /* CLLocationManager+Ex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CLLocationManager+Ex.swift"; sourceTree = "<group>"; };
@@ -88,12 +81,9 @@
 		A87274452977FC6600DE3DCC /* StoreFilial+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StoreFilial+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		A87274462977FC6600DE3DCC /* StoreATM+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StoreATM+CoreDataClass.swift"; sourceTree = "<group>"; };
 		A87274472977FC6600DE3DCC /* StoreATM+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StoreATM+CoreDataProperties.swift"; sourceTree = "<group>"; };
-		A872744F297836B400DE3DCC /* StoreElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreElement.swift; sourceTree = "<group>"; };
 		A8AAA527296C4DC100642B4A /* Infobox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Infobox.swift; sourceTree = "<group>"; };
 		A8AAA529296C4DE700642B4A /* Filial.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Filial.swift; sourceTree = "<group>"; };
 		A8AAA52D296D441F00642B4A /* BankElements.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankElements.swift; sourceTree = "<group>"; };
-		A8AAA52F296D946F00642B4A /* ElementResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElementResponse.swift; sourceTree = "<group>"; };
-		A8B5F3972969C83A00D097C4 /* DisplayType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayType.swift; sourceTree = "<group>"; };
 		A8B5F3992969CFC200D097C4 /* UIButton+Ex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIButton+Ex.swift"; sourceTree = "<group>"; };
 		A8B71EFE297148260056B839 /* CheckboxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckboxView.swift; sourceTree = "<group>"; };
 		A8B71F02297159BF0056B839 /* CheckboxButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckboxButton.swift; sourceTree = "<group>"; };
@@ -218,7 +208,6 @@
 			isa = PBXGroup;
 			children = (
 				A8726070295DE65F00666DB9 /* MKMapView+Ex.swift */,
-				A82D737E2972DFDB00CEC1A5 /* UISegmentedControl+Ex.swift */,
 				A86EACCA296FF9470059777D /* CLLocationManager+Ex.swift */,
 				A8B5F3992969CFC200D097C4 /* UIButton+Ex.swift */,
 				A8412AED296EFD1E00F46526 /* Array+Ex.swift */,
@@ -267,16 +256,6 @@
 			path = Annotations;
 			sourceTree = "<group>";
 		};
-		A8AAA531296D948D00642B4A /* Protocols */ = {
-			isa = PBXGroup;
-			children = (
-				A8AAA52F296D946F00642B4A /* ElementResponse.swift */,
-				A8412AEB296EF8F400F46526 /* ElementDescription.swift */,
-				A872744F297836B400DE3DCC /* StoreElement.swift */,
-			);
-			path = Protocols;
-			sourceTree = "<group>";
-		};
 		A8C2AEBF29659F6300E375E5 /* Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -322,7 +301,6 @@
 				A804F97F297960AC005B246E /* Services */,
 				A8E816E4295C505E0014A7FD /* Supporting files */,
 				A8726072295DE6EA00666DB9 /* Exstensions */,
-				A8AAA531296D948D00642B4A /* Protocols */,
 			);
 			path = task4;
 			sourceTree = "<group>";
@@ -332,7 +310,6 @@
 			children = (
 				A8E5F920295C3C2700B18A0B /* AppDelegate.swift */,
 				A8E5F922295C3C2700B18A0B /* SceneDelegate.swift */,
-				A8B5F3972969C83A00D097C4 /* DisplayType.swift */,
 				A8E5F929295C3C2900B18A0B /* Assets.xcassets */,
 				A8E5F92B295C3C2900B18A0B /* LaunchScreen.storyboard */,
 				A8E5F92E295C3C2900B18A0B /* Info.plist */,
@@ -500,12 +477,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				A8549029297D7AB90008C059 /* AlertManager.swift in Sources */,
-				A8727450297836B400DE3DCC /* StoreElement.swift in Sources */,
 				A804F997297AB86C005B246E /* DetailPresenter.swift in Sources */,
-				A8412AEC296EF8F400F46526 /* ElementDescription.swift in Sources */,
 				A8AAA52E296D441F00642B4A /* BankElements.swift in Sources */,
 				A86EACCB296FF9470059777D /* CLLocationManager+Ex.swift in Sources */,
-				A82D737F2972DFDC00CEC1A5 /* UISegmentedControl+Ex.swift in Sources */,
 				A804F98D297960EE005B246E /* MainInteractor.swift in Sources */,
 				A804F98A297960EE005B246E /* MainRouter.swift in Sources */,
 				A80F71632972B8E200789AEE /* LoaderView.swift in Sources */,
@@ -528,7 +502,6 @@
 				A8B5F39A2969CFC200D097C4 /* UIButton+Ex.swift in Sources */,
 				A8B71EFF297148260056B839 /* CheckboxView.swift in Sources */,
 				A8E5F921295C3C2700B18A0B /* AppDelegate.swift in Sources */,
-				A8AAA530296D946F00642B4A /* ElementResponse.swift in Sources */,
 				A8AAA528296C4DC100642B4A /* Infobox.swift in Sources */,
 				A82F1CEF296870520057BAE7 /* NetworkMonitor.swift in Sources */,
 				A87274482977FC6600DE3DCC /* StoreInfobox+CoreDataClass.swift in Sources */,
@@ -536,7 +509,6 @@
 				A87274412977EFB800DE3DCC /* StoreElements.xcdatamodeld in Sources */,
 				A8B71F03297159BF0056B839 /* CheckboxButton.swift in Sources */,
 				A872744D2977FC6600DE3DCC /* StoreATM+CoreDataProperties.swift in Sources */,
-				A8B5F3982969C83A00D097C4 /* DisplayType.swift in Sources */,
 				A804F98C297960EE005B246E /* MainViewController.swift in Sources */,
 				A8E5F923295C3C2700B18A0B /* SceneDelegate.swift in Sources */,
 				A872744A2977FC6600DE3DCC /* StoreFilial+CoreDataClass.swift in Sources */,

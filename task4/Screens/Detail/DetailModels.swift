@@ -8,6 +8,10 @@
 import UIKit
 import CoreLocation
 
+protocol ElementDescription: ElementResponse {
+    func arrayDescriptions() -> [String]
+}
+
 enum Detail {
 
     enum Model {

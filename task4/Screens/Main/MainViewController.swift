@@ -14,6 +14,19 @@ protocol MainDisplayLogic: AnyObject {
 }
 
 class MainViewController: UIViewController, MainDisplayLogic {
+    enum DisplayType: Int, CaseIterable {
+        case map
+        case list
+
+        var title: String {
+            switch self {
+            case .map: return "Карта"
+            case .list: return "Список"
+            }
+        }
+    }
+
+    // MARK: - Properties
     var interactor: (MainBusinessLogic & CheckboxViewDelegate)?
     var router: (NSObjectProtocol & MainRoutingLogic & MainDataPassing & ElementAnnotationViewDelegate)?
 
@@ -33,7 +46,13 @@ class MainViewController: UIViewController, MainDisplayLogic {
     // MARK: - Views
     private lazy var refreshButton: UIButton = {
         let button = UIButton()
-        button.setupRefreshConfigurating()
+        var configuration = UIButton.Configuration.plain()
+        configuration.title = "Обновить"
+        configuration.attributedTitle?.font = UIFont.systemFont(ofSize: 15.0)
+        configuration.image = UIImage(systemName: "arrow.triangle.2.circlepath")
+        configuration.imagePadding = 5.0
+
+        button.configuration = configuration
         button.addTarget(self, action: #selector(fetchRequest), for: .touchUpInside)
 
         return button
@@ -41,7 +60,12 @@ class MainViewController: UIViewController, MainDisplayLogic {
 
     private lazy var segmentedControl: UISegmentedControl = {
         let segmentedControl = UISegmentedControl(items: DisplayType.allCases.map { $0.title })
-        segmentedControl.setupConfigurating()
+        segmentedControl.selectedSegmentIndex = DisplayType.map.rawValue
+        segmentedControl.setDividerImage(UIImage(systemName: "chevron.left.2"), forLeftSegmentState: .selected,
+                                         rightSegmentState: .normal, barMetrics: .default)
+        segmentedControl.setDividerImage(UIImage(systemName: "chevron.right.2"), forLeftSegmentState: .normal,
+                                         rightSegmentState: .selected, barMetrics: .default)
+        segmentedControl.tintColor = .label
         segmentedControl.addTarget(self, action: #selector(switchDisplayType), for: .valueChanged)
 
         return segmentedControl
