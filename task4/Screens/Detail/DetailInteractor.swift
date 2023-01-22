@@ -5,7 +5,6 @@
 //  Created by Misha Volkov on 20.01.23.
 //
 
-import UIKit
 import CoreLocation
 
 protocol DetailBusinessLogic {
@@ -28,5 +27,4 @@ class DetailInteractor: DetailBusinessLogic, DetailDataStore {
             presenter?.presentData(response: .detailData(detailData: detailData))
         }
     }
-
 }

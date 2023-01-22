@@ -5,13 +5,13 @@
 //  Created by Misha Volkov on 9.01.23.
 //
 
-import UIKit
+import Foundation
 
 protocol BankManagerDelegate: AnyObject {
     func bankElementsDidUpdated(_ elements: [ElementResponse])
 }
 
-final class BankManager: NSObject {
+final class BankManager {
     // MARK: - Properties
     weak var delegate: BankManagerDelegate?
 
@@ -38,17 +38,17 @@ final class BankManager: NSObject {
         elements.forEach { (data, type) in
             switch type {
             case .atm:
-                updateAtms(fromData: data)
+                getAtms(fromData: data)
             case .infobox:
-                updateInfobox(fromData: data)
+                getInfobox(fromData: data)
             case .filial:
-                updateFillials(fromData: data)
+                getFillials(fromData: data)
             }
         }
         delegate?.bankElementsDidUpdated(allBankElements)
     }
 
-    private func updateAtms(fromData data: Data) {//generic
+    private func getAtms(fromData data: Data) {
         do {
             atms = try ATMResponse(data: data)
         } catch let error {
@@ -56,7 +56,7 @@ final class BankManager: NSObject {
         }
     }
 
-    private func updateInfobox(fromData data: Data) {
+    private func getInfobox(fromData data: Data) {
         do {
             infoboxes = try InfoboxResponse(data: data)
         } catch let error {
@@ -64,7 +64,7 @@ final class BankManager: NSObject {
         }
     }
 
-    private func updateFillials(fromData data: Data) {
+    private func getFillials(fromData data: Data) {
         do {
             filials = try FilialResponse(data: data)
         } catch let error {

@@ -5,7 +5,6 @@
 //  Created by Misha Volkov on 18.01.23.
 //
 
-import Foundation
 import CoreData
 
 protocol StoreElement {
@@ -27,7 +26,6 @@ final class CoreDataManager {
     lazy var viewContext: NSManagedObjectContext = persistentContainer.viewContext
 
     func saveContext() {
-
         let context = persistentContainer.viewContext
         if context.hasChanges {
             do {
@@ -80,7 +78,6 @@ final class CoreDataManager {
             for object in fetched {
                 if let storeEntity = object as? NSManagedObject {
                     viewContext.delete(storeEntity)
-                    print("\(entity) - deleted")//-
                 }
             }
         } catch {
@@ -97,7 +94,6 @@ final class CoreDataManager {
 
         var storeEntity = T(entity: entityDescription, insertInto: viewContext)
         storeEntity.data = data
-        print("save context \(entity)")//-
         saveContext()
     }
 

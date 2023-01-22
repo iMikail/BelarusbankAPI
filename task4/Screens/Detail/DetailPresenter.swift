@@ -5,8 +5,6 @@
 //  Created by Misha Volkov on 20.01.23.
 //
 
-import UIKit
-
 protocol DetailPresentationLogic {
     func presentData(response: Detail.Model.Response.ResponseType)
 }

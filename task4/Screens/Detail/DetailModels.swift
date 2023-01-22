@@ -5,7 +5,6 @@
 //  Created by Misha Volkov on 20.01.23.
 //
 
-import UIKit
 import CoreLocation
 
 protocol ElementDescription {
