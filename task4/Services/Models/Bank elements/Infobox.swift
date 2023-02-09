@@ -80,14 +80,26 @@ extension Infobox: TerminalElementResponse, ElementDescription {
     var elementType: BankElements { return .infobox }
 
     func arrayDescriptions() -> [String] {
-        var arrayDescriprions = [String]()
+        var descriptions = [String]()
 
-        Mirror(reflecting: self).children.forEach { child in
-            if let property = child.label, let value = child.value as? String {
-                arrayDescriprions.append("\(property): \(value)")
-            }
-        }
+        descriptions.append("id инфокиоска: \(itemId)")
+        descriptions.append("Область: \(area ?? "")")
+        descriptions.append("Тип населённого пункта: \(cityType ?? "")")
+        descriptions.append("Название населённого пункта: \(city ?? "")")
+        descriptions.append("Тип улицы: \(addressType ?? "")")
+        descriptions.append("Название улицы: \(address ?? "")")
+        descriptions.append("Дом: \(house ?? "")")
+        descriptions.append("Место установки: \(installPlace ?? "")")
+        descriptions.append("Режим работы инфокиоска: \(workTime ?? "")")
+        descriptions.append("Координата широты: \(latitude)")
+        descriptions.append("Координата долготы: \(longitude)")
+        descriptions.append("Режим работы инфокиоска:\n\(itemWorkTime)")
+        descriptions.append("Тип банкомата: \(infType ?? "")")
+        descriptions.append("Исправность инфокиоска: \(infStatus ?? "")")
+        descriptions.append("Выдаваемая валюта: \(currency ?? "")")
+        descriptions.append("Наличие купюроприемника: \(cashIn ?? "")")
+        descriptions.append("Возможность печати чека: \(infPrinter ?? "")")
 
-        return arrayDescriprions
+        return descriptions
     }
 }

@@ -231,14 +231,22 @@ extension Filial: FilialElementResponse, ElementDescription {
     var elementType: BankElements { return .filial }
 
     func arrayDescriptions() -> [String] {
-        var arrayDescriprions = [String]()
+        var descriptions = [String]()
 
-        Mirror(reflecting: self).children.forEach { child in
-            if let property = child.label, let value = child.value as? String {
-                arrayDescriprions.append("\(property): \(value)")
-            }
-        }
+        descriptions.append("id филиала: \(itemId)")
+        descriptions.append("Филиал: \(filialName ?? "")")
+        descriptions.append("Тип населённого пункта: \(nameType ?? "")")
+        descriptions.append("Название населённого пункта: \(name ?? "")")
+        descriptions.append("Тип улицы: \(streetType ?? "")")
+        descriptions.append("Название улицы: \(street ?? "")")
+        descriptions.append("Дом: \(homeNumber ?? "")")
+        let workTime = "\n" + itemWorkTime.split(separator: "|").joined(separator: "\n")
+        descriptions.append("Режим работы филиала: \(workTime)")
+        descriptions.append("Координата широты: \(latitude)")
+        descriptions.append("Координата долготы: \(longitude)")
+        descriptions.append("Номер счёта: \(belNumberSchet ?? "")")
+        descriptions.append("Номер телефона: \(itemPhoneInfo)")
 
-        return arrayDescriprions
+        return descriptions
     }
 }
