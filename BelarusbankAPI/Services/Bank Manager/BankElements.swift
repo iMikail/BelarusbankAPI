@@ -5,6 +5,8 @@
 //  Created by Misha Volkov on 10.01.23.
 //
 
+import UIKit
+
 enum BankElements: Int, CaseIterable {
     case atm
     case infobox
@@ -12,25 +14,45 @@ enum BankElements: Int, CaseIterable {
 
     var apiLink: String {
         switch self {
-        case .atm: return "https://belarusbank.by/api/atm"
-        case .infobox: return "https://belarusbank.by/api/infobox"
-        case .filial: return  "https://belarusbank.by/api/filials_info"
+        case .atm:
+            return "https://belarusbank.by/api/atm"
+        case .infobox:
+            return "https://belarusbank.by/api/infobox"
+        case .filial:
+            return  "https://belarusbank.by/api/filials_info"
         }
     }
 
     var elementName: String {
         switch self {
-        case .atm: return "Банкомат"
-        case .infobox: return "Инфокиоск"
-        case .filial: return "Филиал"
+        case .atm:
+            return "Банкомат"
+        case .infobox:
+            return "Инфокиоск"
+        case .filial:
+            return "Филиал"
         }
     }
 
     var imageName: String {
         switch self {
-        case .atm: return "atm"
-        case .infobox: return "infobox"
-        case .filial: return "filial"
+        case .atm:
+            return "atm"
+        case .infobox:
+            return "infobox"
+        case .filial:
+            return "filial"
+        }
+    }
+
+    var color: UIColor {
+        switch self {
+        case .atm:
+            return .systemBlue
+        case .infobox:
+            return .systemTeal
+        case .filial:
+            return .systemCyan
         }
     }
 }

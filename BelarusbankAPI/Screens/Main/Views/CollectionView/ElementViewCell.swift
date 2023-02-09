@@ -13,6 +13,9 @@ final class ElementViewCell: UICollectionViewCell {
     var bankElement: ElementResponse? {
         didSet {
             setupInfo()
+            if let element = bankElement {
+                backgroundColor = element.elementType.color.withAlphaComponent(0.4)
+            }
         }
     }
 
@@ -34,7 +37,7 @@ final class ElementViewCell: UICollectionViewCell {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = .tertiaryLabel
+        layer.cornerRadius = 5
         addSubview(stackView)
         stackView.snp.makeConstraints { make in
             make.edges.equalToSuperview()

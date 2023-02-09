@@ -102,7 +102,7 @@ final class ElementAnnotationView: MKMarkerAnnotationView {
 
     private func configuratingPin() {
         markerTintColor = .secondarySystemBackground
-        glyphTintColor = .systemGreen
+        glyphTintColor = elementAnnotation?.element.elementType.color
         if let firstChar = elementAnnotation?.element.elementType.elementName.first {
             glyphText = String(firstChar)
         }

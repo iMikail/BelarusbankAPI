@@ -14,6 +14,7 @@ final class CheckboxButton: UIButton {
     func setupBankElementType(_ type: BankElements) {
         elementType = type
         isSelected = true
+        tintColor = elementType.color
         setImage(UIImage(systemName: "square"), for: .normal)
         setImage(UIImage(systemName: "checkmark.square"), for: .selected)
         addTarget(self, action: #selector(self.toggleCheckboxSelection), for: .touchUpInside)
